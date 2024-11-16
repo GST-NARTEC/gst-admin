@@ -1,47 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Button, Image } from "@nextui-org/react";
+import { Card, Button, Image, Spinner } from "@nextui-org/react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
 
+// api
+import { useGetProductsQuery } from "../../store/apis/endpoints/products";
+import { useAddToCartMutation } from "../../store/apis/endpoints/cart";
+
 function Barcodes() {
   const navigate = useNavigate();
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem('cartItems');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+  const { data: productsData, isLoading: isProductsLoading } =
+    useGetProductsQuery();
 
-  const barcodeProducts = [
-    {
-      id: 1,
-      name: "UPC-A",
-      description: "Universal Product Code, widely used in retail",
-      price: 36.0,
-      image:
-        "https://www.sagedata.com/images/2007/Code_128_Barcode_Graphic.jpg",
-    },
-    {
-      id: 2,
-      name: "EAN-13",
-      description: "International Article Number, used worldwide",
-      price: 40.0,
-      image:
-        "https://www.sagedata.com/images/2007/Code_128_Barcode_Graphic.jpg",
-    },
-    {
-      id: 3,
-      name: "QR Code",
-      description: "Quick Response Code, can store more data",
-      price: 45.0,
-      image:
-        "https://www.sagedata.com/images/2007/Code_128_Barcode_Graphic.jpg",
-    },
-    {
-      id: 4,
-      name: "Code 128",
-      description: "High-density linear barcode",
-      price: 38.0,
-      image:
-        "https://www.sagedata.com/images/2007/Code_128_Barcode_Graphic.jpg",
-    },
-  ];
+  const [addItemToCart, { isLoading: isAddingToCart }] = useAddToCartMutation();
+
+  const userData = JSON.parse(localStorage.getItem("userData"));
+
+  const defaultImage =
+    "https://www.sagedata.com/images/2007/Code_128_Barcode_Graphic.jpg";
+
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cart));
+  }, [cart]);
 
   const addToCart = (product) => {
     const existingItem = cart.find((item) => item.id === product.id);
@@ -80,6 +65,28 @@ function Barcodes() {
     setCart(cart.filter((item) => item.id !== productId));
   };
 
+  const handleCheckout = async () => {
+    try {
+      const cartData = {
+        userId: userData?.id,
+        items: cart.map((item) => ({
+          productId: item.id,
+          quantity: item.quantity,
+        })),
+      };
+
+      const response = await addItemToCart(cartData);
+
+      if (response.data) {
+        localStorage.setItem('cartTotal', getTotal());
+        navigate("/register/payment");
+      }
+    } catch (error) {
+      console.error("Checkout failed:", error);
+      // You might want to add toast notification here
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-">
       {/* Navigation buttons at top */}
@@ -96,36 +103,43 @@ function Barcodes() {
       <div className="flex gap-6">
         {/* Products Grid */}
         <div className="flex-grow">
-          <div className="grid grid-cols-3 gap-4">
-            {barcodeProducts.map((product) => (
-              <Card
-                key={product.id}
-                className="p-4 shadow-md hover:shadow-md transition-shadow"
-              >
-                <div className="flex flex-col items-center text-center">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    className="w-32 h-24 object-contain mb-3"
-                  />
-                  <h3 className="text-sm mb-1">{product.name}</h3>
-                  <p className="text-gray-500 text-xs mb-2 h-8 line-clamp-2">
-                    {product.description}
-                  </p>
-                  <p className="text-sm font-bold text-navy-600 mb-3">
-                    AED {product.price.toFixed(2)}
-                  </p>
-                  <Button
-                    className="w-full bg-navy-600 hover:bg-navy-700 text-white"
-                    size="sm"
-                    onClick={() => addToCart(product)}
-                  >
-                    Add to Cart
-                  </Button>
-                </div>
-              </Card>
-            ))}
-          </div>
+          {isProductsLoading ? (
+            <div className="h-[50vh] flex items-center justify-center">
+              <Spinner size="lg" color="primary" label="Loading products..." />
+            </div>
+          ) : (
+            <div className="grid grid-cols-3 gap-4">
+              {productsData?.data?.products.map((product) => (
+                <Card
+                  key={product.id}
+                  className="p-4 shadow-md hover:shadow-md transition-shadow"
+                >
+                  <div className="flex flex-col items-center text-center">
+                    <Image
+                      src={product.image || defaultImage}
+                      alt={product.title}
+                      className="w-32 h-24 object-contain mb-3"
+                    />
+                    <h3 className="text-sm mb-1">{product.title}</h3>
+                    <p className="text-gray-500 text-xs mb-2 h-8 line-clamp-2">
+                      {product.description}
+                    </p>
+                    <p className="text-sm font-bold text-navy-600 mb-3">
+                      AED {product.price.toFixed(2)}
+                    </p>
+                    <Button
+                      className="w-full bg-navy-600 hover:bg-navy-700 text-white"
+                      size="sm"
+                      onClick={() => addToCart(product)}
+                      isLoading={isProductsLoading}
+                    >
+                      Add to Cart
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Cart */}
@@ -147,7 +161,7 @@ function Barcodes() {
                   <div className="flex gap-3 ">
                     <div className="w-24 ">
                       <Image
-                        src={item.image}
+                        src={item.image || defaultImage}
                         alt={item.name}
                         className="w-24 h-20 object-contain mb-1"
                       />
@@ -174,7 +188,7 @@ function Barcodes() {
                     <div className="flex-grow flex flex-col justify-between">
                       <div className="flex justify-between items-start">
                         <span className="text-gray-500 text-sm">
-                          {item.name}
+                          {item.title}
                         </span>
                         <button
                           onClick={() => removeFromCart(item.id)}
@@ -207,12 +221,14 @@ function Barcodes() {
                   <span>AED {getTotal().toFixed(2)}</span>
                 </div>
 
-                <button
-                  onClick={() => navigate("/register/payment")}
-                  className="w-full bg-navy-600 hover:bg-navy-700 text-white py-2.5 rounded-lg transition-colors"
+                <Button
+                  onClick={handleCheckout}
+                  className="w-full bg-navy-600 hover:bg-navy-700 text-white"
+                  isLoading={isAddingToCart}
+                  isDisabled={isAddingToCart}
                 >
-                  Proceed to Checkout
-                </button>
+                  {isAddingToCart ? "Processing..." : "Proceed to Checkout"}
+                </Button>
               </div>
             )}
           </Card>

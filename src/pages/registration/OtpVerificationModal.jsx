@@ -9,7 +9,39 @@ import {
   Input,
 } from "@nextui-org/react";
 
-const OtpVerificationModal = ({ isOpen, onOpenChange, onVerify, email }) => {
+// api
+import {
+  useVerifyOtpMutation,
+  useSendOtpMutation,
+} from "../../store/apis/endpoints/User";
+import toast from "react-hot-toast";
+
+const OtpVerificationModal = ({
+  isOpen,
+  onOpenChange,
+  onVerify,
+  email,
+  emailData,
+}) => {
+  const [
+    verifyOtp,
+    { isLoading: isVerifyingOtp, isSuccess: isVerified, isError, error },
+  ] = useVerifyOtpMutation();
+
+  const [sendOtp, { isLoading: isSendingOtp }] = useSendOtpMutation();
+
+  console.log(emailData);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.data?.message);
+    } else if (isVerified) {
+      toast.success("OTP verified successfully");
+      onVerify();
+      onOpenChange(false);
+    }
+  }, [isError, error, isVerified]);
+
   const [otp, setOtp] = useState(["", "", "", ""]);
   const inputRefs = Array(4)
     .fill(0)
@@ -23,7 +55,7 @@ const OtpVerificationModal = ({ isOpen, onOpenChange, onVerify, email }) => {
   }, [isOpen]);
 
   const handleChange = (index, value) => {
-    if (!/^\d*$/.test(value)) return;
+    if (value !== "" && !/^\d$/.test(value)) return;
 
     const newOtp = [...otp];
     newOtp[index] = value;
@@ -31,11 +63,6 @@ const OtpVerificationModal = ({ isOpen, onOpenChange, onVerify, email }) => {
 
     if (value && index < 3) {
       inputRefs[index + 1].current?.focus();
-    }
-
-    if (newOtp.every((digit) => digit) && newOtp.join("").length === 4) {
-      onVerify(newOtp.join(""));
-      onOpenChange(false);
     }
   };
 
@@ -45,9 +72,33 @@ const OtpVerificationModal = ({ isOpen, onOpenChange, onVerify, email }) => {
     }
   };
 
-  const handleVerify = () => {
-    onVerify(otp.join(""));
-    onOpenChange(false);
+  const handleVerify = async () => {
+    const otpString = otp.join("");
+
+    if (otpString.length !== 4) {
+      toast.error("Please enter all 4 digits");
+      return;
+    }
+
+    try {
+      await verifyOtp({
+        otp: otpString,
+        token: emailData?.token,
+      }).unwrap();
+    } catch (err) {
+      // Error handled in useEffect
+    }
+  };
+
+  const handleResend = async () => {
+    try {
+      await sendOtp({ email }).unwrap();
+      toast.success("OTP resent successfully");
+      setOtp(["", "", "", ""]);
+      setTimeout(() => inputRefs[0].current?.focus(), 100);
+    } catch (err) {
+      toast.error(err?.data?.message || "Failed to resend OTP");
+    }
   };
 
   return (
@@ -59,9 +110,6 @@ const OtpVerificationModal = ({ isOpen, onOpenChange, onVerify, email }) => {
               <h3 className="text-xl">Email Verification</h3>
               <p className="text-sm text-default-500">
                 Enter the 4-digit code sent to {email}
-              </p>
-              <p className="text-xs text-default-400">
-                (Use 1234 for testing successful verification)
               </p>
             </ModalHeader>
 
@@ -82,6 +130,7 @@ const OtpVerificationModal = ({ isOpen, onOpenChange, onVerify, email }) => {
                       inputWrapper: "h-14",
                     }}
                     size="lg"
+                    disabled={isVerifyingOtp}
                   />
                 ))}
               </div>
@@ -93,11 +142,10 @@ const OtpVerificationModal = ({ isOpen, onOpenChange, onVerify, email }) => {
                 <Button
                   variant="light"
                   className="text-navy-600 p-0"
-                  onPress={() => {
-                    console.log("Resend OTP");
-                  }}
+                  onPress={handleResend}
+                  isDisabled={isSendingOtp}
                 >
-                  Resend
+                  {isSendingOtp ? "Sending..." : "Resend"}
                 </Button>
               </p>
               <div className="flex gap-2 justify-end w-full">
@@ -107,9 +155,10 @@ const OtpVerificationModal = ({ isOpen, onOpenChange, onVerify, email }) => {
                 <Button
                   className="bg-navy-600 text-white hover:bg-navy-700"
                   onClick={handleVerify}
-                  isDisabled={!otp.every((digit) => digit)}
+                  isDisabled={!otp.every((digit) => digit) || isVerifyingOtp}
+                  isLoading={isVerifyingOtp}
                 >
-                  Verify
+                  {isVerifyingOtp ? "Verifying..." : "Verify"}
                 </Button>
               </div>
             </ModalFooter>

@@ -1,34 +1,89 @@
 import React, { useState, useEffect } from "react";
-import { Card, useDisclosure, Chip } from "@nextui-org/react";
+import {
+  Card,
+  useDisclosure,
+  Chip,
+  Select,
+  SelectItem,
+} from "@nextui-org/react";
 import { MdEmail, MdPhone, MdLocationOn, MdBusiness } from "react-icons/md";
 import { FaGlobe } from "react-icons/fa";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import OtpVerificationModal from "./OtpVerificationModal";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import LocationPicker from "./LocationPicker";
+import LocationSelects from "./LocationSelects";
+
+// api
+import {
+  useSendOtpMutation,
+  useCreateUserMutation,
+  useVerifyLicenseMutation,
+} from "../../store/apis/endpoints/User";
+import toast from "react-hot-toast";
+import { LoadScript } from "@react-google-maps/api";
 
 const MembershipForm = () => {
   const navigate = useNavigate();
   const [isVerified, setIsVerified] = useState(false);
   const [showVerifyButton, setShowVerifyButton] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
+  // api call
+  const [
+    sendOtp,
+    {
+      isLoading: isSendingOtp,
+      isSuccess: isEmailSent,
+      isError: isEmailError,
+      error: emailError,
+      data: emailData,
+    },
+  ] = useSendOtpMutation();
+  const [
+    createUser,
+    {
+      isLoading: isCreatingUser,
+      isSuccess: isUserCreated,
+      isError: isUserError,
+      error: userError,
+      data: userData,
+    },
+  ] = useCreateUserMutation();
+  const [
+    verifyLicense,
+    {
+      isLoading: isVerifyingLicense,
+      isSuccess: isLicenseSuccess,
+      isError: isLicenseError,
+      error: licenseError,
+    },
+  ] = useVerifyLicenseMutation();
 
   const {
     register,
     watch,
     formState: { errors, isValid },
+    setValue,
+    control,
   } = useForm({
     mode: "onChange",
     defaultValues: {
       email: "",
+      companyLicenseNo: "",
       companyNameAr: "",
       companyNameEn: "",
       mobileNumber: "",
       landline: "",
       country: "",
-      provinceCity: "",
-      streetAddress: "",
+      region: "",
+      city: "",
       zipCode: "",
+      streetAddress: "",
+      latitude: null,
+      longitude: null,
     },
     reValidateMode: "onChange",
   });
@@ -41,18 +96,29 @@ const MembershipForm = () => {
     setShowVerifyButton(emailRegex.test(email));
   }, [email]);
 
-  const handleVerifyClick = () => {
-    onOpen();
-  };
+  useEffect(() => {
+    if (isEmailError) {
+      toast.error(emailError?.data?.message);
+    } else if (isEmailSent) {
+      toast.success("OTP sent to your email successfully");
+    }
+  }, [isEmailError, emailError, isEmailSent]);
 
+  const handleVerifyClick = async () => {
+    try {
+      await sendOtp({ email }).unwrap();
+      onOpen();
+    } catch (error) {
+      console.error("Failed to send OTP:", error);
+    }
+  };
   const [hasAttemptedEmailVerification, setHasAttemptedEmailVerification] =
     useState(false);
   const [hasAttemptedLicenseVerification, setHasAttemptedLicenseVerification] =
     useState(false);
 
-  const handleOtpVerify = (otp) => {
-    const isValid = otp === "1234";
-    setIsVerified(isValid);
+  const handleOtpVerify = () => {
+    setIsVerified(true);
     setHasAttemptedEmailVerification(true);
     onOpenChange(false);
   };
@@ -61,12 +127,22 @@ const MembershipForm = () => {
   const [showLicenseVerifyButton, setShowLicenseVerifyButton] = useState(false);
   const [isLicenseInvalid, setIsLicenseInvalid] = useState(false);
 
-  const handleLicenseVerify = () => {
+  const handleLicenseVerify = async () => {
     const licenseNo = watch("companyLicenseNo");
-    const isValid = licenseNo === "9912345678";
-    setIsLicenseVerified(isValid);
-    setIsLicenseInvalid(!isValid);
-    setHasAttemptedLicenseVerification(true);
+    try {
+      const result = await verifyLicense({
+        licenseKey: licenseNo,
+      }).unwrap();
+
+      setIsLicenseVerified(true);
+      setIsLicenseInvalid(false);
+      setHasAttemptedLicenseVerification(true);
+    } catch (error) {
+      setIsLicenseVerified(false);
+      setIsLicenseInvalid(true);
+      setHasAttemptedLicenseVerification(true);
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -83,9 +159,54 @@ const MembershipForm = () => {
     }
   }, [watch("companyLicenseNo")]);
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    if (isLicenseError) {
+      toast.error(licenseError?.data?.message || "License verification failed");
+    } else if (isLicenseSuccess) {
+      toast.success("License verified successfully");
+    }
+  }, [isLicenseError, licenseError, isLicenseSuccess]);
+
+  useEffect(() => {
+    if (isUserError) {
+      toast.error(userError?.data?.message || "Failed to create user");
+    } else if (isUserCreated) {
+      toast.success("User created successfully");
+      localStorage.setItem("userData", JSON.stringify(userData?.data?.user));
+      navigate("/register/barcodes");
+    }
+  }, [isUserError, userError, isUserCreated, navigate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/register/barcodes");
+
+    const formData = {
+      email: watch("email"),
+      companyLicenseNo: watch("companyLicenseNo"),
+      companyNameEn: watch("companyNameEn"),
+      companyNameAr: watch("companyNameAr"),
+      landline: watch("landline"),
+      mobile: watch("mobileNumber"),
+      country: watch("country"),
+      region: watch("region"),
+      city: watch("city"),
+      zipCode: watch("zipCode"),
+      streetAddress: watch("streetAddress"),
+      latitude: parseFloat(watch("latitude")),
+      longitude: parseFloat(watch("longitude")),
+    };
+
+    try {
+      await createUser(formData).unwrap();
+    } catch (error) {
+      console.error("Failed to create user:", error);
+    }
+  };
+
+  const handleLocationChange = (location) => {
+    setValue("latitude", location.latitude);
+    setValue("longitude", location.longitude);
+    setValue("streetAddress", location.address);
   };
 
   return (
@@ -146,9 +267,10 @@ const MembershipForm = () => {
                   {showVerifyButton && !isVerified && (
                     <button
                       onClick={handleVerifyClick}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 bg-navy-600 text-white rounded-md text-sm hover:bg-navy-700 transition-colors"
+                      disabled={isSendingOtp}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 bg-navy-600 text-white rounded-md text-sm hover:bg-navy-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Verify
+                      {isSendingOtp ? "Sending..." : "Verify"}
                     </button>
                   )}
                 </div>
@@ -189,25 +311,25 @@ const MembershipForm = () => {
                     disabled={!isVerified}
                     {...register("companyLicenseNo", {
                       required: "License number is required",
-                      pattern: {
-                        value: /^\d{10}$/,
-                        message: "Please enter a valid 10-digit license number",
+                      minLength: {
+                        value: 10,
+                        message: "License number must be 10 characters",
                       },
                     })}
-                    maxLength={10}
                     className={`w-full px-4 py-2.5 border ${
                       isLicenseInvalid ? "border-red-500" : "border-gray-400"
                     } rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed`}
-                    placeholder="Enter 10-digit license number"
+                    placeholder="Enter license number"
                   />
                   {showLicenseVerifyButton &&
                     !isLicenseVerified &&
                     !isLicenseInvalid && (
                       <button
                         onClick={handleLicenseVerify}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 bg-navy-600 text-white rounded-md text-sm hover:bg-navy-700 transition-colors "
+                        disabled={isVerifyingLicense}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 bg-navy-600 text-white rounded-md text-sm hover:bg-navy-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        Verify
+                        {isVerifyingLicense ? "Verifying..." : "Verify"}
                       </button>
                     )}
                 </div>
@@ -277,20 +399,13 @@ const MembershipForm = () => {
                   <span className="text-red-500 ml-1">*</span>
                 </label>
                 <div className="flex">
-                  <select
-                    disabled={!isVerified || !isLicenseVerified}
-                    className="px-3 py-2.5 border border-gray-400 rounded-l-lg bg-gray-50 text-gray-600 focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <option>+966</option>
-                    <option>+960</option>
-                  </select>
                   <input
                     type="tel"
                     disabled={!isVerified || !isLicenseVerified}
                     {...register("landline", {
                       required: "Landline number is required",
                     })}
-                    className="w-full px-4 py-2.5 border border-gray-400 rounded-r-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-4 py-2.5 border border-gray-400 rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="Enter landline number"
                   />
                 </div>
@@ -308,20 +423,13 @@ const MembershipForm = () => {
                   <span className="text-red-500 ml-1">*</span>
                 </label>
                 <div className="flex">
-                  <select
-                    disabled={!isVerified || !isLicenseVerified}
-                    className="px-3 py-2.5 border border-gray-400 rounded-l-lg bg-gray-50 text-gray-600 focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <option>+966</option>
-                    <option>+960</option>
-                  </select>
                   <input
                     type="tel"
                     disabled={!isVerified || !isLicenseVerified}
                     {...register("mobileNumber", {
                       required: "Mobile number is required",
                     })}
-                    className="w-full px-4 py-2.5 border border-gray-400 rounded-r-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-4 py-2.5 border border-gray-400 rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="Enter mobile number"
                   />
                 </div>
@@ -333,78 +441,11 @@ const MembershipForm = () => {
               </div>
 
               {/* Location Row 1 */}
-              <div>
-                <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                  <FaGlobe className="w-4 h-4 mr-2 text-navy-700" />
-                  Country
-                  <span className="text-red-500 ml-1">*</span>
-                </label>
-                <select
-                  disabled={!isVerified || !isLicenseVerified}
-                  {...register("country", {
-                    required: "Country is required",
-                  })}
-                  className="w-full px-4 py-2.5 border border-gray-400 rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <option>United Arab Emirates</option>
-                  <option>Saudi Arabia</option>
-                  <option>Qatar</option>
-                </select>
-                {errors.country && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.country.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                  <MdLocationOn className="w-4 h-4 mr-2 text-navy-700" />
-                  Region
-                  <span className="text-red-500 ml-1">*</span>
-                </label>
-                <select
-                  disabled={!isVerified || !isLicenseVerified}
-                  {...register("region", {
-                    required: "Region is required",
-                  })}
-                  className="w-full px-4 py-2.5 border border-gray-400 rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <option>Eastern Region</option>
-                  <option>Western Region</option>
-                  <option>Central Region</option>
-                </select>
-                {errors.region && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.region.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Location Row 2 */}
-              <div>
-                <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                  <MdLocationOn className="w-4 h-4 mr-2 text-navy-700" />
-                  City
-                  <span className="text-red-500 ml-1">*</span>
-                </label>
-                <select
-                  disabled={!isVerified || !isLicenseVerified}
-                  {...register("city", {
-                    required: "City is required",
-                  })}
-                  className="w-full px-4 py-2.5 border border-gray-400 rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <option>Abu Dhabi</option>
-                  <option>Dubai</option>
-                  <option>Sharjah</option>
-                </select>
-                {errors.city && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.city.message}
-                  </p>
-                )}
-              </div>
+              <LocationSelects 
+                control={control}
+                isDisabled={!isVerified || !isLicenseVerified}
+                errors={errors}
+              />
 
               <div>
                 <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
@@ -432,23 +473,31 @@ const MembershipForm = () => {
               <div className="col-span-2">
                 <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
                   <MdLocationOn className="w-4 h-4 mr-2 text-navy-700" />
-                  Street Address
+                  Location & Address
                   <span className="text-red-500 ml-1">*</span>
                 </label>
-                <input
-                  type="text"
-                  disabled={!isVerified || !isLicenseVerified}
-                  {...register("streetAddress", {
-                    required: "Street address is required",
-                  })}
-                  className="w-full px-4 py-2.5 border border-gray-400 rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
-                  placeholder="Enter street address"
-                />
-                {errors.streetAddress && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.streetAddress.message}
-                  </p>
-                )}
+                <LoadScript
+                  googleMapsApiKey={googleMapsApiKey}
+                  libraries={["places"]}
+                  loadingElement={
+                    <div className=" flex items-center justify-center mx-auto animate-spin rounded-full h-12 w-12 border-b-2 border-navy-600      "></div>
+                  }
+                >
+                  <LocationPicker
+                    onLocationChange={handleLocationChange}
+                    isDisabled={!isVerified || !isLicenseVerified}
+                    error={errors.streetAddress?.message}
+                    defaultLocation={
+                      watch("latitude") && watch("longitude")
+                        ? {
+                            latitude: watch("latitude"),
+                            longitude: watch("longitude"),
+                            address: watch("streetAddress"),
+                          }
+                        : null
+                    }
+                  />
+                </LoadScript>
               </div>
             </div>
 
@@ -458,9 +507,14 @@ const MembershipForm = () => {
                 type="button"
                 onClick={handleSubmit}
                 className="w-full bg-navy-600 text-white py-3 rounded-lg hover:bg-navy-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={!isVerified || !isLicenseVerified || !isValid}
+                disabled={
+                  !isVerified ||
+                  !isLicenseVerified ||
+                  !isValid ||
+                  isCreatingUser
+                }
               >
-                Save & Next
+                {isCreatingUser ? "Saving..." : "Save & Next"}
               </button>
             </div>
           </div>
@@ -472,6 +526,7 @@ const MembershipForm = () => {
         onOpenChange={onOpenChange}
         onVerify={handleOtpVerify}
         email={email}
+        emailData={emailData}
       />
     </>
   );

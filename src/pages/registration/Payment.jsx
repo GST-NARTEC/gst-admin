@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { RadioGroup, Radio, Input, Checkbox } from "@nextui-org/react";
+import { RadioGroup, Radio, Input, Checkbox, Button } from "@nextui-org/react";
 import { BsBank2, BsCreditCard2Front } from "react-icons/bs";
 import { FaCcVisa, FaCcMastercard } from "react-icons/fa";
 import { SiStencyl } from "react-icons/si";
 import { GiTakeMyMoney } from "react-icons/gi";
 import PaymentSuccessModal from "./PaymentSuccessModal";
+
+import { useCheckoutMutation } from "../../store/apis/endpoints/checkout";
+import toast from "react-hot-toast";
 
 function Payment() {
   const navigate = useNavigate();
@@ -13,11 +16,52 @@ function Payment() {
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const handlePaymentComplete = () => {
-    // Here you would typically process the payment
-    // After successful payment:
-    setShowSuccessModal(true);
+  const userData = JSON.parse(localStorage.getItem("userData"));
+
+  const [
+    checkout,
+    { isLoading: isCheckoutLoading, isSuccess, isError, error },
+  ] = useCheckoutMutation();
+
+  // Get cart data from localStorage
+  const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+  const cartTotal = parseFloat(localStorage.getItem("cartTotal") || "0");
+
+  const handlePaymentComplete = async () => {
+    try {
+      const paymentTypeMap = {
+        bank: "Bank Transfer",
+        card: "Credit Card",
+        debit: "Debit Card",
+        stc: "STC Pay",
+        tabby: "Tabby",
+      };
+
+      const response = await checkout({
+        userId: userData?.id,
+        paymentType: paymentTypeMap[paymentMethod],
+      });
+
+      if (response.data) {
+        // Clear cart data after successful payment
+        localStorage.removeItem("cartItems");
+        localStorage.removeItem("cartTotal");
+        localStorage.removeItem("userData");
+        setShowSuccessModal(true);
+      }
+    } catch (error) {
+      console.error("Payment failed:", error);
+    }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setShowSuccessModal(true);
+      localStorage.removeItem("userData");
+    } else if (isError) {
+      toast.error(error?.data?.message || "Payment failed");
+    }
+  }, [isSuccess, isError, error]);
 
   return (
     <>
@@ -158,26 +202,62 @@ function Payment() {
             </div>
           </div>
 
-          {/* Payment Summary Section */}
+          {/* Enhanced Payment Summary Section */}
           <div className="bg-white rounded-xl shadow-md p-6 h-fit">
-            <h2 className="text-xl mb-6">Payment</h2>
-            <div className="space-y-4">
-              <div className="flex justify-between py-2">
-                <span className="text-gray-600">Total Amount:</span>
-                <span className="font-medium">AED 72.00</span>
+            <h2 className="text-xl mb-6">Order Summary</h2>
+            
+            {/* Cart Items List */}
+            <div className="space-y-4 mb-6">
+              {cartItems.map((item) => (
+                <div key={item.id} className="flex justify-between py-2 border-b">
+                  <div className="flex-1">
+                    <h4 className="text-sm font-medium">{item.title}</h4>
+                    <div className="text-xs text-gray-500 mt-1">
+                      Quantity: {item.quantity}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm">AED {item.price.toFixed(2)} × {item.quantity}</div>
+                    <div className="text-sm font-medium text-navy-600">
+                      AED {(item.price * item.quantity).toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Summary Calculations */}
+            <div className="space-y-3 py-4 border-t border-dashed">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Subtotal:</span>
+                <span>AED {cartTotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between py-2">
-                <span className="text-gray-600">Total Qty:</span>
-                <span>2 Barcodes</span>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Total Items:</span>
+                <span>{cartItems.reduce((sum, item) => sum + item.quantity, 0)} Barcodes</span>
               </div>
-              <div className="flex justify-between py-2">
+              <div className="flex justify-between text-sm">
                 <span className="text-gray-600">VAT (0%):</span>
-                <span>0.00</span>
+                <span>AED 0.00</span>
               </div>
-              <div className="flex justify-between py-2 border-t">
-                <span className="text-gray-600">Overall Amount:</span>
-                <span className="font-medium">AED 72.00</span>
-              </div>
+            </div>
+
+            {/* Total Amount */}
+            <div className="flex justify-between py-4 border-t mt-4">
+              <span className="text-lg font-medium">Total Amount:</span>
+              <span className="text-lg font-bold text-navy-600">
+                AED {cartTotal.toFixed(2)}
+              </span>
+            </div>
+
+            {/* Edit Cart Link */}
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => navigate('/register/barcodes')}
+                className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+              >
+                Edit Cart
+              </button>
             </div>
           </div>
         </div>
@@ -190,13 +270,14 @@ function Payment() {
           >
             Previous
           </button>
-          <button
+          <Button
             onClick={handlePaymentComplete}
-            className="px-6 py-2 bg-navy-600 text-white rounded-lg hover:bg-navy-700"
-            disabled={!acceptTerms}
+            className="px-6 py-2 bg-navy-600 text-white rounded-lg hover:bg-navy-700 cursor-pointer"
+            isDisabled={!acceptTerms || isCheckoutLoading}
+            isLoading={isCheckoutLoading}
           >
-            Complete Payment
-          </button>
+            {isCheckoutLoading ? "Processing..." : "Complete Payment"}
+          </Button>
         </div>
       </div>
 
