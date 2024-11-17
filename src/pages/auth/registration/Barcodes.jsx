@@ -5,13 +5,15 @@ import { FaPlus, FaMinus } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
 
 // api
-import { useGetProductsQuery } from "../../store/apis/endpoints/products";
-import { useAddToCartMutation } from "../../store/apis/endpoints/cart";
+import { useGetProductsQuery } from "../../../store/apis/endpoints/products";
+import { useAddToCartMutation } from "../../../store/apis/endpoints/cart";
+
+const VAT_RATE = 0.1; // 10% VAT
 
 function Barcodes() {
   const navigate = useNavigate();
   const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem('cartItems');
+    const savedCart = localStorage.getItem("cartItems");
     return savedCart ? JSON.parse(savedCart) : [];
   });
   const { data: productsData, isLoading: isProductsLoading } =
@@ -25,7 +27,7 @@ function Barcodes() {
     "https://www.sagedata.com/images/2007/Code_128_Barcode_Graphic.jpg";
 
   useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(cart));
+    localStorage.setItem("cartItems", JSON.stringify(cart));
   }, [cart]);
 
   const addToCart = (product) => {
@@ -57,8 +59,22 @@ function Barcodes() {
     );
   };
 
-  const getTotal = () => {
-    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const getItemTotal = (item) => {
+    return item.price * item.quantity;
+  };
+
+  const getCartTotals = () => {
+    const subtotal = cart.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+    const vatAmount = subtotal * VAT_RATE;
+
+    return {
+      subtotal,
+      vatAmount,
+      total: subtotal + vatAmount,
+    };
   };
 
   const removeFromCart = (productId) => {
@@ -67,6 +83,8 @@ function Barcodes() {
 
   const handleCheckout = async () => {
     try {
+      const { subtotal, vatAmount, total } = getCartTotals();
+
       const cartData = {
         userId: userData?.id,
         items: cart.map((item) => ({
@@ -78,12 +96,14 @@ function Barcodes() {
       const response = await addItemToCart(cartData);
 
       if (response.data) {
-        localStorage.setItem('cartTotal', getTotal());
+        localStorage.setItem("cartItems", JSON.stringify(cart));
+        localStorage.setItem("cartSubtotal", subtotal);
+        localStorage.setItem("cartVAT", vatAmount);
+        localStorage.setItem("cartTotal", total);
         navigate("/register/payment");
       }
     } catch (error) {
       console.error("Checkout failed:", error);
-      // You might want to add toast notification here
     }
   };
 
@@ -199,13 +219,11 @@ function Barcodes() {
                       </div>
 
                       <div className="flex justify-end flex-col items-end">
-                        {/* AED {item.price.toFixed(2)} × {item.quantity} */}
                         <span className="text-sm">
                           AED {item.price.toFixed(2)} × {item.quantity}
                         </span>
-
-                        <span className="text-sm">
-                          AED {(item.price * item.quantity).toFixed(2)}
+                        <span className="text-sm font-bold">
+                          AED {getItemTotal(item).toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -216,14 +234,24 @@ function Barcodes() {
 
             {cart.length > 0 && (
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <div className="flex justify-between items-center mb-4">
-                  <span>Total:</span>
-                  <span>AED {getTotal().toFixed(2)}</span>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Subtotal:</span>
+                    <span>AED {getCartTotals().subtotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">VAT (10%):</span>
+                    <span>AED {getCartTotals().vatAmount.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between items-center font-bold">
+                    <span>Total:</span>
+                    <span>AED {getCartTotals().total.toFixed(2)}</span>
+                  </div>
                 </div>
 
                 <Button
                   onClick={handleCheckout}
-                  className="w-full bg-navy-600 hover:bg-navy-700 text-white"
+                  className="w-full mt-4 bg-navy-600 hover:bg-navy-700 text-white"
                   isLoading={isAddingToCart}
                   isDisabled={isAddingToCart}
                 >

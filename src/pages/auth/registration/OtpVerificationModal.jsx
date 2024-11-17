@@ -13,7 +13,7 @@ import {
 import {
   useVerifyOtpMutation,
   useSendOtpMutation,
-} from "../../store/apis/endpoints/User";
+} from "../../../store/apis/endpoints/User";
 import toast from "react-hot-toast";
 
 const OtpVerificationModal = ({

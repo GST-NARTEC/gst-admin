@@ -6,7 +6,7 @@ import {
   useGetCountriesQuery,
   useGetRegionsQuery,
   useGetCitiesQuery,
-} from "../../store/apis/endpoints/location";
+} from "../../../store/apis/endpoints/location";
 
 const LocationSelects = ({ control, isDisabled, errors }) => {
   const [selectedCountry, setSelectedCountry] = useState("");

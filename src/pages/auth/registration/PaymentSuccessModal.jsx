@@ -25,36 +25,38 @@ export default function PaymentSuccessModal({ isOpen, onClose }) {
             {/* Success Message */}
             <div className="space-y-3">
               <h2 className="text-2xl font-semibold text-gray-800">
-                Payment Successful!
+                Registration Successful!
               </h2>
               <p className="text-green-500 font-medium text-lg">
-                Thank you for your purchase!
+                Welcome to our membership program
               </p>
             </div>
 
             {/* Instructions */}
-            <p className="text-gray-600 max-w-md">
-              Please proceed to log in to your member portal using the link sent
-              to your registered email.
-            </p>
+            <div className="space-y-4 text-gray-600 max-w-md">
+              <p>
+                Your registration is complete! We've sent your member portal
+                credentials to your registered email address. Please check your
+                inbox to access your account.
+              </p>
+            </div>
 
             {/* Action Buttons */}
             <div className="flex flex-col w-full gap-3 mt-4">
               <Button
-                color="primary"
-                className="w-full"
+                className="w-full bg-navy-700 text-white"
                 size="lg"
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/login")}
               >
-                Go to Homepage
+                Go to Login
               </Button>
 
               <div className="flex items-center gap-2 justify-center text-sm">
-                <span className="text-gray-600">Need help?</span>
+                <span className="text-gray-600">Didn't receive the email?</span>
                 <Button
                   variant="light"
-                  className="text-blue-500 hover:text-blue-600 p-0"
-                  onClick={() => navigate("/support")}
+                  className="text-navy-700 hover:text-navy-800 p-0"
+                  // onClick={() => navigate("/support")}
                 >
                   Contact support
                 </Button>

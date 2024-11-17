@@ -20,7 +20,7 @@ import {
   useSendOtpMutation,
   useCreateUserMutation,
   useVerifyLicenseMutation,
-} from "../../store/apis/endpoints/User";
+} from "../../../store/apis/endpoints/User";
 import toast from "react-hot-toast";
 import { LoadScript } from "@react-google-maps/api";
 
@@ -441,7 +441,7 @@ const MembershipForm = () => {
               </div>
 
               {/* Location Row 1 */}
-              <LocationSelects 
+              <LocationSelects
                 control={control}
                 isDisabled={!isVerified || !isLicenseVerified}
                 errors={errors}

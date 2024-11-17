@@ -7,7 +7,7 @@ import { SiStencyl } from "react-icons/si";
 import { GiTakeMyMoney } from "react-icons/gi";
 import PaymentSuccessModal from "./PaymentSuccessModal";
 
-import { useCheckoutMutation } from "../../store/apis/endpoints/checkout";
+import { useCheckoutMutation } from "../../../store/apis/endpoints/checkout";
 import toast from "react-hot-toast";
 
 function Payment() {
@@ -25,7 +25,11 @@ function Payment() {
 
   // Get cart data from localStorage
   const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+  const cartSubtotal = parseFloat(localStorage.getItem("cartSubtotal") || "0");
+  const cartVAT = parseFloat(localStorage.getItem("cartVAT") || "0");
   const cartTotal = parseFloat(localStorage.getItem("cartTotal") || "0");
+
+  const VAT_RATE = 10; // 10% VAT
 
   const handlePaymentComplete = async () => {
     try {
@@ -40,12 +44,14 @@ function Payment() {
       const response = await checkout({
         userId: userData?.id,
         paymentType: paymentTypeMap[paymentMethod],
+        vat: VAT_RATE,
       });
 
       if (response.data) {
-        // Clear cart data after successful payment
         localStorage.removeItem("cartItems");
         localStorage.removeItem("cartTotal");
+        localStorage.removeItem("cartSubtotal");
+        localStorage.removeItem("cartVAT");
         localStorage.removeItem("userData");
         setShowSuccessModal(true);
       }
@@ -205,11 +211,14 @@ function Payment() {
           {/* Enhanced Payment Summary Section */}
           <div className="bg-white rounded-xl shadow-md p-6 h-fit">
             <h2 className="text-xl mb-6">Order Summary</h2>
-            
+
             {/* Cart Items List */}
             <div className="space-y-4 mb-6">
               {cartItems.map((item) => (
-                <div key={item.id} className="flex justify-between py-2 border-b">
+                <div
+                  key={item.id}
+                  className="flex justify-between py-2 border-b"
+                >
                   <div className="flex-1">
                     <h4 className="text-sm font-medium">{item.title}</h4>
                     <div className="text-xs text-gray-500 mt-1">
@@ -217,7 +226,9 @@ function Payment() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm">AED {item.price.toFixed(2)} × {item.quantity}</div>
+                    <div className="text-sm">
+                      AED {item.price.toFixed(2)} × {item.quantity}
+                    </div>
                     <div className="text-sm font-medium text-navy-600">
                       AED {(item.price * item.quantity).toFixed(2)}
                     </div>
@@ -230,30 +241,22 @@ function Payment() {
             <div className="space-y-3 py-4 border-t border-dashed">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Subtotal:</span>
+                <span>AED {cartSubtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">VAT (10%):</span>
+                <span>AED {cartVAT.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-lg font-bold mt-2">
+                <span>Total Amount:</span>
                 <span>AED {cartTotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Total Items:</span>
-                <span>{cartItems.reduce((sum, item) => sum + item.quantity, 0)} Barcodes</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">VAT (0%):</span>
-                <span>AED 0.00</span>
-              </div>
-            </div>
-
-            {/* Total Amount */}
-            <div className="flex justify-between py-4 border-t mt-4">
-              <span className="text-lg font-medium">Total Amount:</span>
-              <span className="text-lg font-bold text-navy-600">
-                AED {cartTotal.toFixed(2)}
-              </span>
             </div>
 
             {/* Edit Cart Link */}
             <div className="mt-4 text-center">
               <button
-                onClick={() => navigate('/register/barcodes')}
+                onClick={() => navigate("/register/barcodes")}
                 className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
               >
                 Edit Cart
