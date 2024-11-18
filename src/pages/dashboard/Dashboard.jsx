@@ -1,5 +1,6 @@
 import React from "react";
 import { Card } from "@nextui-org/react";
+import MainLayout from "../../layout/MainLayout";
 import {
   FaUsers,
   FaDollarSign,
@@ -87,45 +88,49 @@ function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-500">Welcome back, Admin</p>
-        </div>
+    <MainLayout>
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <p className="text-gray-500">Welcome back, Admin</p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, index) => (
-            <Card key={index} className="border-none">
-              <div className="flex items-center p-6">
-                <div
-                  className={`rounded-full p-3 ${getColorClasses(stat.color)}`}
-                >
-                  <div className="text-xl">{stat.icon}</div>
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">
-                    {stat.title}
-                  </p>
-                  <div className="flex items-baseline">
-                    <p className="text-2xl font-semibold text-gray-900">
-                      {stat.value}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {stats.map((stat, index) => (
+              <Card key={index} className="border-none">
+                <div className="flex items-center p-6">
+                  <div
+                    className={`rounded-full p-3 ${getColorClasses(
+                      stat.color
+                    )}`}
+                  >
+                    <div className="text-xl">{stat.icon}</div>
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-500">
+                      {stat.title}
                     </p>
-                    <span
-                      className={`ml-2 text-sm ${
-                        stat.isNegative ? "text-red-500" : "text-green-500"
-                      }`}
-                    >
-                      {stat.change}
-                    </span>
+                    <div className="flex items-baseline">
+                      <p className="text-2xl font-semibold text-gray-900">
+                        {stat.value}
+                      </p>
+                      <span
+                        className={`ml-2 text-sm ${
+                          stat.isNegative ? "text-red-500" : "text-green-500"
+                        }`}
+                      >
+                        {stat.change}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </MainLayout>
   );
 }
 

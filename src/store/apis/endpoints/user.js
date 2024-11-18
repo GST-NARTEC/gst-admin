@@ -2,6 +2,14 @@ import { apiSlice } from "../apiSlice";
 
 const user = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    getUser: builder.query({
+      query: (params) => ({
+        url: "/user/v1/search",
+        method: "GET",
+        params,
+      }),
+    }),
+
     sendOtp: builder.mutation({
       query: (data) => ({
         url: "/user/v1/send-otp",
@@ -41,4 +49,5 @@ export const {
   useVerifyOtpMutation,
   useCreateUserMutation,
   useVerifyLicenseMutation,
+  useGetUserQuery,
 } = user;

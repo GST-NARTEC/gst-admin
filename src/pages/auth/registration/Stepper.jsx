@@ -19,9 +19,9 @@ function Stepper() {
 
   return (
     <div className="bg-navy-600 min-h-screen">
-      <Card className="px-4 pt-8 container mx-auto rounded-md shadow-lg bg-white">
+      <Card className="px-4 pt-8 container mx-auto rounded-md shadow-lg bg-white max-w-5xl">
         <div className="relative">
-          <div className="absolute left-0 -top-3">
+          <div className="absolute right-0 -top-3">
             <div className="">
               <img src={Images.Logo} alt="logo" className="w-20" />
             </div>

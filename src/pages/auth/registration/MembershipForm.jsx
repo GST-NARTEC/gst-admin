@@ -14,6 +14,8 @@ import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import LocationPicker from "./LocationPicker";
 import LocationSelects from "./LocationSelects";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 // api
 import {
@@ -23,6 +25,7 @@ import {
 } from "../../../store/apis/endpoints/User";
 import toast from "react-hot-toast";
 import { LoadScript } from "@react-google-maps/api";
+import LicenseRegistrationModal from "./LicenseRegistrationModal";
 
 const MembershipForm = () => {
   const navigate = useNavigate();
@@ -126,6 +129,7 @@ const MembershipForm = () => {
   const [isLicenseVerified, setIsLicenseVerified] = useState(false);
   const [showLicenseVerifyButton, setShowLicenseVerifyButton] = useState(false);
   const [isLicenseInvalid, setIsLicenseInvalid] = useState(false);
+  const [showLicenseRegModal, setShowLicenseRegModal] = useState(false);
 
   const handleLicenseVerify = async () => {
     const licenseNo = watch("companyLicenseNo");
@@ -321,17 +325,25 @@ const MembershipForm = () => {
                     } rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed`}
                     placeholder="Enter license number"
                   />
-                  {showLicenseVerifyButton &&
-                    !isLicenseVerified &&
-                    !isLicenseInvalid && (
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-2">
+                    {showLicenseVerifyButton && !isLicenseVerified && !isLicenseInvalid && (
                       <button
                         onClick={handleLicenseVerify}
                         disabled={isVerifyingLicense}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 bg-navy-600 text-white rounded-md text-sm hover:bg-navy-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-3 py-1 bg-navy-600 text-white rounded-md text-sm hover:bg-navy-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {isVerifyingLicense ? "Verifying..." : "Verify"}
                       </button>
                     )}
+                    {isLicenseInvalid && (
+                      <button
+                        onClick={() => setShowLicenseRegModal(true)}
+                        className="px-3 py-1 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 transition-colors"
+                      >
+                        Register License
+                      </button>
+                    )}
+                  </div>
                 </div>
                 {errors.companyLicenseNo && (
                   <p className="text-red-500 text-sm mt-1">
@@ -340,7 +352,7 @@ const MembershipForm = () => {
                 )}
                 {isLicenseInvalid && (
                   <p className="text-red-500 text-sm mt-1">
-                    Invalid license number
+                    Invalid license number. You can register a new license.
                   </p>
                 )}
               </div>
@@ -398,17 +410,23 @@ const MembershipForm = () => {
                   Landline
                   <span className="text-red-500 ml-1">*</span>
                 </label>
-                <div className="flex">
-                  <input
-                    type="tel"
-                    disabled={!isVerified || !isLicenseVerified}
-                    {...register("landline", {
-                      required: "Landline number is required",
-                    })}
-                    className="w-full px-4 py-2.5 border border-gray-400 rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
-                    placeholder="Enter landline number"
-                  />
-                </div>
+                <Controller
+                  name="landline"
+                  control={control}
+                  rules={{ required: "Landline number is required" }}
+                  render={({ field: { onChange, value } }) => (
+                    <PhoneInput
+                      country={"sa"}
+                      value={value}
+                      onChange={onChange}
+                      disabled={!isVerified || !isLicenseVerified}
+                      inputClass="!w-full !h-[45px] !text-base  !border-gray-400 !rounded-lg  focus:!ring-navy-600  !bg-gray-50 focus:!bg-white disabled:!opacity-50 disabled:!cursor-not-allowed"
+                      containerClass="!w-full"
+                      buttonClass={`!border-gray-400  !border !rounded-l-lg !h-[45px] !bg-gray-50 `}
+                      dropdownClass="!bg-white !z-10"
+                    />
+                  )}
+                />
                 {errors.landline && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.landline.message}
@@ -422,17 +440,23 @@ const MembershipForm = () => {
                   Mobile Number
                   <span className="text-red-500 ml-1">*</span>
                 </label>
-                <div className="flex">
-                  <input
-                    type="tel"
-                    disabled={!isVerified || !isLicenseVerified}
-                    {...register("mobileNumber", {
-                      required: "Mobile number is required",
-                    })}
-                    className="w-full px-4 py-2.5 border border-gray-400 rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
-                    placeholder="Enter mobile number"
-                  />
-                </div>
+                <Controller
+                  name="mobileNumber"
+                  control={control}
+                  rules={{ required: "Mobile number is required" }}
+                  render={({ field: { onChange, value } }) => (
+                    <PhoneInput
+                      country={"sa"}
+                      value={value}
+                      onChange={onChange}
+                      disabled={!isVerified || !isLicenseVerified}
+                      inputClass="!w-full !h-[45px] !text-base !border-gray-400 !rounded-lg focus:!ring-navy-600  !bg-gray-50 focus:!bg-white disabled:!opacity-50 disabled:!cursor-not-allowed"
+                      containerClass="!w-full"
+                      buttonClass={`!border-gray-400 !border !rounded-l-lg !h-[45px] !bg-gray-50`}
+                      dropdownClass="!bg-white !z-10"
+                    />
+                  )}
+                />
                 {errors.mobileNumber && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.mobileNumber.message}
@@ -480,7 +504,7 @@ const MembershipForm = () => {
                   googleMapsApiKey={googleMapsApiKey}
                   libraries={["places"]}
                   loadingElement={
-                    <div className=" flex items-center justify-center mx-auto animate-spin rounded-full h-12 w-12 border-b-2 border-navy-600      "></div>
+                    <div className="flex items-center justify-center mx-auto animate-spin rounded-full h-12 w-12 border-b-2 border-navy-600" />
                   }
                 >
                   <LocationPicker
@@ -527,6 +551,11 @@ const MembershipForm = () => {
         onVerify={handleOtpVerify}
         email={email}
         emailData={emailData}
+      />
+
+      <LicenseRegistrationModal 
+        isOpen={showLicenseRegModal} 
+        onClose={() => setShowLicenseRegModal(false)} 
       />
     </>
   );

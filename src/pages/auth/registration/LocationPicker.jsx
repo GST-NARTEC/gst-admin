@@ -118,8 +118,8 @@ const LocationPicker = ({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="relative h-[400px] w-full rounded-xl overflow-hidden shadow-lg border border-gray-200">
+    <div className="flex gap-6">
+      <div className="flex-1 h-[400px] rounded-xl overflow-hidden shadow-lg border border-gray-200">
         <GoogleMap
           mapContainerStyle={{ height: "100%", width: "100%" }}
           center={
@@ -140,7 +140,7 @@ const LocationPicker = ({
             <input
               type="text"
               placeholder="Search for a location"
-              className="absolute left-1/2 -translate-x-1/2 top-4 w-[320px] h-[40px] px-4 py-2 rounded-lg shadow-lg border border-gray-200 outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition-all bg-white/95 backdrop-blur-sm"
+              className="absolute left-1/2 -translate-x-1/2 top-16 w-[320px] h-[40px] px-4 py-2 rounded-lg shadow-lg border border-gray-200 outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition-all bg-white/95 backdrop-blur-sm"
             />
           </StandaloneSearchBox>
 
@@ -161,44 +161,42 @@ const LocationPicker = ({
         </GoogleMap>
       </div>
 
-      <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 space-y-5">
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Latitude
-            </label>
-            <input
-              type="text"
-              value={mapStates.selectedLocation?.latitude || ""}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:bg-white transition-colors"
-              placeholder="Latitude"
-              readOnly
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Longitude
-            </label>
-            <input
-              type="text"
-              value={mapStates.selectedLocation?.longitude || ""}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:bg-white transition-colors"
-              placeholder="Longitude"
-              readOnly
-            />
-          </div>
+      <div className="w-[400px] bg-white rounded-xl px- space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Latitude
+          </label>
+          <input
+            type="text"
+            value={mapStates.selectedLocation?.latitude || ""}
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50 focus:bg-white transition-colors"
+            placeholder="24.7037952"
+            readOnly
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Longitude
+          </label>
+          <input
+            type="text"
+            value={mapStates.selectedLocation?.longitude || ""}
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50 focus:bg-white transition-colors"
+            placeholder="46.7140608"
+            readOnly
+          />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Address
           </label>
-          <input
-            type="text"
+          <textarea
             value={mapStates.selectedLocation?.address || ""}
             disabled={isDisabled}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-            placeholder="Enter street address"
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all h-24 resize-none"
+            placeholder="Saudi Arabia, 12224"
             readOnly
           />
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}

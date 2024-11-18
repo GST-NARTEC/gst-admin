@@ -10,7 +10,12 @@ export default {
   theme: {
     extend: {
       colors: {
+        primary: "#1B365D",
+        secondary: "#335082",
+        tertiary: "#254170",
         navy: {
+          400: "#335082",
+          500: "#254170",
           600: "#1B365D",
           700: "#152A4A",
         },
@@ -18,5 +23,5 @@ export default {
     },
   },
   darkMode: "class",
-  plugins: [nextui()],
+  plugins: [nextui(), require("tailwind-scrollbar")({ nocompatible: true })],
 };
