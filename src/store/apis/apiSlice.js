@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://gs1ksa.org:9025/api",
+    baseUrl: "https://gs1ksa.org:9021/api",
     // baseUrl: "http://localhost:3000/api",
     // both url is above dev and testing
     // credentials: "include",
