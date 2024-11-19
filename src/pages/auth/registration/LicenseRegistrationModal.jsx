@@ -57,7 +57,10 @@ const LicenseRegistrationModal = ({ isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalContent>
-        <ModalHeader>Register New License</ModalHeader>
+        <ModalHeader className="flex flex-col gap-1">
+          <h3 className="text-xl font-semibold">Upload your company License Document</h3>
+          <p className="text-sm text-gray-500">Please provide your license details below</p>
+        </ModalHeader>
         <ModalBody>
           <div className="space-y-6">
             <Input
