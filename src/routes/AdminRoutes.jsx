@@ -7,9 +7,12 @@ import Tax from "../pages/settings/Tax";
 import Categories from "../pages/categories/Categories";
 import Products from "../pages/products/Products";
 import AddProduct from "../pages/products/AddProduct";
-import Members from "../pages/members/Members";
 import EditProduct from "../pages/products/EditProduct";
 import NotFound from "../pages/NotFound";
+
+import Members from "../pages/members/Members";
+import ViewMember from "../pages/members/ViewMember";
+
 function AdminRoutes() {
   return (
     <Routes>
@@ -27,6 +30,7 @@ function AdminRoutes() {
       <Route path="/admin/edit-product/:id" element={<EditProduct />} />
 
       <Route path="/admin/members" element={<Members />} />
+      <Route path="/admin/view-member/:id" element={<ViewMember />} />
 
       <Route path="/admin/*" element={<NotFound />} />
     </Routes>

@@ -14,7 +14,7 @@ import {
 function Settings() {
   const navigate = useNavigate();
   const location = useLocation();
-  const isMainSettingsPage = location.pathname === "/settings";
+  const isMainSettingsPage = location.pathname === "/admin/settings";
 
   const settingsCards = [
     {

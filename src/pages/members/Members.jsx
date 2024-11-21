@@ -17,7 +17,21 @@ import {
   Select,
   SelectItem,
 } from "@nextui-org/react";
-import { FaSearch, FaPlus, FaEllipsisV, FaFilter, FaEye, FaEdit, FaTrash, FaUserCog, FaCheckCircle, FaSync, FaUserPlus, FaSignInAlt, FaBan } from "react-icons/fa";
+import {
+  FaSearch,
+  FaPlus,
+  FaEllipsisV,
+  FaFilter,
+  FaEye,
+  FaEdit,
+  FaTrash,
+  FaUserCog,
+  FaCheckCircle,
+  FaSync,
+  FaUserPlus,
+  FaSignInAlt,
+  FaBan,
+} from "react-icons/fa";
 import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import { useGetUserQuery } from "../../store/apis/endpoints/user";
 import { useDebounce } from "../../hooks/useDebounce";
@@ -46,7 +60,7 @@ function Members() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState("10");
-  
+
   // Debounce search term
   const debouncedSearch = useDebounce(search, 500);
 
@@ -69,7 +83,7 @@ function Members() {
   };
 
   const handleView = (member) => {
-    navigate(`/view-member/${member.id}`);
+    navigate(`/admin/view-member/${member.id}`);
   };
 
   const renderCell = (member, columnKey) => {
@@ -86,7 +100,7 @@ function Members() {
                 <FaEllipsisV />
               </Button>
             </DropdownTrigger>
-            <DropdownMenu 
+            <DropdownMenu
               aria-label="Member Actions"
               className="text-default-500"
             >
@@ -164,8 +178,8 @@ function Members() {
           >
             Filters
           </Button> */}
-          <Button 
-            className="bg-navy-700 text-white" 
+          <Button
+            className="bg-navy-700 text-white"
             startContent={<FaPlus />}
             // onClick={() => navigate("/add-member")}
             onPress={() => window.open("/register/membership-form", "_blank")}
@@ -182,11 +196,13 @@ function Members() {
       <div className="flex justify-between items-center px-2 py-2">
         <div className="flex items-center gap-4">
           <div className="flex gap-2 items-center">
-            <span className="text-default-400 text-sm w-48">Rows per page:</span>
+            <span className="text-default-400 text-sm w-48">
+              Rows per page:
+            </span>
             <Select
               size="sm"
               defaultSelectedKeys={[limit]}
-            //   className="min-w-[100px]"
+              //   className="min-w-[100px]"
               onChange={(e) => setLimit(e.target.value)}
             >
               {ROWS_PER_PAGE.map((item) => (
@@ -232,7 +248,7 @@ function Members() {
               <TableColumn key={column.uid}>{column.name}</TableColumn>
             )}
           </TableHeader>
-          <TableBody 
+          <TableBody
             items={members}
             isLoading={isLoading}
             loadingContent={<Spinner className="text-navy-700" />}
