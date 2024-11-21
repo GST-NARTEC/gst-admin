@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import MainLayout from "../../layout/MainLayout";
+import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import {
   Input,
   Select,
@@ -14,9 +14,9 @@ import {
 } from "@nextui-org/react";
 import { FaArrowLeft, FaUpload } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
-import { 
+import {
   useUpdateProductMutation,
-  useGetProductByIdQuery 
+  useGetProductByIdQuery,
 } from "../../store/apis/endpoints/products";
 import { useGetCategoriesQuery } from "../../store/apis/endpoints/categories";
 import toast from "react-hot-toast";
@@ -24,9 +24,13 @@ import toast from "react-hot-toast";
 function EditProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
-  
-  const { data: productData, isLoading: isProductLoading } = useGetProductByIdQuery(id);
-  const { data: categoriesData } = useGetCategoriesQuery({ page: 1, limit: 100 });
+
+  const { data: productData, isLoading: isProductLoading } =
+    useGetProductByIdQuery(id);
+  const { data: categoriesData } = useGetCategoriesQuery({
+    page: 1,
+    limit: 100,
+  });
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
 
   const [formData, setFormData] = useState({
@@ -53,9 +57,9 @@ function EditProduct() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        image: file
+        image: file,
       }));
     }
   };
@@ -108,9 +112,7 @@ function EditProduct() {
       <Card className="container mx-auto">
         <CardBody className="p-6">
           <h1 className="text-2xl font-bold mb-4">Edit Product</h1>
-          <p className="text-gray-600 mb-6">
-            Update product information
-          </p>
+          <p className="text-gray-600 mb-6">Update product information</p>
 
           <div className="grid grid-cols-3 gap-6">
             <div className="col-span-2 space-y-4">
@@ -127,7 +129,9 @@ function EditProduct() {
                 <Select
                   label="Category"
                   placeholder="Select a category"
-                  selectedKeys={formData.categoryId ? [formData.categoryId] : []}
+                  selectedKeys={
+                    formData.categoryId ? [formData.categoryId] : []
+                  }
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
@@ -178,7 +182,9 @@ function EditProduct() {
                 <h2 className="text-lg font-semibold mb-2">Image</h2>
                 <Card
                   isPressable
-                  onPress={() => document.getElementById("image-upload").click()}
+                  onPress={() =>
+                    document.getElementById("image-upload").click()
+                  }
                   className="w-full aspect-square flex items-center justify-center border-2 border-dashed border-gray-300 cursor-pointer overflow-hidden"
                 >
                   {formData.image ? (

@@ -61,12 +61,9 @@ function ViewCategory({ isOpen, onClose, category }) {
   const handleSave = async () => {
     try {
       const formDataToSend = new FormData();
-
-      if (formData.name !== category.name) {
-        formDataToSend.append("name", formData.name);
-      }
+      formDataToSend.append("name", formData.name);
       if (formData.newImage) {
-        formDataToSend.append("imag", formData.newImage);
+        formDataToSend.append("image", formData.newImage);
       }
 
       const payload = {

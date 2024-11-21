@@ -1,9 +1,11 @@
-import AppRoutes from "./routes/Routes"
+import AdminRoutes from "./routes/AdminRoutes";
+import WebsiteRoutes from "./routes/WebsiteRoutes";
 
 export default function App() {
   return (
     <div>
-      <AppRoutes />
+      <AdminRoutes />
+      <WebsiteRoutes />
     </div>
   );
 }

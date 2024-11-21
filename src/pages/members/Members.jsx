@@ -18,7 +18,7 @@ import {
   SelectItem,
 } from "@nextui-org/react";
 import { FaSearch, FaPlus, FaEllipsisV, FaFilter, FaEye, FaEdit, FaTrash, FaUserCog, FaCheckCircle, FaSync, FaUserPlus, FaSignInAlt, FaBan } from "react-icons/fa";
-import MainLayout from "../../layout/MainLayout";
+import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import { useGetUserQuery } from "../../store/apis/endpoints/user";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useNavigate } from "react-router-dom";

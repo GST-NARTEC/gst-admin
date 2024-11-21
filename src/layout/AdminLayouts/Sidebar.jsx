@@ -23,7 +23,7 @@ import {
   FaCity,
 } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
-import { Images } from "../assets";
+import { Images } from "../../assets";
 import { MdEmail } from "react-icons/md";
 
 function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
@@ -31,8 +31,8 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
   const [openDropdowns, setOpenDropdowns] = useState({});
 
   const menuItems = [
-    { path: "/", icon: <FaChartLine />, label: "Dashboard" },
-    { path: "/members", icon: <FaUsers />, label: "Members" },
+    { path: "/admin/dashboard", icon: <FaChartLine />, label: "Dashboard" },
+    { path: "/admin/members", icon: <FaUsers />, label: "Members" },
     {
       label: "Master Data",
       icon: <FaDatabase />,
@@ -40,40 +40,60 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
       subItems: [
         { path: "/master/users", icon: <FaUsers />, label: "Users" },
         {
-          path: "/master/email-settings",
+          path: "/admin/master/email-settings",
           icon: <MdEmail />,
           label: "Email Settings",
         },
-        { path: "/master/roles", icon: <FaUserShield />, label: "Roles" },
-        { path: "/master/units", icon: <FaRuler />, label: "Units" },
-        { path: "/master/language", icon: <FaLanguage />, label: "Language" },
-        { path: "/master/documents", icon: <FaFile />, label: "Documents" },
+        { path: "/admin/master/roles", icon: <FaUserShield />, label: "Roles" },
+        { path: "/admin/master/units", icon: <FaRuler />, label: "Units" },
         {
-          path: "/master/product-packaging",
+          path: "/admin/master/language",
+          icon: <FaLanguage />,
+          label: "Language",
+        },
+        {
+          path: "/admin/master/documents",
+          icon: <FaFile />,
+          label: "Documents",
+        },
+        {
+          path: "/admin/master/product-packaging",
           icon: <FaBox />,
           label: "Product Packaging",
         },
         {
-          path: "/master/other-products",
+          path: "/admin/master/other-products",
           icon: <FaBoxes />,
           label: "Other Products",
         },
-        { path: "/master/gcp-type", icon: <FaCloud />, label: "Gcp Type" },
         {
-          path: "/master/country-of-sales",
+          path: "/admin/master/gcp-type",
+          icon: <FaCloud />,
+          label: "Gcp Type",
+        },
+        {
+          path: "/admin/master/country-of-sales",
           icon: <FaGlobe />,
           label: "Country Of Sales",
         },
-        { path: "/master/hs-code", icon: <FaBarcode />, label: "Hs Code" },
-        { path: "/master/unspcs", icon: <FaUncharted />, label: "UNSPCS" },
-        { path: "/master/cities", icon: <FaCity />, label: "Cities" },
+        {
+          path: "/admin/master/hs-code",
+          icon: <FaBarcode />,
+          label: "Hs Code",
+        },
+        {
+          path: "/admin/master/unspcs",
+          icon: <FaUncharted />,
+          label: "UNSPCS",
+        },
+        { path: "/admin/master/cities", icon: <FaCity />, label: "Cities" },
       ],
     },
-    { path: "/categories", icon: <FaList />, label: "Categories" },
-    { path: "/products", icon: <FaBox />, label: "Products" },
-    { path: "/languages", icon: <FaLanguage />, label: "Languages" },
-    { path: "/roles", icon: <FaUserShield />, label: "User Roles" },
-    { path: "/settings", icon: <FaCog />, label: "Settings" },
+    { path: "/admin/categories", icon: <FaList />, label: "Categories" },
+    { path: "/admin/products", icon: <FaBox />, label: "Products" },
+    { path: "/admin/languages", icon: <FaLanguage />, label: "Languages" },
+    { path: "/admin/roles", icon: <FaUserShield />, label: "User Roles" },
+    { path: "/admin/settings", icon: <FaCog />, label: "Settings" },
   ];
 
   // Helper to check if current path belongs to a dropdown's subitems

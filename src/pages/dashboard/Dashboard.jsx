@@ -1,6 +1,6 @@
 import React from "react";
 import { Card } from "@nextui-org/react";
-import MainLayout from "../../layout/MainLayout";
+import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import {
   FaUsers,
   FaDollarSign,

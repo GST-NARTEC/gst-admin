@@ -1,5 +1,5 @@
 import React from "react";
-import MainLayout from "../../layout/MainLayout";
+import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   FaMoneyBill,
