@@ -46,7 +46,7 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
         },
         { path: "/master/roles", icon: <FaUserShield />, label: "Roles" },
         { path: "/master/units", icon: <FaRuler />, label: "Units" },
-        { path: "/master/Language/Dynamic", icon: <FaLanguage />, label: "Language" },
+        { path: "/Language/Dynamic", icon: <FaLanguage />, label: "Language" },
         { path: "/master/documents", icon: <FaFile />, label: "Documents" },
         {
           path: "/master/product-packaging",
