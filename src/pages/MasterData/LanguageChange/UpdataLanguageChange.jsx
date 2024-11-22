@@ -3,10 +3,7 @@ import {
   Modal,
   ModalContent,
   ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Input,
+  ModalBody,  ModalFooter, Button, Input,
 } from "@nextui-org/react";
 import toast from "react-hot-toast";
 import { useUpdateLanguageMutation } from "../../../store/apis/endpoints/Language";
