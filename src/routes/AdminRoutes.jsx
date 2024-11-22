@@ -9,9 +9,9 @@ import Products from "../pages/products/Products";
 import AddProduct from "../pages/products/AddProduct";
 import EditProduct from "../pages/products/EditProduct";
 import NotFound from "../pages/NotFound";
-
 import Members from "../pages/members/Members";
 import ViewMember from "../pages/members/ViewMember";
+import LaanguageChange from "../pages/MasterData/LanguageChange/LaanguageChange"
 
 function AdminRoutes() {
   return (
@@ -24,7 +24,7 @@ function AdminRoutes() {
         {/* Add other settings routes here */}
       </Route>
       <Route path="/admin/categories" element={<Categories />} />
-
+      <Route path="/adminLanguage/Dynamic" element={<LaanguageChange />} />
       <Route path="/admin/products" element={<Products />} />
       <Route path="/admin/add-product" element={<AddProduct />} />
       <Route path="/admin/edit-product/:id" element={<EditProduct />} />

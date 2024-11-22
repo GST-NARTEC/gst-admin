@@ -1,6 +1,7 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import { baseurl } from './store/apis/apiSlice'
 
 const storedLanguage = sessionStorage.getItem('selectedLanguaged')
 const initialLanguage = storedLanguage || 'ar'
@@ -13,7 +14,7 @@ const dynamicTranslations = {
 // Function to fetch translations
 const fetchTranslations = async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/masterdata/v1/translations')
+    const response = await fetch( baseurl + '/masterdata/v1/translations')
     const data = await response.json()
     
     if (data) {

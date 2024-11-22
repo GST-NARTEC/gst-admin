@@ -33,13 +33,20 @@ const LanguageApi = apiSlice.injectEndpoints({
     }),
 
     // Delete Language
-    deleteLanguage: builder.mutation({
-      query: id => ({
-        url: `/translations/v1/${id}`,
-        method: 'DELETE'
+    // deleteLanguage: builder.mutation({
+    //   query: id => ({
+    //     url: `/masterdata/v1/translations`,
+    //     method: 'Delete'
+    //   }),
+    //   invalidatesTags: ['Language']
+    // }),
+    getLanguageChange: builder.query({
+      query: params => ({
+        url: '/masterdata/v1/translations',
+        method: 'GET',
       }),
-      invalidatesTags: ['Language']
-    })
+      providesTags: ['Language']
+    }),
   })
 })
 
@@ -47,5 +54,6 @@ export const {
   useGetLanguageQuery,
   useCreateLanguageMutation,
   useUpdateLanguageMutation,
-  useDeleteLanguageMutation
+  // useDeleteLanguageMutation,
+  useGetLanguageChangeQuery
 } = LanguageApi

@@ -14,11 +14,11 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { FaSearch, FaPlus } from "react-icons/fa";
-import MainLayout from "../../../layout/MainLayout";
 import { useGetLanguageQuery } from "../../../store/apis/endpoints/Language";
 import AddLanguageChange from "./AddLanguageChange";
 import { MdModeEditOutline } from "react-icons/md";
 import UpdataLanguageChange from "./UpdataLanguageChange";
+import MainLayout from "../../../layout/AdminLayouts/MainLayout";
 
 function LaanguageChange() {
   const [page, setPage] = useState(1);
@@ -66,15 +66,15 @@ function LaanguageChange() {
   const topContent = useMemo(
     () => (
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between items-center">
-          <Input
+        <div className="flex justify-end items-end">
+          {/* <Input
             isClearable
             value={search}
             onValueChange={setSearch}
             className="w-full sm:max-w-[44%]"
             placeholder="Search by Language name..."
             startContent={<FaSearch className="text-default-300" />}
-          />
+          /> */}
           <Button
             className="bg-navy-600 text-white"
             startContent={<FaPlus />}

@@ -4,17 +4,21 @@ import engflage from "./assets/Images/Flage.png"
 import arabicflage from "./assets/Images/Arabflage.jpg"
 // import { useLanguage } from './Contexts/LanguageContext';
 import { IoMdArrowDropdown } from 'react-icons/io';
+import { selecdirection, seleclanguage, setLanguage ,setdirection} from "./store/slice/Lanugagereducer";
+import { useSelector,useDispatch} from 'react-redux';
 
 const LanguageSwitcher = () => {
+     const initialLanguage = useSelector(seleclanguage);
+     const direction = useSelector(selecdirection);
+     const dispatch = useDispatch()
+     
+
     const { i18n } = useTranslation();
-    // const { selectedLanguage, setSelectedLanguage } = useLanguage();
     const changeLanguage = (language) => {
         i18n.changeLanguage(language);
-        // setSelectedLanguage(language);
+        dispatch(setLanguage(language));
+        dispatch(setdirection(language === "ar" ? "directionrtl" : "directionltr"));
     };
-    const storedLanguage = sessionStorage.getItem('selectedLanguaged');
-    const initialLanguage = storedLanguage || 'ar'; 
-    sessionStorage.setItem('selectedLanguaged', initialLanguage);
     const [isActive, setIsActive] = useState(false);
     const [currentOption, setCurrentOption] = useState(initialLanguage);
 
@@ -26,7 +30,6 @@ const LanguageSwitcher = () => {
         setCurrentOption(option);
         setIsActive(false);
         changeLanguage(option);
-        sessionStorage.setItem('selectedLanguaged', option);
     };
 
     return (

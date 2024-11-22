@@ -19,6 +19,9 @@ import { useNavigate } from "react-router-dom";
 import { useGetProductsQuery } from "../../store/apis/endpoints/products";
 import { useDebounce } from "../../hooks/useDebounce";
 import DeleteProduct from "../../components/products/DeleteProduct";
+import { useSelector } from "react-redux";
+import { selecdirection, seleclanguage } from "../../store/slice/Lanugagereducer";
+import i18n from "../../i18n";
 
 const TABLE_COLUMNS = [
   { name: "NAME", uid: "title" },
@@ -29,6 +32,9 @@ const TABLE_COLUMNS = [
 ];
 
 function Products() {
+   const direction = useSelector(selecdirection);
+     const language = useSelector(seleclanguage);
+
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
@@ -152,7 +158,7 @@ function Products() {
   return (
     <MainLayout>
       <div className="p-6">
-        <h1 className="text-2xl font-bold pb-4">Products</h1>
+        <h1 className={`text-2xl font-bold pb-4 ${i18n.language===language ? direction :'' }`}>Products</h1>
         <Table
           topContent={topContent}
           bottomContent={bottomContent}

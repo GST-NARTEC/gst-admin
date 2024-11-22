@@ -16,3 +16,10 @@
         display: none;
     }
 }
+.directionltr{
+    direction: ltr;
+}
+
+.directionrtl {
+    direction:rtl;
+}
