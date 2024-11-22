@@ -12,11 +12,16 @@ import {
   Switch,
   Textarea,
 } from "@nextui-org/react";
+import { toast } from "react-hot-toast";
+
+import { useCreateTaxMutation } from "../../../store/apis/endpoints/tax";
 
 function AddTaxModal({ isOpen, onOpenChange }) {
+  const [createTax, { isLoading }] = useCreateTaxMutation();
+
   const [formData, setFormData] = useState({
     name: "",
-    type: "percentage",
+    type: "PERCENTAGE",
     value: "",
     description: "",
     taxId: "",
@@ -30,9 +35,31 @@ function AddTaxModal({ isOpen, onOpenChange }) {
     }));
   };
 
-  const handleSubmit = () => {
-    console.log("Form submitted:", formData);
-    onOpenChange(false);
+  const handleSubmit = async () => {
+    try {
+      // Validate required fields
+      if (!formData.name || !formData.value || !formData.type) {
+        toast.error("Please fill in all required fields");
+        return;
+      }
+
+      // Prepare data according to the model structure
+      const taxData = {
+        name: formData.name,
+        description: formData.description || null,
+        value: parseFloat(formData.value), // Convert string to float
+        type: formData.type,
+        taxId: formData.taxId || null,
+        isActive: formData.isActive,
+      };
+
+      await createTax(taxData).unwrap();
+      toast.success("Tax created successfully");
+      onOpenChange(false); // Close modal
+    } catch (error) {
+      toast.error(error.data?.message || "Failed to create tax");
+      console.error("Tax creation failed:", error);
+    }
   };
 
   return (
@@ -76,8 +103,8 @@ function AddTaxModal({ isOpen, onOpenChange }) {
                       trigger: "bg-gray-50",
                     }}
                   >
-                    <SelectItem key="percentage">Percentage</SelectItem>
-                    <SelectItem key="fixed">Fixed</SelectItem>
+                    <SelectItem key="PERCENTAGE">Percentage</SelectItem>
+                    <SelectItem key="FIXED">Fixed</SelectItem>
                   </Select>
                   <Input
                     label="Value"
@@ -142,6 +169,7 @@ function AddTaxModal({ isOpen, onOpenChange }) {
                 Cancel
               </Button>
               <Button
+                isLoading={isLoading}
                 onPress={handleSubmit}
                 className="bg-navy-600 text-white hover:bg-navy-700"
               >

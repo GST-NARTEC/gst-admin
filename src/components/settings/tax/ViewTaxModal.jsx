@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   ModalContent,
@@ -12,17 +12,39 @@ import {
   Switch,
   Textarea,
 } from "@nextui-org/react";
+import {
+  useUpdateTaxMutation,
+  useDeleteTaxMutation,
+} from "../../../store/apis/endpoints/tax";
+import { toast } from "react-hot-toast";
 
-function ViewTaxModal({ isOpen, onOpenChange }) {
+function ViewTaxModal({ isOpen, onOpenChange, tax }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [updateTax, { isLoading: isUpdating }] = useUpdateTaxMutation();
+  const [deleteTax, { isLoading: isDeleting }] = useDeleteTaxMutation();
+
   const [formData, setFormData] = useState({
-    name: "VAT",
-    type: "percentage",
-    value: "5",
-    taxId: "923456789012345",
-    description: "Goods and Services",
+    name: "",
+    type: "PERCENTAGE",
+    value: "",
+    taxId: "",
+    description: "",
     isActive: true,
   });
+
+  // Update formData when tax prop changes
+  useEffect(() => {
+    if (tax) {
+      setFormData({
+        name: tax.name,
+        type: tax.type,
+        value: tax.value.toString(),
+        taxId: tax.taxId,
+        description: tax.description,
+        isActive: tax.isActive,
+      });
+    }
+  }, [tax]);
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({
@@ -31,6 +53,35 @@ function ViewTaxModal({ isOpen, onOpenChange }) {
     }));
   };
 
+  const handleSave = async () => {
+    try {
+      await updateTax({
+        id: tax.id,
+        data: {
+          ...formData,
+          value: parseFloat(formData.value),
+        },
+      }).unwrap();
+
+      toast.success("Tax updated successfully");
+      setIsEditing(false);
+      onOpenChange(false);
+    } catch (error) {
+      toast.error(error.data?.message || "Failed to update tax");
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteTax(tax.id).unwrap();
+      toast.success("Tax deleted successfully");
+      onOpenChange(false);
+    } catch (error) {
+      toast.error(error.data?.message || "Failed to delete tax");
+    }
+  };
+
+  // Update the Select component options
   return (
     <Modal
       isOpen={isOpen}
@@ -73,8 +124,8 @@ function ViewTaxModal({ isOpen, onOpenChange }) {
                       trigger: "bg-gray-50",
                     }}
                   >
-                    <SelectItem key="percentage">Percentage</SelectItem>
-                    <SelectItem key="fixed">Fixed</SelectItem>
+                    <SelectItem key="PERCENTAGE">Percentage</SelectItem>
+                    <SelectItem key="FIXED">Fixed</SelectItem>
                   </Select>
                   <Input
                     label="Value"
@@ -135,19 +186,13 @@ function ViewTaxModal({ isOpen, onOpenChange }) {
               {isEditing ? (
                 <>
                   <Button
+                    isLoading={isUpdating}
                     className="bg-navy-600 text-white hover:bg-navy-700"
-                    onPress={() => {
-                      console.log("Saving changes:", formData);
-                      setIsEditing(false);
-                    }}
+                    onPress={handleSave}
                   >
                     Save Changes
                   </Button>
-                  <Button
-                    className="text-gray-600 hover:bg-gray-100"
-                    variant="light"
-                    onPress={() => setIsEditing(false)}
-                  >
+                  <Button variant="light" onPress={() => setIsEditing(false)}>
                     Cancel
                   </Button>
                 </>
@@ -160,19 +205,13 @@ function ViewTaxModal({ isOpen, onOpenChange }) {
                     Edit
                   </Button>
                   <Button
+                    isLoading={isDeleting}
                     className="bg-red-500 text-white hover:bg-red-600"
-                    onPress={() => {
-                      console.log("Deleting tax");
-                      onClose();
-                    }}
+                    onPress={handleDelete}
                   >
                     Delete
                   </Button>
-                  <Button
-                    className="text-gray-600 hover:bg-gray-100"
-                    variant="light"
-                    onPress={onClose}
-                  >
+                  <Button variant="light" onPress={onClose}>
                     Close
                   </Button>
                 </>

@@ -1,5 +1,5 @@
 import React from "react";
-import MainLayout from "../../layout/MainLayout";
+import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   FaMoneyBill,
@@ -14,7 +14,7 @@ import {
 function Settings() {
   const navigate = useNavigate();
   const location = useLocation();
-  const isMainSettingsPage = location.pathname === "/settings";
+  const isMainSettingsPage = location.pathname === "/admin/settings";
 
   const settingsCards = [
     {

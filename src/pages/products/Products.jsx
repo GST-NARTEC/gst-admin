@@ -14,7 +14,7 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { FaSearch, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
-import MainLayout from "../../layout/MainLayout";
+import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import { useNavigate } from "react-router-dom";
 import { useGetProductsQuery } from "../../store/apis/endpoints/products";
 import { useDebounce } from "../../hooks/useDebounce";

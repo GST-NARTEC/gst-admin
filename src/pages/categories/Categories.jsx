@@ -14,7 +14,7 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { FaSearch, FaPlus, FaEye } from "react-icons/fa";
-import MainLayout from "../../layout/MainLayout";
+import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import AddCategory from "../../components/categories/AddCategory";
 import ViewCategory from "../../components/categories/ViewCategory";
 import { useGetCategoriesQuery } from "../../store/apis/endpoints/categories";
