@@ -6,9 +6,7 @@ import { useCreateLanguageMutation } from "../../../store/apis/endpoints/Languag
 function AddLanguageChange({ isOpen, onClose }) {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newname_ar, setNewname_ar] = useState("");
-
   const [createCategory, { isLoading, isError, error, isSuccess }] = useCreateLanguageMutation();
-
   useEffect(() => {
     if (isSuccess) {
       toast.success("Language added successfully!");
