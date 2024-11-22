@@ -13,6 +13,7 @@ import Products from "../pages/products/Products";
 import AddProduct from "../pages/products/AddProduct";
 import Members from "../pages/members/Members";
 import EditProduct from "../pages/products/EditProduct";
+import LaanguageChange from "../pages/MasterData/LanguageChange/LaanguageChange"
 
 function AppRoutes() {
   return (
@@ -30,6 +31,7 @@ function AppRoutes() {
         {/* Add other settings routes here */}
       </Route>
       <Route path="/categories" element={<Categories />} />
+      <Route path="Language/Dynamic" element={<LaanguageChange />} />
 
       <Route path="/products" element={<Products />} />
       <Route path="/add-product" element={<AddProduct />} />

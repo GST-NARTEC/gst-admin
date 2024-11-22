@@ -46,7 +46,7 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
         },
         { path: "/master/roles", icon: <FaUserShield />, label: "Roles" },
         { path: "/master/units", icon: <FaRuler />, label: "Units" },
-        { path: "/master/language", icon: <FaLanguage />, label: "Language" },
+        { path: "/master/Language/Dynamic", icon: <FaLanguage />, label: "Language" },
         { path: "/master/documents", icon: <FaFile />, label: "Documents" },
         {
           path: "/master/product-packaging",
@@ -71,7 +71,7 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
     },
     { path: "/categories", icon: <FaList />, label: "Categories" },
     { path: "/products", icon: <FaBox />, label: "Products" },
-    { path: "/languages", icon: <FaLanguage />, label: "Languages" },
+    { path: "/Language/Dynamic", icon: <FaLanguage />, label: "Languages" },
     { path: "/roles", icon: <FaUserShield />, label: "User Roles" },
     { path: "/settings", icon: <FaCog />, label: "Settings" },
   ];
