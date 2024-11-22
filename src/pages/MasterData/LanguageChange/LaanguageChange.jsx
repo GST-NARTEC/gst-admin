@@ -13,13 +13,12 @@ import {
   Pagination,
   Spinner,
 } from "@nextui-org/react";
-import { FaSearch, FaPlus, FaEye } from "react-icons/fa";
+import { FaSearch, FaPlus } from "react-icons/fa";
 import MainLayout from "../../../layout/MainLayout";
 import { useGetLanguageQuery } from "../../../store/apis/endpoints/Language";
 import AddLanguageChange from "./AddLanguageChange";
 import { MdModeEditOutline } from "react-icons/md";
 import UpdataLanguageChange from "./UpdataLanguageChange";
-// import ViewCategory from "../../components/categories/ViewCategory";
 
 function LaanguageChange() {
   const [page, setPage] = useState(1);
@@ -41,18 +40,6 @@ function LaanguageChange() {
 
   const renderCell = (category, columnKey) => {
     switch (columnKey) {
-      // case "name":
-      //   return (
-      //     <User
-      //       avatarProps={{ radius: "lg", src: category.image }}
-      //       description={`Created: ${new Date(
-      //         category.createdAt
-      //       ).toLocaleDateString()}`}
-      //       name={category.name}
-      //     >
-      //       {category.name}
-      //     </User>
-      //   );
       case "actions":
         return (
           <div className="relative flex items-center justify-center gap-2">

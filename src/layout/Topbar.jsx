@@ -1,4 +1,7 @@
+import { I18nextProvider } from "react-i18next";
 import { FaBell, FaUser, FaBars } from "react-icons/fa";
+import LanguageSwitcher from "../switer";
+import i18ns from "../i18n";
 
 function Topbar({ toggleLargeScreenSidebar, isLargeScreenCollapsed }) {
   return (
@@ -20,6 +23,9 @@ function Topbar({ toggleLargeScreenSidebar, isLargeScreenCollapsed }) {
         <button className="p-2 hover:bg-gray-100 rounded-full">
           <FaUser className="text-gray-600" />
         </button>
+        <I18nextProvider i18n={i18ns}>
+          <LanguageSwitcher />
+        </I18nextProvider>
       </div>
     </div>
   );

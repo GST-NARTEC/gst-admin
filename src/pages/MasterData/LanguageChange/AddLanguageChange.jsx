@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Input,
-  Image,
-} from "@nextui-org/react";
+import {Modal, ModalContent,ModalHeader,ModalBody,ModalFooter,Button,Input,} from "@nextui-org/react";
 import toast from "react-hot-toast";
 import { useCreateLanguageMutation } from "../../../store/apis/endpoints/Language";
 
@@ -16,16 +7,13 @@ function AddLanguageChange({ isOpen, onClose }) {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newname_ar, setNewname_ar] = useState("");
 
-
-  const [createCategory, { isLoading, isError, error, isSuccess }] =
-    useCreateLanguageMutation();
+  const [createCategory, { isLoading, isError, error, isSuccess }] = useCreateLanguageMutation();
 
   useEffect(() => {
     if (isSuccess) {
       toast.success("Language added successfully!");
       handleClose();
     }
-
     if (isError) {
       toast.error(error?.data?.message || "Failed to add Language");
     }
