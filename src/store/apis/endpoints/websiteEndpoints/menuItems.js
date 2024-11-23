@@ -1,5 +1,6 @@
 import { apiSlice } from "../../apiSlice";
 
+// Menu Items API
 const menuItemsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getMenuItems: builder.query({
