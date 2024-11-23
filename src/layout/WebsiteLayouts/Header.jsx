@@ -4,119 +4,54 @@ import { BsPhone, BsGlobe } from "react-icons/bs";
 import { IoChevronDownOutline } from "react-icons/io5";
 import { MdMail } from "react-icons/md";
 import { Images } from "../../assets/Index";
-
+import { useGetActiveMenuItemsQuery } from "../../store/apis/endpoints/websiteEndpoints/menuItems";
 import { useNavigate } from "react-router-dom";
-
-const menuItems = [
-  {
-    title: "Solutions",
-    items: [
-      {
-        section: "HARDWARE",
-        links: [
-          "Handheld Mobile Devices",
-          "Barcode Scanners",
-          "Label Printers",
-          "Mobile Printers",
-          "RFID Printers",
-          "Enterprise Tablets",
-          "Dimensioning System",
-          "Signage Solutions / Digital Display",
-          "Vehicle Mount Computers",
-          "Wearable Computers",
-          "Industrial Mobile Powered Workstations",
-          "Wireless Network Infrastructure",
-          "Accessories",
-        ],
-      },
-      {
-        section: "SOFTWARE",
-        links: [
-          "Mobile Device Management (MDM)",
-          "FATS",
-          "Inventory",
-          "Asset Management",
-          "Mobile Data Collection Software",
-          "Label Design & Printing",
-          "Warehouse Management Software (WMS)",
-          "Supply Chain Management Software",
-          "Terminal Emulation",
-          "Field Service Productivity Software",
-          "Voice Applications",
-          "Facilities Maintenance",
-          "GST Traceability",
-        ],
-      },
-    ],
-  },
-  {
-    title: "Services",
-    items: [
-      {
-        links: [
-          "Asset Tagging Services",
-          "Asset Reconciliation Services",
-          "Physical Inventory Counting",
-          "Product Barcode Mapping",
-          "Warehouse Bin Labelling",
-          "Stock Counting Services",
-          "Repair & Support",
-          "Field Service Application",
-        ],
-      },
-    ],
-  },
-  {
-    title: "Consumables",
-    items: [
-      {
-        links: [
-          "Radio Frequency Identification (RFID)",
-          "Real-Time Location Systems (RTLS)",
-          "Barcode Labels & Ribbons",
-          "Labels & Printing Supplies",
-        ],
-      },
-    ],
-  },
-  {
-    title: "Resources",
-    items: [
-      {
-        links: [
-          "Blog",
-          "White Papers",
-          "Case Studies",
-          "Press Releases",
-          "Video Library",
-        ],
-      },
-    ],
-  },
-  {
-    title: "Company",
-    items: [
-      {
-        links: [
-          "Company Profile",
-          "Why GST",
-          "Partners",
-          "Careers",
-          "Testimonials",
-          "Contact",
-          "Services Flyer",
-        ],
-      },
-    ],
-  },
-];
+import { Skeleton } from "@nextui-org/react";
+import OverlayLoader from "../../components/common/OverlayLoader";
 
 export default function Header() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [isLeaving, setIsLeaving] = useState(false);
   const timeoutRef = useRef(null);
 
+  const { data: menuData, isLoading, isError } = useGetActiveMenuItemsQuery();
+
   const navigate = useNavigate();
+
+  const transformedMenuItems = React.useMemo(() => {
+    if (!menuData?.data?.menus) return [];
+
+    return menuData.data.menus.map((menu) => {
+      // Handle empty submenus
+      if (menu.subMenus.length === 0) {
+        return {
+          title: menu.nameEn,
+          items: [{ links: ["No submenu items available"] }],
+        };
+      }
+
+      // Group submenus by heading
+      const groupedSubmenus = menu.subMenus.reduce((acc, item) => {
+        const heading = item.headingEn === "null" ? "" : item.headingEn;
+        if (!acc[heading]) {
+          acc[heading] = [];
+        }
+        acc[heading].push(item);
+        return acc;
+      }, {});
+
+      // Transform grouped items into final format
+      const items = Object.entries(groupedSubmenus).map(([section, items]) => ({
+        section: section || undefined,
+        links: items.map((item) => item.nameEn),
+      }));
+
+      return {
+        title: menu.nameEn,
+        items,
+      };
+    });
+  }, [menuData]);
 
   const handleMouseEnter = (title) => {
     if (timeoutRef.current) {
@@ -141,6 +76,14 @@ export default function Header() {
       }
     };
   }, []);
+
+  if (isLoading) {
+    return <OverlayLoader />;
+  }
+
+  if (isError) {
+    return <div>Error loading menu items</div>;
+  }
 
   return (
     <header className="w-full relative">
@@ -194,8 +137,13 @@ export default function Header() {
               transition={{ duration: 0.5 }}
               className="flex items-center space-x-3"
             >
-              <button 
-                onClick={() => window.open('https://buybarcodeupc.com/register/membership-form', '_blank')}
+              <button
+                onClick={() =>
+                  window.open(
+                    "https://buybarcodeupc.com/register/membership-form",
+                    "_blank"
+                  )
+                }
                 className="px-3 py-1.5 text-sm border-2 border-[#1B365D] text-[#1B365D] rounded hover:bg-[#1B365D] hover:text-white transition-all duration-300"
               >
                 Get Started
@@ -218,7 +166,7 @@ export default function Header() {
       <div className="bg-[#1B365D] text-white relative z-20">
         <div className="container mx-auto px-4 py-1">
           <nav className="flex justify-center gap-x-5">
-            {menuItems.map((menu) => (
+            {transformedMenuItems.map((menu) => (
               <div
                 key={menu.title}
                 onMouseEnter={() => handleMouseEnter(menu.title)}
@@ -257,7 +205,7 @@ export default function Header() {
           >
             <div className="container mx-auto">
               <div className="py-8 px-6 max-w-5xl mx-auto">
-                {menuItems
+                {transformedMenuItems
                   .find((menu) => menu.title === activeMenu)
                   ?.items.map((section, sectionIndex) => (
                     <div key={sectionIndex} className="mb-8 last:mb-0">
@@ -273,7 +221,7 @@ export default function Header() {
                       >
                         {section.links.map((link, linkIndex) => (
                           <motion.a
-                            key={link}
+                            key={linkIndex}
                             href="#"
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
