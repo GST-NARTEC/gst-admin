@@ -47,7 +47,7 @@ function Products() {
   const pagination = data?.data?.pagination;
 
   const handleEdit = (product) => {
-    navigate(`/edit-product/${product.id}`);
+    navigate(`/admin/edit-product/${product.id}`);
   };
 
   const handleDelete = (product) => {
@@ -119,7 +119,7 @@ function Products() {
         <Button
           className="bg-navy-700 text-white"
           startContent={<FaPlus />}
-          onClick={() => navigate("/add-product")}
+          onClick={() => navigate("/admin/add-product")}
         >
           Add New Product
         </Button>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Images } from "../../../assets";
+import { Images } from "../../../assets/Index";
 import { IoMail } from "react-icons/io5";
 import { FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -110,6 +110,7 @@ const LoginPage = () => {
 
               {/* Submit Button */}
               <button
+                onClick={() => navigate("/admin/dashboard")}
                 type="submit"
                 className="w-full py-3.5 px-4 mt-4 border border-transparent rounded-lg
                          text-sm font-medium text-white bg-blue-600 hover:bg-blue-700
@@ -119,19 +120,6 @@ const LoginPage = () => {
                 Sign in
               </button>
             </form>
-
-            {/* Sign Up Link */}
-            <div className="text-center">
-              <p className="text-gray-600">
-                Don't have an account?{" "}
-                <button
-                  onClick={() => navigate("/register/membership-form")}
-                  className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
-                >
-                  Register now
-                </button>
-              </p>
-            </div>
 
             {/* Footer */}
             <div className="text-center pt-4">

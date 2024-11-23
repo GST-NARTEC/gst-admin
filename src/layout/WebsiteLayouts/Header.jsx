@@ -5,6 +5,8 @@ import { IoChevronDownOutline } from "react-icons/io5";
 import { MdMail } from "react-icons/md";
 import { Images } from "../../assets/Index";
 
+import { useNavigate } from "react-router-dom";
+
 const menuItems = [
   {
     title: "Solutions",
@@ -114,6 +116,8 @@ export default function Header() {
   const [isLeaving, setIsLeaving] = useState(false);
   const timeoutRef = useRef(null);
 
+  const navigate = useNavigate();
+
   const handleMouseEnter = (title) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -190,10 +194,16 @@ export default function Header() {
               transition={{ duration: 0.5 }}
               className="flex items-center space-x-3"
             >
-              <button className="px-3 py-1.5 text-sm border-2 border-[#1B365D] text-[#1B365D] rounded hover:bg-[#1B365D] hover:text-white transition-all duration-300">
+              <button 
+                onClick={() => window.open('https://buybarcodeupc.com/register/membership-form', '_blank')}
+                className="px-3 py-1.5 text-sm border-2 border-[#1B365D] text-[#1B365D] rounded hover:bg-[#1B365D] hover:text-white transition-all duration-300"
+              >
                 Get Started
               </button>
-              <button className="px-3 py-1.5 text-sm bg-[#335082] text-white rounded hover:bg-[#1B365D] transition-all duration-300">
+              <button
+                onClick={() => navigate("/admin/login")}
+                className="px-3 py-1.5 text-sm bg-[#335082] text-white rounded hover:bg-[#1B365D] transition-all duration-300"
+              >
                 Login
               </button>
               <button className="p-1.5 text-[#1B365D] hover:bg-[#1B365D] hover:text-white rounded transition-all duration-300">

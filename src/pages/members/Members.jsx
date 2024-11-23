@@ -182,7 +182,12 @@ function Members() {
             className="bg-navy-700 text-white"
             startContent={<FaPlus />}
             // onClick={() => navigate("/add-member")}
-            onPress={() => window.open("/register/membership-form", "_blank")}
+            onPress={() =>
+              window.open(
+                "https://buybarcodeupc.com/register/membership-form",
+                "_blank"
+              )
+            }
           >
             Add New Member
           </Button>

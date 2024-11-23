@@ -4,7 +4,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import {
   useGetCurrencyQuery,
-  useCreateCurrencyMutation,
+  useUpdateCurrencyMutation,
 } from "../../store/apis/endpoints/currency";
 import toast from "react-hot-toast";
 
@@ -14,29 +14,37 @@ function Currency() {
 
   const { data: currencyData, isLoading: isCurrencyLoading } =
     useGetCurrencyQuery();
-  const [createCurrency, { isLoading: isCreatingCurrency }] =
-    useCreateCurrencyMutation();
+  const [updateCurrency, { isLoading: isUpdatingCurrency }] =
+    useUpdateCurrencyMutation();
 
   // Set currency symbol from API if available
   useEffect(() => {
-    if (currencyData?.data?.currencies?.[0]?.symbol) {
-      setCurrencySymbol(currencyData.data.currencies[0].symbol);
+    if (currencyData?.data?.currencies?.[0]) {
+      const currency = currencyData.data.currencies[0];
+      setCurrencySymbol(currency.symbol);
     }
   }, [currencyData]);
 
   const handleSave = async () => {
     try {
-      await createCurrency({
-        name: "currency",
-        symbol: currencySymbol,
-      }).unwrap();
+      const currencyId = currencyData?.data?.currencies?.[0]?.id;
+      if (!currencyId) throw new Error("Currency ID not found");
+
+      const payload = {
+        id: currencyId,
+        data: {
+          symbol: currencySymbol,
+          name: "currency",
+        },
+      };
+
+      await updateCurrency(payload).unwrap();
       toast.success("Currency updated successfully");
-    //   navigate("/settings");
+      //   navigate("/settings");
     } catch (error) {
       toast.error(error?.data?.message || "Failed to update currency");
     }
   };
-
 
   return (
     <div>
@@ -45,7 +53,7 @@ function Currency() {
         <Button
           color="default"
           startContent={<IoArrowBack />}
-          onPress={() => navigate("/settings")}
+          onPress={() => navigate("/admin/settings")}
         >
           Back
         </Button>
@@ -59,33 +67,34 @@ function Currency() {
         ) : (
           <>
             <Input
-          label="Currency symbol"
-          placeholder="Enter currency symbol"
-          value={currencySymbol}
-          onChange={(e) => setCurrencySymbol(e.target.value)}
-          className="mb-4"
-        />
+              label="Currency symbol"
+              placeholder="Enter currency symbol"
+              value={currencySymbol}
+              onChange={(e) => setCurrencySymbol(e.target.value)}
+              className="mb-4"
+            />
 
-        <div className="text-gray-600 space-y-2 mb-6">
-          <p>
-            This will be rendered on right side of amount to enhance overview.
-            like {currencySymbol} 100.00
-          </p>
-          <p>
-            This will be reflected on all the places where amount is displayed.
-          </p>
-        </div>
+            <div className="text-gray-600 space-y-2 mb-6">
+              <p>
+                This will be rendered on right side of amount to enhance
+                overview. like {currencySymbol} 100.00
+              </p>
+              <p>
+                This will be reflected on all the places where amount is
+                displayed.
+              </p>
+            </div>
 
-        <div className="flex justify-end">
-          <Button
-              className="bg-navy-700 text-white"
-              onPress={handleSave}
-              isLoading={isCreatingCurrency}
-            >
-              Save
-            </Button>
-          </div>
-        </>
+            <div className="flex justify-end">
+              <Button
+                className="bg-navy-700 text-white"
+                onPress={handleSave}
+                isLoading={isUpdatingCurrency}
+              >
+                Save
+              </Button>
+            </div>
+          </>
         )}
       </Card>
     </div>

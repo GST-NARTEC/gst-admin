@@ -15,11 +15,20 @@ const currencyApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Currency"],
     }),
+
+    updateCurrency: builder.mutation({
+      query: (data) => ({
+        url: `/currency/v1/${data.id}`,
+        method: "PUT",
+        body: data.data,
+      }),
+      invalidatesTags: ["Currency"],
+    }),
   }),
 });
 
 export const {
   useGetCurrencyQuery,
   useCreateCurrencyMutation,
+  useUpdateCurrencyMutation,
 } = currencyApi;
-
