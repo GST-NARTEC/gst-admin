@@ -4,12 +4,15 @@ const sliderApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getSliders: builder.query({
       query: () => "/slider/v1",
+      providesTags: ["Sliders"],
     }),
     getActiveSliders: builder.query({
       query: () => "/slider/v1/active",
+      providesTags: ["Sliders"],
     }),
     getSlider: builder.query({
       query: (id) => `/slider/v1/${id}`,
+      providesTags: ["Sliders"],
     }),
     createSlider: builder.mutation({
       query: (body) => ({
@@ -17,19 +20,22 @@ const sliderApi = apiSlice.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Sliders"],
     }),
     updateSlider: builder.mutation({
-      query: ({ id, ...body }) => ({
-        url: `/slider/v1/${id}`,
+      query: (args) => ({
+        url: `/slider/v1/${args.id}`,
         method: "PUT",
-        body,
+        body: args.body,
       }),
+      invalidatesTags: ["Sliders"],
     }),
     deleteSlider: builder.mutation({
       query: (id) => ({
         url: `/slider/v1/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Sliders"],
     }),
   }),
 });

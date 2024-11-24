@@ -21,6 +21,10 @@ import {
   FaBarcode,
   FaUncharted,
   FaCity,
+  FaGlobeAmericas,
+  FaGlobeAsia,
+  FaImages,
+  FaSearch,
 } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import { Images } from "../../assets";
@@ -89,6 +93,57 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
         { path: "/admin/master/cities", icon: <FaCity />, label: "Cities" },
       ],
     },
+    {
+      label: "Websites",
+      icon: <FaGlobe />,
+      isDropdown: true,
+      subItems: [
+        {
+          path: "/admin/gstsa1",
+          icon: <FaGlobeAmericas />,
+          label: "GSTSA1",
+          isNested: true,
+          nestedItems: [
+            { path: "/admin/gstsa1/pages", icon: <FaFile />, label: "Pages" },
+            { path: "/admin/gstsa1/media", icon: <FaImages />, label: "Media" },
+            {
+              path: "/admin/gstsa1/navigation",
+              icon: <FaBars />,
+              label: "Navigation",
+            },
+            {
+              path: "/admin/gstsa1/seo",
+              icon: <FaSearch />,
+              label: "SEO Settings",
+            },
+          ],
+        },
+        {
+          path: "/admin/barcode",
+          icon: <FaBarcode />,
+          label: "Barcode UPC",
+          isNested: true,
+          nestedItems: [
+            { path: "/admin/barcode/pages", icon: <FaFile />, label: "Pages" },
+            {
+              path: "/admin/barcode/banners",
+              icon: <FaImages />,
+              label: "Banners",
+            },
+            {
+              path: "/admin/barcode/menus",
+              icon: <FaBars />,
+              label: "Menu Items",
+            },
+            {
+              path: "/admin/barcode/seo",
+              icon: <FaSearch />,
+              label: "SEO Settings",
+            },
+          ],
+        },
+      ],
+    },
     { path: "/admin/categories", icon: <FaList />, label: "Categories" },
     { path: "/admin/products", icon: <FaBox />, label: "Products" },
     { path: "/admin/languages", icon: <FaLanguage />, label: "Languages" },
@@ -96,27 +151,63 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
     { path: "/admin/settings", icon: <FaCog />, label: "Settings" },
   ];
 
-  // Helper to check if current path belongs to a dropdown's subitems
-  const isDropdownPath = (subItems) => {
-    return subItems?.some((item) => location.pathname.startsWith(item.path));
+  // Modified to handle nested paths better
+  const isDropdownPath = (items) => {
+    return items?.some((item) => {
+      if (location.pathname.startsWith(item.path)) {
+        return true;
+      }
+      if (item.isNested && item.nestedItems) {
+        return item.nestedItems.some((nestedItem) =>
+          location.pathname.startsWith(nestedItem.path)
+        );
+      }
+      return false;
+    });
   };
 
-  // Initialize dropdowns state
+  // Initialize dropdowns state with nested items
   useEffect(() => {
     const initialState = {};
     menuItems.forEach((item) => {
       if (item.isDropdown) {
         initialState[item.label] = isDropdownPath(item.subItems);
+
+        // Also check nested items
+        item.subItems.forEach((subItem) => {
+          if (subItem.isNested) {
+            initialState[subItem.label] = isDropdownPath(subItem.nestedItems);
+          }
+        });
       }
     });
     setOpenDropdowns(initialState);
   }, [location.pathname]);
 
-  const toggleDropdown = (dropdownLabel) => {
-    setOpenDropdowns((prev) => ({
-      ...prev,
-      [dropdownLabel]: !prev[dropdownLabel],
-    }));
+  const toggleDropdown = (dropdownLabel, parentLabel = null) => {
+    setOpenDropdowns((prev) => {
+      const newState = { ...prev };
+
+      // If it's a nested dropdown, don't close parent
+      if (parentLabel) {
+        newState[dropdownLabel] = !prev[dropdownLabel];
+      } else {
+        // For top-level dropdowns, close other top-level dropdowns
+        Object.keys(prev).forEach((key) => {
+          if (
+            !menuItems.find(
+              (item) =>
+                item.isDropdown &&
+                item.subItems.some((sub) => sub.label === key)
+            )
+          ) {
+            newState[key] = key === dropdownLabel ? !prev[key] : false;
+          }
+        });
+      }
+
+      return newState;
+    });
   };
 
   return (
@@ -203,20 +294,72 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
                       }`}
                     >
                       {item.subItems.map((subItem) => (
-                        <Link
-                          key={subItem.path}
-                          to={subItem.path}
-                          className={`flex items-center p-2 rounded-lg mb-1 transition-colors whitespace-nowrap
-                            ${
-                              location.pathname === subItem.path
-                                ? "bg-navy-700 text-white"
-                                : "hover:bg-navy-700"
-                            }
-                            ${isLargeScreenCollapsed ? "lg:px-4" : "gap-3"}`}
-                        >
-                          <span className="text-xl">{subItem.icon}</span>
-                          <span>{subItem.label}</span>
-                        </Link>
+                        <div key={subItem.path}>
+                          {subItem.isNested ? (
+                            <button
+                              onClick={() =>
+                                toggleDropdown(subItem.label, item.label)
+                              }
+                              className={`w-full flex items-center p-2 rounded-lg mb-1 transition-colors whitespace-nowrap
+                                ${
+                                  isLargeScreenCollapsed ? "lg:px-4" : "gap-3"
+                                }`}
+                            >
+                              <span className="text-xl">{subItem.icon}</span>
+                              <span>{subItem.label}</span>
+                              <FaAngleDown
+                                className={`ml-auto transition-transform ${
+                                  openDropdowns[subItem.label]
+                                    ? "rotate-180"
+                                    : ""
+                                }`}
+                              />
+                            </button>
+                          ) : (
+                            <Link
+                              to={subItem.path}
+                              className={`flex items-center p-2 rounded-lg mb-1 transition-colors whitespace-nowrap
+                                ${
+                                  location.pathname === subItem.path
+                                    ? "bg-navy-700 text-white"
+                                    : "hover:bg-navy-700"
+                                }
+                                ${
+                                  isLargeScreenCollapsed ? "lg:px-4" : "gap-3"
+                                }`}
+                            >
+                              <span className="text-xl">{subItem.icon}</span>
+                              <span>{subItem.label}</span>
+                            </Link>
+                          )}
+
+                          {subItem.isNested && openDropdowns[subItem.label] && (
+                            <div className="ml-4">
+                              {subItem.nestedItems.map((nestedItem) => (
+                                <Link
+                                  key={nestedItem.path}
+                                  to={nestedItem.path}
+                                  className={`flex items-center p-2 rounded-lg mb-1 transition-colors whitespace-nowrap
+                                    ${
+                                      location.pathname === nestedItem.path
+                                        ? "bg-navy-700 text-white"
+                                        : "hover:bg-navy-700"
+                                    }
+                                    ${
+                                      isLargeScreenCollapsed
+                                        ? "lg:px-4"
+                                        : "gap-3"
+                                    }`}
+                                >
+                                  <span className="text-xl">
+                                    {nestedItem.icon}
+                                  </span>
+                                  <span>{nestedItem.label}</span>
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       ))}
                     </div>
                   )}

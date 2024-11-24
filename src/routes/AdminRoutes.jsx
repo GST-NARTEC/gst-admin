@@ -13,6 +13,12 @@ import NotFound from "../pages/NotFound";
 import Members from "../pages/members/Members";
 import ViewMember from "../pages/members/ViewMember";
 
+import Navigation from "../pages/WebsitesManagement/GSTSA/Navigation";
+import Media from "../pages/WebsitesManagement/GSTSA/Media";
+
+// Pages Management
+import Pages from "../pages/WebsitesManagement/GSTSA/Pages";
+import HomePage from "../components/managePages/homePage/HomePage";
 function AdminRoutes() {
   return (
     <Routes>
@@ -33,6 +39,17 @@ function AdminRoutes() {
       <Route path="/admin/view-member/:id" element={<ViewMember />} />
 
       <Route path="/admin/*" element={<NotFound />} />
+
+      {/* Websites Management */}
+      <Route path="/admin/gstsa1/navigation" element={<Navigation />} />
+      <Route path="/admin/gstsa1/media" element={<Media />} />
+      
+      {/* Pages Management with nested routes */}
+      <Route path="/admin/gstsa1/pages" element={<Pages />}>
+        <Route index element={null} />
+        <Route path="home" element={<HomePage />} />
+    
+      </Route>
     </Routes>
   );
 }
