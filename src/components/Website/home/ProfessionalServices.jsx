@@ -5,34 +5,23 @@ import { IoHardwareChipOutline } from "react-icons/io5";
 import { BiBarcode, BiPrinter } from 'react-icons/bi';
 import { MdOutlineLocalPrintshop } from 'react-icons/md';
 import { TbTruckDelivery } from 'react-icons/tb';
+import { useGetActiveProServicesQuery } from "../../../store/apis/endpoints/websiteEndpoints/proServices";
 
-const services = [
+const serviceIcons = [
   {
     icon: <BsGrid className="w-12 h-12" />,
-    title: "System Solution Services",
-    description:
-      "Provide comprehensive barcoding, software solutions that helps businesses operations effectively and efficiency",
     color: "from-blue-400 to-cyan-300",
   },
   {
     icon: <BsPeople className="w-12 h-12" />,
-    title: "Repair Services & Support",
-    description:
-      "Offering comprehensive maintenance solutions tailored to meet your needs, our Service Care programs range from time and material to service contracts, on-site service and depot repairs.",
     color: "from-cyan-400 to-teal-300",
   },
   {
     icon: <TbWaveSine className="w-12 h-12" />,
-    title: "Deployment Services",
-    description:
-      "With comprehensive deployment services such as device staging and pre-configuration, training and installation services, all of your equipment arrives completely configured and ready to use right out of the box.",
     color: "from-teal-400 to-blue-300",
   },
   {
     icon: <IoHardwareChipOutline className="w-12 h-12" />,
-    title: "Device Management Services",
-    description:
-      "Monitor and manage your investment with a mobile device and wireless infrastructure management system. Let us develop the system for you or continue to be your first line of support with our Managed Services.",
     color: "from-blue-400 to-indigo-300",
   },
 ];
@@ -64,9 +53,44 @@ const itemVariants = {
 };
 
 export default function ProfessionalServices() {
+  const { data: proServicesData, isLoading } = useGetActiveProServicesQuery();
+  const proServices = proServicesData?.data?.proServices || [];
+
+  const SkeletonCard = () => (
+    <div className="group relative">
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-cyan-500/5 rounded-2xl" />
+      <div className="relative p-8 text-center">
+        <div className="mb-6">
+          <div className="inline-flex p-4 rounded-2xl bg-gray-200 w-20 h-20 animate-pulse" />
+        </div>
+        <div className="h-6 bg-gray-200 rounded w-3/4 mx-auto mb-4 animate-pulse" />
+        <div className="space-y-2 mb-6">
+          <div className="h-4 bg-gray-200 rounded w-full animate-pulse" />
+          <div className="h-4 bg-gray-200 rounded w-5/6 animate-pulse" />
+          <div className="h-4 bg-gray-200 rounded w-4/6 animate-pulse" />
+        </div>
+        <div className="h-4 bg-gray-200 rounded w-20 mx-auto animate-pulse" />
+      </div>
+    </div>
+  );
+
+  if (isLoading) {
+    return (
+      <section className="py-24 bg-gradient-to-b from-white to-gray-50">
+        <div className="mx-10 px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[1, 2, 3, 4].map((i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-24 bg-gradient-to-b from-white to-gray-50">
-      <div className=" mx-10 px-4">
+      <div className="mx-10 px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -89,9 +113,9 @@ export default function ProfessionalServices() {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
-          {services.map((service, index) => (
+          {proServices.map((service, index) => (
             <motion.div
-              key={index}
+              key={service.id}
               variants={itemVariants}
               className="group relative"
             >
@@ -100,22 +124,24 @@ export default function ProfessionalServices() {
               <div className="relative p-8 text-center">
                 <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
                   <div
-                    className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${service.color} text-white shadow-lg`}
+                    className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${
+                      serviceIcons[index % serviceIcons.length].color
+                    } text-white shadow-lg`}
                   >
-                    {service.icon}
+                    {serviceIcons[index % serviceIcons.length].icon}
                   </div>
                 </div>
 
                 <h3 className="text-xl font-bold mb-4 text-gray-800 group-hover:text-blue-600 transition-colors duration-300">
-                  {service.title}
+                  {service.titleEn}
                 </h3>
 
                 <p className="text-gray-600 mb-6 line-clamp-4">
-                  {service.description}
+                  {service.descriptionEn}
                 </p>
 
                 <button className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold group/btn">
-                  <span>More</span>
+                  <span>{service.captionEn || "More"}</span>
                   <svg
                     className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform"
                     fill="none"

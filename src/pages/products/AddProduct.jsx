@@ -10,6 +10,7 @@ import {
   CardBody,
   Image,
   CardFooter,
+  Switch,
 } from "@nextui-org/react";
 import { FaArrowLeft, FaUpload } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +31,7 @@ function AddProduct() {
     description: "",
     price: "",
     image: null,
+    status: "active",
   });
 
   const navigate = useNavigate();
@@ -51,6 +53,7 @@ function AddProduct() {
       productData.append("description", formData.description);
       productData.append("price", formData.price);
       productData.append("categoryId", formData.categoryId);
+      productData.append("status", formData.status);
       if (formData.image) {
         productData.append("image", formData.image);
       }
@@ -141,6 +144,21 @@ function AddProduct() {
                   }))
                 }
               />
+
+              <div className="flex items-center gap-2">
+                <Switch
+                  defaultSelected
+                  value={formData.status}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      status: value ? "active" : "inactive",
+                    }))
+                  }
+                >
+                  {formData.status === "active" ? "Active" : "Inactive"}
+                </Switch>
+              </div>
             </div>
 
             <div className="space-y-4">

@@ -1,31 +1,6 @@
 import { motion } from "framer-motion";
-
-const features = [
-  {
-    title: "Better inventory and product management",
-    image: "https://gstsa1.org/wp-content/uploads/2024/11/benefit-v2-1.webp", // Add these images to your public folder
-    description:
-      "Streamline your inventory tracking and product management with advanced 2D barcode technology",
-  },
-  {
-    title: "Sustainability",
-    image: "https://gstsa1.org/wp-content/uploads/2024/11/benefit-v2-2.webp",
-    description:
-      "Contribute to environmental sustainability through efficient digital tracking solutions",
-  },
-  {
-    title: "Product authentication",
-    image: "https://gstsa1.org/wp-content/uploads/2024/11/benefit-v2-3.webp",
-    description:
-      "Ensure product authenticity and prevent counterfeiting with secure 2D barcodes",
-  },
-  {
-    title: "Branding and marketing",
-    image: "https://gstsa1.org/wp-content/uploads/2024/11/benefit-v2-4.webp",
-    description:
-      "Enhance your brand presence and marketing capabilities with dynamic 2D barcodes",
-  },
-];
+import { useGetActiveWhyBarcodesQuery } from "../../../store/apis/endpoints/websiteEndpoints/whyBarcode";
+import { Spinner } from "@nextui-org/react";
 
 const containerVariants = {
   hidden: {},
@@ -48,6 +23,29 @@ const itemVariants = {
 };
 
 export default function WhyChooseUs() {
+  const { data: whyBarcodesData, isLoading } = useGetActiveWhyBarcodesQuery();
+  const whyBarcodes = whyBarcodesData?.data?.whyBarcodes || [];
+
+  if (isLoading) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-quaternary/5 to-white">
+        <div className="flex justify-center items-center min-h-[400px]">
+          <Spinner size="lg" color="primary" />
+        </div>
+      </section>
+    );
+  }
+
+  if (!whyBarcodes?.length) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-quaternary/5 to-white">
+        <div className="flex justify-center items-center min-h-[400px]">
+          <p className="text-gray-500 text-lg">No data available</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-20 bg-gradient-to-b from-quaternary/5 to-white">
       <div className="mx-10 px-4">
@@ -74,25 +72,25 @@ export default function WhyChooseUs() {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
-          {features.map((feature, index) => (
+          {whyBarcodes.map((feature) => (
             <motion.div
-              key={index}
+              key={feature.id}
               variants={itemVariants}
               className="group relative overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-2xl hover:shadow-quaternary/20 transition-all duration-500"
             >
               <div className="aspect-square overflow-hidden">
                 <img
-                  src={feature.image}
-                  alt={feature.title}
+                  src={feature.image || "https://placehold.co/400x400"}
+                  alt={feature.titleEn}
                   className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                 />
               </div>
               <div className="p-6 relative">
                 <h3 className="text-xl font-semibold mb-3 text-primary group-hover:text-quaternary transition-colors duration-300">
-                  {feature.title}
+                  {feature.titleEn}
                 </h3>
                 <p className="text-gray-600 text-sm group-hover:text-gray-700 transition-colors duration-300">
-                  {feature.description}
+                  {feature.descriptionEn}
                 </p>
 
                 {/* Decorative elements */}

@@ -10,6 +10,10 @@ const whyBarcodeApi = apiSlice.injectEndpoints({
       query: (id) => `/v1/whybarcode/${id}`,
       providesTags: ["WhyBarcode"],
     }),
+    getActiveWhyBarcodes: builder.query({
+      query: () => "/v1/whybarcode/active",
+      providesTags: ["WhyBarcode"],
+    }),
     createWhyBarcode: builder.mutation({
       query: (data) => ({
         url: "/v1/whybarcode",
@@ -40,6 +44,7 @@ const whyBarcodeApi = apiSlice.injectEndpoints({
 export const {
   useGetWhyBarcodesQuery,
   useGetWhyBarcodeQuery,
+  useGetActiveWhyBarcodesQuery,
   useCreateWhyBarcodeMutation,
   useUpdateWhyBarcodeMutation,
   useDeleteWhyBarcodeMutation,

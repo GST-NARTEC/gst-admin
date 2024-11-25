@@ -10,6 +10,10 @@ const coreSolutionApi = apiSlice.injectEndpoints({
       query: (id) => `/core-solution/v1/${id}`,
       providesTags: ["CoreSolution"],
     }),
+    getActiveCoreSolutions: builder.query({
+      query: () => "/core-solution/v1/active",
+      providesTags: ["CoreSolution"],
+    }),
     createCoreSolution: builder.mutation({
       query: (data) => ({
         url: "/core-solution/v1",
@@ -39,6 +43,7 @@ const coreSolutionApi = apiSlice.injectEndpoints({
 export const {
   useGetCoreSolutionsQuery,
   useGetCoreSolutionQuery,
+  useGetActiveCoreSolutionsQuery,
   useCreateCoreSolutionMutation,
   useUpdateCoreSolutionMutation,
   useDeleteCoreSolutionMutation,

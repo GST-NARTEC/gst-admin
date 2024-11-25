@@ -112,6 +112,7 @@ function Pages() {
                 </CardBody>
                 <CardFooter className="justify-center pb-6">
                   <Button
+                  onClick={()=>navigate(page.path)}
                     className="bg-navy-600 text-white shadow-lg hover:bg-navy-700"
                     size="sm"
                     endContent={

@@ -12,6 +12,10 @@ import {
   Chip,
 } from "@nextui-org/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { useGetProServicesQuery } from "../../../../store/apis/endpoints/websiteEndpoints/proServices";
+import AddProService from "./AddProService";
+import EditProService from "./EditProService";
+import DeleteProService from "./DeleteProService";
 
 function ProServices() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -19,27 +23,7 @@ function ProServices() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  // Static data for now
-  const proServices = [
-    {
-      id: 1,
-      titleEn: "Barcode Consultation",
-      titleAr: "استشارات الباركود",
-      descriptionEn: "Expert consultation for barcode implementation",
-      descriptionAr: "استشارات خبيرة لتنفيذ الباركود",
-      image: "https://placehold.co/100x100",
-      isActive: true,
-    },
-    {
-      id: 2,
-      titleEn: "Integration Services",
-      titleAr: "خدمات التكامل",
-      descriptionEn: "Seamless integration with existing systems",
-      descriptionAr: "تكامل سلس مع الأنظمة الحالية",
-      image: "https://placehold.co/100x100",
-      isActive: false,
-    },
-  ];
+  const { data: proServicesData, isLoading } = useGetProServicesQuery();
 
   const handleEdit = (item) => {
     setSelectedItem(item);
@@ -92,11 +76,11 @@ function ProServices() {
         return (
           <Chip
             className="capitalize"
-            color={item.isActive ? "success" : "danger"}
+            color={item.status === 1 ? "success" : "danger"}
             size="sm"
             variant="flat"
           >
-            {item.isActive ? "Active" : "Inactive"}
+            {item.status === 1 ? "Active" : "Inactive"}
           </Chip>
         );
 
@@ -157,8 +141,13 @@ function ProServices() {
           <TableColumn>STATUS</TableColumn>
           <TableColumn>ACTIONS</TableColumn>
         </TableHeader>
-        <TableBody emptyContent={"No records found"}>
-          {proServices.map((item) => (
+        <TableBody
+          isLoading={isLoading}
+          loadingContent={<Spinner />}
+          emptyContent={"No records found"}
+          items={proServicesData?.data?.proServices || []}
+        >
+          {(proServicesData?.data?.proServices || []).map((item) => (
             <TableRow key={item.id}>
               {["title", "description", "image", "status", "actions"].map(
                 (columnKey) => (
@@ -172,7 +161,28 @@ function ProServices() {
         </TableBody>
       </Table>
 
-      {/* Modal components will be added later */}
+      {isAddModalOpen && (
+        <AddProService
+          isOpen={isAddModalOpen}
+          onOpenChange={setIsAddModalOpen}
+        />
+      )}
+
+      {isEditModalOpen && (
+        <EditProService
+          isOpen={isEditModalOpen}
+          onOpenChange={setIsEditModalOpen}
+          proService={selectedItem}
+        />
+      )}
+
+      {isDeleteModalOpen && (
+        <DeleteProService
+          isOpen={isDeleteModalOpen}
+          onOpenChange={setIsDeleteModalOpen}
+          proService={selectedItem}
+        />
+      )}
     </div>
   );
 }

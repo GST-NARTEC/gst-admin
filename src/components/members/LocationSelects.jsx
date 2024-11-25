@@ -13,17 +13,18 @@ function LocationSelects({ control, errors, defaultValues }) {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
+  const [initialLoad, setInitialLoad] = useState(true);
 
   // Fetch data using RTK Query
   const { data: countriesResponse, isLoading: isLoadingCountries } =
     useGetCountriesQuery();
   const { data: regionsResponse, isLoading: isLoadingRegions } =
     useGetRegionsQuery(selectedCountry, {
-      skip: !selectedCountry,
+      skip: !selectedCountry && !initialLoad,
     });
   const { data: citiesResponse, isLoading: isLoadingCities } =
     useGetCitiesQuery(selectedRegion, {
-      skip: !selectedRegion,
+      skip: !selectedRegion && !initialLoad,
     });
 
   const countries = countriesResponse?.data?.countries || [];
@@ -32,15 +33,44 @@ function LocationSelects({ control, errors, defaultValues }) {
 
   // Set initial values only once
   useEffect(() => {
-    if (defaultValues?.country && countries.length > 0) {
-      const countryId = countries.find(
-        (c) => c.nameEn === defaultValues.country
-      )?.id;
-      setSelectedCountry(countryId || "");
+    if (defaultValues?.country && countries.length > 0 && initialLoad && control) {
+      const country = countries.find(c => c.nameEn === defaultValues.country);
+      if (country) {
+        setSelectedCountry(country.id);
+        setTimeout(() => {
+          control.setValue("country", country.nameEn, { shouldDirty: false });
+        }, 0);
+      }
     }
-  }, [defaultValues?.country, countries]);
+  }, [defaultValues?.country, countries, initialLoad, control]);
+
+  useEffect(() => {
+    if (defaultValues?.region && regions.length > 0 && initialLoad && control) {
+      const region = regions.find(r => r.nameEn === defaultValues.region);
+      if (region) {
+        setSelectedRegion(region.id);
+        setTimeout(() => {
+          control.setValue("region", region.nameEn, { shouldDirty: false });
+        }, 0);
+      }
+    }
+  }, [defaultValues?.region, regions, initialLoad, control]);
+
+  useEffect(() => {
+    if (defaultValues?.city && cities.length > 0 && initialLoad && control) {
+      const city = cities.find(c => c.nameEn === defaultValues.city);
+      if (city) {
+        setSelectedCity(city.id);
+        setTimeout(() => {
+          control.setValue("city", city.nameEn, { shouldDirty: false });
+          setInitialLoad(false);
+        }, 0);
+      }
+    }
+  }, [defaultValues?.city, cities, initialLoad, control]);
 
   const resetDependentFields = () => {
+    setInitialLoad(false);
     setSelectedRegion("");
     setSelectedCity("");
     control.setValue("region", "", { shouldDirty: true });

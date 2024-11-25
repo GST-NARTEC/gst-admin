@@ -12,6 +12,7 @@ import {
   Pagination,
   Tooltip,
   Spinner,
+  Chip,
 } from "@nextui-org/react";
 import { FaSearch, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import MainLayout from "../../layout/AdminLayouts/MainLayout";
@@ -25,6 +26,7 @@ const TABLE_COLUMNS = [
   { name: "CATEGORY", uid: "category" },
   { name: "DESCRIPTION", uid: "description" },
   { name: "PRICE", uid: "price" },
+  { name: "STATUS", uid: "status" },
   { name: "ACTIONS", uid: "actions" },
 ];
 
@@ -76,9 +78,28 @@ function Products() {
       case "category":
         return <span>{product.category?.name || "Uncategorized"}</span>;
       case "description":
-        return <span>{product.description}</span>;
+        return (
+          <Tooltip content={product.description}>
+            <div className="max-w-[150px]">
+              <p className="text-small  line-clamp-2">
+                {product.description}
+              </p>
+            </div>
+          </Tooltip>
+        );
       case "price":
         return <span>${Number(product.price).toFixed(2)}</span>;
+      case "status":
+        return (
+          <Chip
+            className="capitalize"
+            color={product.status === "active" ? "success" : "danger"}
+            size="sm"
+            variant="flat"
+          >
+            {product.status}
+          </Chip>
+        );
       case "actions":
         return (
           <div className="flex gap-4 items-center">

@@ -1,38 +1,6 @@
 import { motion } from "framer-motion";
 import { Images } from "../../../assets/Index";
-
-const solutions = [
-  {
-    title: "Location Tracking & Visibility",
-    images: ["https://gstsa1.org/wp-content/uploads/2024/11/image.png"],
-    category: "TRACKING",
-  },
-  {
-    title: "Inventory Management",
-    images: ["https://gstsa1.org/wp-content/uploads/2024/11/image-1.png"],
-    category: "MANAGEMENT",
-  },
-  {
-    title: "Asset Tracking",
-    images: ["https://gstsa1.org/wp-content/uploads/2024/11/image-2.png"],
-    category: "TRACKING",
-  },
-  {
-    title: "Traceability Solutions",
-    images: ["https://gstsa1.org/wp-content/uploads/2024/11/image-3.png"],
-    category: "SOLUTIONS",
-  },
-  {
-    title: "FATS (Fixed Asset Tracking System)",
-    images: ["https://gstsa1.org/wp-content/uploads/2024/11/image-1-1.png"],
-    category: "SYSTEM",
-  },
-  {
-    title: "Warehouse Management System (WMS)",
-    images: ["https://gstsa1.org/wp-content/uploads/2024/11/image-2-1.png"],
-    category: "SYSTEM",
-  },
-];
+import { useGetActiveCoreSolutionsQuery } from "../../../store/apis/endpoints/websiteEndpoints/CoreSolution";
 
 const containerVariants = {
   hidden: {},
@@ -54,7 +22,45 @@ const itemVariants = {
   },
 };
 
+const SkeletonCard = () => (
+  <div className="group relative rounded-2xl overflow-hidden bg-white">
+    <div className="relative aspect-[4/3] overflow-hidden animate-pulse bg-gray-200" />
+    <div className="relative p-6 bg-white">
+      <div className="h-6 bg-gray-200 rounded animate-pulse mb-4" />
+      <div className="space-y-2 mb-4">
+        <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
+        <div className="h-4 bg-gray-200 rounded animate-pulse w-1/2" />
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="h-4 bg-gray-200 rounded animate-pulse w-24" />
+        <div className="w-10 h-10 rounded-full bg-gray-200 animate-pulse" />
+      </div>
+    </div>
+  </div>
+);
+
 export default function CoreSolutions() {
+  const { data: coreSolutionsData, isLoading } = useGetActiveCoreSolutionsQuery();
+  const coreSolutions = coreSolutionsData?.data?.coreSolutions || [];
+
+  if (isLoading) {
+    return (
+      <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-secondary/5 to-quaternary/5" />
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-quaternary/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+        
+        <div className="mx-16 px-4 relative">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3, 4, 5, 6].map((index) => (
+              <SkeletonCard key={index} />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-secondary/5 to-quaternary/5" />
@@ -73,9 +79,7 @@ export default function CoreSolutions() {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <span className="inline-block px-4 py-2 bg-quaternary/10 rounded-full text-quaternary text-sm font-medium mb-4">
-            BY APPLICATION
-          </span>
+     
           <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-tertiary to-quaternary bg-clip-text text-transparent">
             Featured Core Solutions
           </h2>
@@ -91,35 +95,36 @@ export default function CoreSolutions() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
-          {solutions.map((solution, index) => (
+          {coreSolutions.map((solution) => (
             <motion.div
-              key={index}
+              key={solution.id}
               variants={itemVariants}
               className="group relative rounded-2xl overflow-hidden bg-white hover:shadow-2xl hover:shadow-quaternary/20 transition-all duration-500"
             >
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img
-                  src={solution.images[0]}
-                  alt={solution.title}
+                  src={solution.image || "https://placehold.co/400x300"}
+                  alt={solution.titleEn}
                   className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                 />
-                <span className="absolute top-4 right-4 px-4 py-2 bg-quaternary text-white text-xs font-bold rounded-full shadow-lg">
-                  {solution.category}
-                </span>
+            
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
               </div>
 
               <div className="relative p-6 bg-white">
                 <h3 className="text-xl font-bold text-primary group-hover:text-quaternary transition-colors duration-300 mb-4">
-                  {solution.title}
+                  {solution.titleEn}
                 </h3>
+                <p className="text-gray-600 mb-4 line-clamp-2">
+                  {solution.descriptionEn}
+                </p>
 
                 <div className="flex items-center justify-between">
                   <button className="flex items-center gap-2 text-quaternary font-semibold group/btn">
                     <span className="relative">
-                      Learn More
+                      {solution.captionEn || "Learn More"}
                       <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-quaternary group-hover/btn:w-full transition-all duration-300" />
                     </span>
                     <svg

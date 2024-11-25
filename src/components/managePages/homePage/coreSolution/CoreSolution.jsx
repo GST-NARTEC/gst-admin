@@ -12,6 +12,10 @@ import {
   Chip,
 } from "@nextui-org/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { useGetCoreSolutionsQuery } from "../../../../store/apis/endpoints/websiteEndpoints/CoreSolution";
+import AddCoreSolution from "./AddCoreSolution";
+import EditCoreSolution from "./EditCoreSolution";
+import DeleteCoreSolution from "./DeleteCoreSolution";
 
 function CoreSolution() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -19,27 +23,7 @@ function CoreSolution() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  // Static data for now
-  const coreSolutions = [
-    {
-      id: 1,
-      titleEn: "Supply Chain Visibility",
-      titleAr: "رؤية سلسلة التوريد",
-      descriptionEn: "End-to-end tracking and monitoring of goods",
-      descriptionAr: "تتبع ومراقبة البضائع من البداية إلى النهاية",
-      image: "https://placehold.co/100x100",
-      isActive: true,
-    },
-    {
-      id: 2,
-      titleEn: "Inventory Management",
-      titleAr: "إدارة المخزون",
-      descriptionEn: "Real-time inventory tracking and optimization",
-      descriptionAr: "تتبع المخزون وتحسينه في الوقت الفعلي",
-      image: "https://placehold.co/100x100",
-      isActive: false,
-    },
-  ];
+  const { data: coreSolutionsData, isLoading } = useGetCoreSolutionsQuery();
 
   const handleEdit = (item) => {
     setSelectedItem(item);
@@ -111,7 +95,7 @@ function CoreSolution() {
                 className="text-default-400 cursor-pointer active:opacity-50"
                 onPress={() => handleEdit(item)}
               >
-                <FaEdit />
+                <FaEdit className="text-base" />
               </Button>
             </Tooltip>
             <Tooltip color="danger" content="Delete">
@@ -122,7 +106,7 @@ function CoreSolution() {
                 className="text-danger cursor-pointer active:opacity-50"
                 onPress={() => handleDelete(item)}
               >
-                <FaTrash />
+                <FaTrash className="text-base" />
               </Button>
             </Tooltip>
           </div>
@@ -157,18 +141,48 @@ function CoreSolution() {
           <TableColumn>STATUS</TableColumn>
           <TableColumn>ACTIONS</TableColumn>
         </TableHeader>
-        <TableBody emptyContent={"No records found"}>
-          {coreSolutions.map((item) => (
+        <TableBody
+          isLoading={isLoading}
+          loadingContent={<Spinner />}
+          emptyContent={"No records found"}
+          items={coreSolutionsData?.data?.coreSolutions || []}
+        >
+          {(coreSolutionsData?.data?.coreSolutions || []).map((item) => (
             <TableRow key={item.id}>
-              {["title", "description", "image", "status", "actions"].map((columnKey) => (
-                <TableCell key={columnKey}>{renderCell(item, columnKey)}</TableCell>
-              ))}
+              {["title", "description", "image", "status", "actions"].map(
+                (columnKey) => (
+                  <TableCell key={columnKey}>
+                    {renderCell(item, columnKey)}
+                  </TableCell>
+                )
+              )}
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
-      {/* Modal components will be added later */}
+      {isAddModalOpen && (
+        <AddCoreSolution
+          isOpen={isAddModalOpen}
+          onOpenChange={setIsAddModalOpen}
+        />
+      )}
+
+      {isEditModalOpen && (
+        <EditCoreSolution
+          isOpen={isEditModalOpen}
+          onOpenChange={setIsEditModalOpen}
+          coreSolution={selectedItem}
+        />
+      )}
+
+      {isDeleteModalOpen && (
+        <DeleteCoreSolution
+          isOpen={isDeleteModalOpen}
+          onOpenChange={setIsDeleteModalOpen}
+          coreSolution={selectedItem}
+        />
+      )}
     </div>
   );
 }

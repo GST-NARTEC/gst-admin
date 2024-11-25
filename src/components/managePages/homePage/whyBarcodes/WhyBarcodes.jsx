@@ -96,7 +96,7 @@ function WhyBarcodes() {
                 className="text-default-400 cursor-pointer active:opacity-50"
                 onPress={() => handleEdit(item)}
               >
-                <FaEdit />
+                <FaEdit className="text-base" />
               </Button>
             </Tooltip>
             <Tooltip color="danger" content="Delete">
@@ -107,7 +107,7 @@ function WhyBarcodes() {
                 className="text-danger cursor-pointer active:opacity-50"
                 onPress={() => handleDelete(item)}
               >
-                <FaTrash />
+                <FaTrash className="text-base" />
               </Button>
             </Tooltip>
           </div>

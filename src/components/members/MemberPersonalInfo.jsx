@@ -95,9 +95,6 @@ function MemberPersonalInfo() {
           delete changedValues.mobileNumber;
         }
 
-        console.log(changedValues);
-        console.log(id);
-
         const payload = {   
           id,
           data: changedValues,
