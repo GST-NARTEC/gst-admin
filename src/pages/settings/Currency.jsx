@@ -9,29 +9,26 @@ import {
 import toast from "react-hot-toast";
 
 function Currency() {
-  const [currencySymbol, setCurrencySymbol] = useState("AED");
+  const [currencySymbol, setCurrencySymbol] = useState("SAR");
   const navigate = useNavigate();
 
-  const { data: currencyData, isLoading: isCurrencyLoading } =
+  const { data: currency, isLoading: isCurrencyLoading } =
     useGetCurrencyQuery();
   const [updateCurrency, { isLoading: isUpdatingCurrency }] =
     useUpdateCurrencyMutation();
 
-  // Set currency symbol from API if available
   useEffect(() => {
-    if (currencyData?.data?.currencies?.[0]) {
-      const currency = currencyData.data.currencies[0];
+    if (currency?.symbol) {
       setCurrencySymbol(currency.symbol);
     }
-  }, [currencyData]);
+  }, [currency]);
 
   const handleSave = async () => {
     try {
-      const currencyId = currencyData?.data?.currencies?.[0]?.id;
-      if (!currencyId) throw new Error("Currency ID not found");
+      if (!currency?.id) throw new Error("Currency ID not found");
 
       const payload = {
-        id: currencyId,
+        id: currency.id,
         data: {
           symbol: currencySymbol,
           name: "currency",
@@ -40,7 +37,6 @@ function Currency() {
 
       await updateCurrency(payload).unwrap();
       toast.success("Currency updated successfully");
-      //   navigate("/settings");
     } catch (error) {
       toast.error(error?.data?.message || "Failed to update currency");
     }

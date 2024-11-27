@@ -2,73 +2,75 @@ import React from "react";
 import { Card } from "@nextui-org/react";
 import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import {
-  FaUsers,
+  FaQrcode,
+  FaBarcode,
   FaDollarSign,
   FaShoppingCart,
   FaChartLine,
-  FaClock,
-  FaStar,
-  FaHeart,
-  FaComments,
+  FaUsers,
+  FaDownload,
+  FaHistory,
 } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { selectCurrencySymbol } from "../../store/slice/currencySlice";
 
 function Dashboard() {
+  const currencySymbol = useSelector(selectCurrencySymbol);
   const stats = [
     {
-      title: "Total Users",
-      value: "2,543",
-      change: "+12.5%",
-      icon: <FaUsers />,
-      color: "blue",
-    },
-    {
       title: "Total Revenue",
-      value: "$45,678",
+      value: `${currencySymbol}45,678`,
       change: "+8.2%",
       icon: <FaDollarSign />,
       color: "green",
     },
     {
       title: "Total Orders",
-      value: "1,234",
-      change: "-3.1%",
+      value: "834",
+      change: "+12.5%",
       icon: <FaShoppingCart />,
-      color: "purple",
-      isNegative: true,
+      color: "blue",
     },
     {
-      title: "Growth Rate",
-      value: "+15.3%",
-      change: "+2.2%",
+      title: "Barcodes Generated",
+      value: "2,543",
+      change: "+15.3%",
+      icon: <FaBarcode />,
+      color: "purple",
+    },
+    {
+      title: "QR Codes Generated",
+      value: "1,892",
+      change: "+10.2%",
+      icon: <FaQrcode />,
+      color: "indigo",
+    },
+    {
+      title: "Active Users",
+      value: "456",
+      change: "+5.7%",
+      icon: <FaUsers />,
+      color: "pink",
+    },
+    {
+      title: "Downloads",
+      value: "4,234",
+      change: "+18.9%",
+      icon: <FaDownload />,
+      color: "cyan",
+    },
+    {
+      title: "Monthly Growth",
+      value: "+22.4%",
+      change: "+3.1%",
       icon: <FaChartLine />,
       color: "yellow",
     },
     {
-      title: "Active Time",
-      value: "5.2hrs",
-      change: "+0.8hrs",
-      icon: <FaClock />,
-      color: "pink",
-    },
-    {
-      title: "Reviews",
-      value: "4.8/5",
-      change: "+0.3",
-      icon: <FaStar />,
-      color: "indigo",
-    },
-    {
-      title: "Total Likes",
-      value: "8.4K",
-      change: "+1.2K",
-      icon: <FaHeart />,
-      color: "red",
-    },
-    {
-      title: "Comments",
-      value: "921",
-      change: "+18",
-      icon: <FaComments />,
+      title: "Recent Generations",
+      value: "156",
+      change: "Last 24h",
+      icon: <FaHistory />,
       color: "orange",
     },
   ];
@@ -83,6 +85,8 @@ function Dashboard() {
       indigo: "bg-indigo-100 text-indigo-600",
       red: "bg-red-100 text-red-600",
       orange: "bg-orange-100 text-orange-600",
+      teal: "bg-teal-100 text-teal-600",
+      cyan: "bg-cyan-100 text-cyan-600",
     };
     return colors[color];
   };

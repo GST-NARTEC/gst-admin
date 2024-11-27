@@ -21,8 +21,11 @@ import {
 } from "../../store/apis/endpoints/products";
 import { useGetCategoriesQuery } from "../../store/apis/endpoints/categories";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { selectCurrencySymbol } from "../../store/slice/currencySlice";
 
 function EditProduct() {
+  const currencySymbol = useSelector(selectCurrencySymbol);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -161,7 +164,9 @@ function EditProduct() {
                   }
                   startContent={
                     <div className="pointer-events-none flex items-center">
-                      <span className="text-default-400 text-small">$</span>
+                      <span className="text-default-400 text-small">
+                        {currencySymbol}
+                      </span>
                     </div>
                   }
                   className="flex-1"

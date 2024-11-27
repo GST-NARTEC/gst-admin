@@ -8,6 +8,7 @@ const user = apiSlice.injectEndpoints({
         method: "GET",
         params,
       }),
+      providesTags: ["users"],
     }),
 
     sendOtp: builder.mutation({
@@ -49,7 +50,7 @@ const user = apiSlice.injectEndpoints({
         method: "PUT",
         body: data.data,
       }),
-      invalidatesTags: ["userDetails"],
+      invalidatesTags: ["userDetails", "users"],
     }),
 
     verifyLicense: builder.mutation({
@@ -58,6 +59,13 @@ const user = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+    }),
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        url: `/user/v1/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["users"],
     }),
   }),
 });
@@ -70,4 +78,5 @@ export const {
   useGetUserQuery,
   useGetUserByIdQuery,
   useUpdateUserMutation,
+  useDeleteUserMutation,
 } = user;

@@ -17,8 +17,11 @@ import { useNavigate } from "react-router-dom";
 import { useCreateProductMutation } from "../../store/apis/endpoints/products";
 import { useGetCategoriesQuery } from "../../store/apis/endpoints/categories";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { selectCurrencySymbol } from "../../store/slice/currencySlice";
 
 function AddProduct() {
+  const currencySymbol = useSelector(selectCurrencySymbol);
   const { data: categoriesData } = useGetCategoriesQuery({
     page: 1,
     limit: 100,
@@ -112,7 +115,7 @@ function AddProduct() {
                   {categoriesData?.data?.categories.map((cat) => (
                     <SelectItem key={cat.id} value={cat.id}>
                       {cat.name}
-                    </SelectItem>
+                    </SelectItem> 
                   ))}
                 </Select>
 
@@ -126,7 +129,9 @@ function AddProduct() {
                   }
                   startContent={
                     <div className="pointer-events-none flex items-center">
-                      <span className="text-default-400 text-small">$</span>
+                      <span className="text-default-400 text-small">
+                        {currencySymbol}
+                      </span>
                     </div>
                   }
                   className="flex-1"

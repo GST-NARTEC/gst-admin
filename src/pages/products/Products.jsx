@@ -20,6 +20,8 @@ import { useNavigate } from "react-router-dom";
 import { useGetProductsQuery } from "../../store/apis/endpoints/products";
 import { useDebounce } from "../../hooks/useDebounce";
 import DeleteProduct from "../../components/products/DeleteProduct";
+import { useSelector } from "react-redux";
+import { selectCurrencySymbol } from "../../store/slice/currencySlice";
 
 const TABLE_COLUMNS = [
   { name: "NAME", uid: "title" },
@@ -31,6 +33,7 @@ const TABLE_COLUMNS = [
 ];
 
 function Products() {
+  const currencySymbol = useSelector(selectCurrencySymbol);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
@@ -88,7 +91,11 @@ function Products() {
           </Tooltip>
         );
       case "price":
-        return <span>${Number(product.price).toFixed(2)}</span>;
+        return (
+          <span>
+            {currencySymbol} {Number(product.price).toFixed(2)}
+          </span>
+        );
       case "status":
         return (
           <Chip

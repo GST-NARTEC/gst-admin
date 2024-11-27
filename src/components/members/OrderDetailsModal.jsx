@@ -14,9 +14,13 @@ import {
   TableCell,
   Image,
 } from "@nextui-org/react";
+import { useSelector } from "react-redux";
+import { selectCurrencySymbol } from "../../store/slice/currencySlice";
 
 function OrderDetailsModal({ isOpen, onOpenChange, order }) {
   if (!order) return null;
+
+  const currencySymbol = useSelector(selectCurrencySymbol);
 
   return (
     <Modal
@@ -59,7 +63,9 @@ function OrderDetailsModal({ isOpen, onOpenChange, order }) {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Total Amount</p>
-                    <p className="font-medium">${order.overallAmount}</p>
+                    <p className="font-medium">
+                      {currencySymbol} {order.overallAmount}
+                    </p>
                   </div>
                 </div>
 
@@ -87,8 +93,12 @@ function OrderDetailsModal({ isOpen, onOpenChange, order }) {
                           </div>
                         </TableCell>
                         <TableCell>{item.quantity}</TableCell>
-                        <TableCell>${item.price}</TableCell>
-                        <TableCell>${item.price * item.quantity}</TableCell>
+                        <TableCell>
+                          {currencySymbol} {item.price}
+                        </TableCell>
+                        <TableCell>
+                          {currencySymbol} {item.price * item.quantity}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -98,13 +108,21 @@ function OrderDetailsModal({ isOpen, onOpenChange, order }) {
                 <div className="space-y-2 text-right">
                   <p className="text-sm">
                     Subtotal:{" "}
-                    <span className="font-medium">${order.totalAmount}</span>
+                    <span className="font-medium">
+                      {currencySymbol} {order.totalAmount}
+                    </span>
                   </p>
                   <p className="text-sm">
-                    VAT: <span className="font-medium">${order.vat}</span>
+                    VAT:{" "}
+                    <span className="font-medium">
+                      {currencySymbol} {order.vat}
+                    </span>
                   </p>
                   <p className="text-lg font-semibold">
-                    Total: <span>${order.overallAmount}</span>
+                    Total:{" "}
+                    <span className="font-medium">
+                      {currencySymbol} {order.overallAmount}
+                    </span>
                   </p>
                 </div>
               </div>

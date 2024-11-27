@@ -16,7 +16,8 @@ import { FaSearch, FaEye, FaFileInvoice } from "react-icons/fa";
 import { useGetUserByIdQuery } from "../../store/apis/endpoints/user";
 import OrderDetailsModal from "./OrderDetailsModal";
 import { useParams } from "react-router-dom";
-
+import { useSelector } from "react-redux";
+import { selectCurrencySymbol } from "../../store/slice/currencySlice";
 
 function OrdersTable() {
   const { id } = useParams();
@@ -24,7 +25,7 @@ function OrdersTable() {
   const [search, setSearch] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const currencySymbol = useSelector(selectCurrencySymbol);
   const { data: ordersData, isLoading } = useGetUserByIdQuery(
     {
       id,
@@ -67,7 +68,12 @@ function OrdersTable() {
       case "totalAmount":
       case "vat":
       case "overallAmount":
-        return <p className="text-sm">${order[columnKey].toFixed(2)}</p>;
+        return (
+          <p className="text-sm">
+            {currencySymbol} {" "}
+            {order[columnKey].toFixed(2)}
+          </p>
+        );
       case "status":
         return (
           <Chip

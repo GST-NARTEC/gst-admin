@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -36,6 +36,9 @@ import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import { useGetUserQuery } from "../../store/apis/endpoints/user";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useNavigate } from "react-router-dom";
+import { useDeleteUserMutation } from "../../store/apis/endpoints/user";
+import OverlayLoader from "../../components/common/OverlayLoader";
+import toast from "react-hot-toast";
 
 const TABLE_COLUMNS = [
   { name: "COMPANY (EN)", uid: "companyNameEn" },
@@ -61,6 +64,16 @@ function Members() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState("10");
 
+  const [
+    deleteUser,
+    {
+      isLoading: isDeleting,
+      isSuccess: isDeleted,
+      isError: isDeletedError,
+      error: deletedError,
+    },
+  ] = useDeleteUserMutation();
+
   // Debounce search term
   const debouncedSearch = useDebounce(search, 500);
 
@@ -73,13 +86,21 @@ function Members() {
   const members = data?.data?.users || [];
   const pagination = data?.data?.pagination;
 
+  useEffect(() => {
+    if (isDeleted) {
+      toast.success("Member deleted successfully");
+    }
+    if (isDeletedError) {
+      toast.error(deletedError?.data?.message);
+    }
+  }, [isDeleted, isDeletedError, deletedError]);
+
   const handleEdit = (member) => {
     navigate(`/edit-member/${member.id}`);
   };
 
-  const handleDelete = (member) => {
-    // Implement delete functionality
-    console.log("Delete member:", member);
+  const handleDelete = async (member) => {
+    await deleteUser(member.id);
   };
 
   const handleView = (member) => {
@@ -269,6 +290,9 @@ function Members() {
           </TableBody>
         </Table>
       </div>
+
+      {/* loadings */}
+      {isDeleting && <OverlayLoader />}
     </MainLayout>
   );
 }
