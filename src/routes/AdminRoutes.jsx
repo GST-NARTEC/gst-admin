@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Login from "../pages/auth/Login/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Settings from "../pages/settings/Settings";
@@ -19,6 +19,10 @@ import Media from "../pages/WebsitesManagement/GSTSA/Media";
 // Pages Management
 import Pages from "../pages/WebsitesManagement/GSTSA/Pages";
 import HomePage from "../components/managePages/homePage/HomePage";
+import PageTemplates from "../pages/WebsitesManagement/GSTSA/PageTemplates";
+import PageTemplatesConfiguration from "../pages/WebsitesManagement/GSTSA/PageTemplatesConfiguration";
+import PageTemplatesGallery from "../pages/WebsitesManagement/GSTSA/PageTemplatesGallery";
+
 function AdminRoutes() {
   return (
     <Routes>
@@ -43,12 +47,18 @@ function AdminRoutes() {
       {/* Websites Management */}
       <Route path="/admin/gstsa1/navigation" element={<Navigation />} />
       <Route path="/admin/gstsa1/media" element={<Media />} />
-      
+
       {/* Pages Management with nested routes */}
       <Route path="/admin/gstsa1/pages" element={<Pages />}>
         <Route index element={null} />
         <Route path="home" element={<HomePage />} />
-    
+      </Route>
+
+      {/* Page Templates Management */}
+      <Route path="/admin/gstsa1/page-templates" element={<PageTemplates />}>
+        <Route index element={<Navigate to="page-setup" replace />} />
+        <Route path="page-setup" element={<PageTemplatesConfiguration />} />
+        <Route path="templates" element={<PageTemplatesGallery />} />
       </Route>
     </Routes>
   );
