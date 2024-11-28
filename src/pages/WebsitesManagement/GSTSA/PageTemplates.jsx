@@ -4,7 +4,8 @@ import { Tabs, Tab, Button } from "@nextui-org/react";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import { FiSettings, FiArrowLeft } from "react-icons/fi";
 import { IoImagesOutline } from "react-icons/io5";
-
+import { CgTemplate } from "react-icons/cg";
+import { LuFileSymlink } from "react-icons/lu";
 function PageTemplates() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -55,7 +56,7 @@ function PageTemplates() {
               key="page-setup"
               title={
                 <div className="flex items-center space-x-2 py-2">
-                  <FiSettings className="text-lg" />
+                  <LuFileSymlink className="text-lg" />
                   <span>Page Setup</span>
                 </div>
               }
@@ -64,7 +65,7 @@ function PageTemplates() {
               key="templates"
               title={
                 <div className="flex items-center space-x-2 py-2">
-                  <IoImagesOutline className="text-lg" />
+                  <CgTemplate className="text-lg" />
                   <span>Templates</span>
                 </div>
               }

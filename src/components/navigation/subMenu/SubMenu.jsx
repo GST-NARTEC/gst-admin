@@ -34,6 +34,7 @@ function SubMenu() {
     { name: "SUB MENU NAME (AR)", uid: "nameAr" },
     { name: "HEADING (EN)", uid: "headingEn" },
     { name: "PARENT MENU", uid: "menu" },
+    { name: "LINKED PAGE", uid: "page" },
     { name: "ACTIONS", uid: "actions" },
   ];
 
@@ -64,6 +65,15 @@ function SubMenu() {
             <p className="text-sm">{subMenu.menu.nameEn}</p>
             <p className="text-xs text-gray-400">{subMenu.menu.nameAr}</p>
           </div>
+        );
+      case "page":
+        return subMenu.page ? (
+          <div className="flex flex-col">
+            <p className="text-sm">{subMenu.page.nameEn}</p>
+            <p className="text-xs text-gray-400">{subMenu.page.slug}</p>
+          </div>
+        ) : (
+          <span className="text-gray-400 text-sm">Unlinked</span>
         );
       case "actions":
         return (

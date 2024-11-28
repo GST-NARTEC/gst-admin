@@ -9,15 +9,25 @@ import {
   Input,
   Select,
   SelectItem,
+  Autocomplete,
+  AutocompleteItem,
 } from "@nextui-org/react";
 import { toast } from "react-hot-toast";
 import { useUpdateSubMenuMutation } from "../../../store/apis/endpoints/websiteEndpoints/subMenu";
 import { useGetMenuItemsQuery } from "../../../store/apis/endpoints/websiteEndpoints/menuItems";
+import { useGetPagesQuery } from "../../../store/apis/endpoints/pageSetup";
 
 function EditSubMenu({ isOpen, onOpenChange, subMenu }) {
   const [updateSubMenu, { isLoading }] = useUpdateSubMenuMutation();
   const { data: menuData } = useGetMenuItemsQuery();
+  const { data: pagesData } = useGetPagesQuery();
+
   const menus = menuData?.data?.menus || [];
+  const pages = pagesData?.data?.pages?.map((page) => ({
+    label: page.nameEn,
+    value: page.id,
+    description: page.slug
+  })) || [];
 
   const [formData, setFormData] = useState({
     nameEn: "",
@@ -25,6 +35,7 @@ function EditSubMenu({ isOpen, onOpenChange, subMenu }) {
     headingEn: "",
     headingAr: "",
     menuId: "",
+    pageId: "",
   });
 
   useEffect(() => {
@@ -35,6 +46,7 @@ function EditSubMenu({ isOpen, onOpenChange, subMenu }) {
         headingEn: subMenu.headingEn === "null" ? "" : subMenu.headingEn,
         headingAr: subMenu.headingAr === "null" ? "" : subMenu.headingAr,
         menuId: subMenu.menuId,
+        pageId: subMenu.pageId || "",
       });
     }
   }, [subMenu]);
@@ -115,7 +127,7 @@ function EditSubMenu({ isOpen, onOpenChange, subMenu }) {
                     const selectedKey = Array.from(keys)[0];
                     setFormData(prev => ({ ...prev, menuId: selectedKey }));
                   }}
-                  className="col-span-2"
+                  className="col-span-1"
                   isRequired
                 >
                   {menus.map((menu) => (
@@ -130,6 +142,28 @@ function EditSubMenu({ isOpen, onOpenChange, subMenu }) {
                     </SelectItem>
                   ))}
                 </Select>
+
+                <Autocomplete
+                  label="Select Page"
+                  placeholder="Search for a page"
+                  defaultItems={pages}
+                  selectedKey={formData.pageId}
+                  onSelectionChange={(id) => 
+                    setFormData(prev => ({ ...prev, pageId: id }))
+                  }
+                  className="col-span-1"
+                >
+                  {(item) => (
+                    <AutocompleteItem key={item.value} textValue={item.label}>
+                      <div className="flex flex-col">
+                        <span>{item.label}</span>
+                        <span className="text-small text-default-400">
+                          {item.description}
+                        </span>
+                      </div>
+                    </AutocompleteItem>
+                  )}
+                </Autocomplete>
               </div>
             </ModalBody>
             <ModalFooter>

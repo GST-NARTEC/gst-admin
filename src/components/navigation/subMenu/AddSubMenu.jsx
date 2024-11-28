@@ -9,15 +9,27 @@ import {
   Input,
   Select,
   SelectItem,
+  Autocomplete,
+  AutocompleteItem,
 } from "@nextui-org/react";
 import { toast } from "react-hot-toast";
 import { useCreateSubMenuMutation } from "../../../store/apis/endpoints/websiteEndpoints/subMenu";
 import { useGetMenuItemsQuery } from "../../../store/apis/endpoints/websiteEndpoints/menuItems";
+import { useGetPagesQuery } from "../../../store/apis/endpoints/pageSetup";
 
 function AddSubMenu({ isOpen, onOpenChange }) {
   const [createSubMenu, { isLoading }] = useCreateSubMenuMutation();
+  const { data: pagesData } = useGetPagesQuery();
+
   const { data: menuData } = useGetMenuItemsQuery();
   const menus = menuData?.data?.menus || [];
+
+  const pages =
+    pagesData?.data?.pages?.map((page) => ({
+      label: page.nameEn,
+      value: page.id,
+      description: page.slug,
+    })) || [];
 
   const [formData, setFormData] = useState({
     nameEn: "",
@@ -25,6 +37,7 @@ function AddSubMenu({ isOpen, onOpenChange }) {
     headingEn: "",
     headingAr: "",
     menuId: "",
+    pageId: "",
   });
 
   const handleChange = (field) => (e) => {
@@ -50,6 +63,7 @@ function AddSubMenu({ isOpen, onOpenChange }) {
         headingEn: "",
         headingAr: "",
         menuId: "",
+        pageId: "",
       });
     } catch (error) {
       toast.error(error.data?.message || "Failed to create submenu");
@@ -57,8 +71,8 @@ function AddSubMenu({ isOpen, onOpenChange }) {
   };
 
   return (
-    <Modal 
-      isOpen={isOpen} 
+    <Modal
+      isOpen={isOpen}
       onOpenChange={onOpenChange}
       size="2xl"
       classNames={{
@@ -108,9 +122,9 @@ function AddSubMenu({ isOpen, onOpenChange }) {
                   selectedKeys={formData.menuId ? [formData.menuId] : []}
                   onSelectionChange={(keys) => {
                     const selectedKey = Array.from(keys)[0];
-                    setFormData(prev => ({ ...prev, menuId: selectedKey }));
+                    setFormData((prev) => ({ ...prev, menuId: selectedKey }));
                   }}
-                  className="col-span-2"
+                  className="col-span-1"
                   isRequired
                   classNames={{
                     trigger: "h-12",
@@ -118,17 +132,41 @@ function AddSubMenu({ isOpen, onOpenChange }) {
                   }}
                 >
                   {menus.map((menu) => (
-                    <SelectItem 
-                      key={menu.id} 
+                    <SelectItem
+                      key={menu.id}
                       textValue={`${menu.nameEn} (${menu.nameAr})`}
                     >
                       <div className="flex flex-col">
                         <span>{menu.nameEn}</span>
-                        <span className="text-small text-default-500">{menu.nameAr}</span>
+                        <span className="text-small text-default-500">
+                          {menu.nameAr}
+                        </span>
                       </div>
                     </SelectItem>
                   ))}
                 </Select>
+
+                <Autocomplete
+                  label="Select Page"
+                  placeholder="Search for a page"
+                  defaultItems={pages}
+                  selectedKey={formData.pageId}
+                  onSelectionChange={(id) =>
+                    setFormData((prev) => ({ ...prev, pageId: id }))
+                  }
+                  className="col-span-1"
+                >
+                  {(item) => (
+                    <AutocompleteItem key={item.value} textValue={item.label}>
+                      <div className="flex flex-col">
+                        <span>{item.label}</span>
+                        <span className="text-small text-default-400">
+                          {item.description}
+                        </span>
+                      </div>
+                    </AutocompleteItem>
+                  )}
+                </Autocomplete>
               </div>
             </ModalBody>
             <ModalFooter>

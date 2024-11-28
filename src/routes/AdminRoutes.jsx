@@ -20,8 +20,12 @@ import Media from "../pages/WebsitesManagement/GSTSA/Media";
 import Pages from "../pages/WebsitesManagement/GSTSA/Pages";
 import HomePage from "../components/managePages/homePage/HomePage";
 import PageTemplates from "../pages/WebsitesManagement/GSTSA/PageTemplates";
-import PageTemplatesConfiguration from "../pages/WebsitesManagement/GSTSA/PageTemplatesConfiguration";
+import PageTemplatesSetup from "../pages/WebsitesManagement/GSTSA/PageTemplatesSetup";
 import PageTemplatesGallery from "../pages/WebsitesManagement/GSTSA/PageTemplatesGallery";
+import Template1 from "../components/pageTemplates/pageTemplatesGallery/Template1/Template1";
+import AddTemplate1 from "../components/pageTemplates/pageTemplatesGallery/Template1/AddTemplate1/AddTemplate1";
+// import EditTemplate1 from "../components/pageTemplates/pageTemplatesGallery/Template1/EditTemplate1/EditTemplate1";
+// import ViewTemplate1 from "../components/pageTemplates/pageTemplatesGallery/Template1/ViewTemplate1/ViewTemplate1";
 
 function AdminRoutes() {
   return (
@@ -57,8 +61,16 @@ function AdminRoutes() {
       {/* Page Templates Management */}
       <Route path="/admin/gstsa1/page-templates" element={<PageTemplates />}>
         <Route index element={<Navigate to="page-setup" replace />} />
-        <Route path="page-setup" element={<PageTemplatesConfiguration />} />
+        <Route path="page-setup" element={<PageTemplatesSetup />} />
         <Route path="templates" element={<PageTemplatesGallery />} />
+      </Route>
+
+      {/* Template Management Routes */}
+      <Route path="/admin/gstsa1/page-templates/templates/template1">
+        <Route index element={<Template1 />} />
+        <Route path="add" element={<AddTemplate1 />} />
+        {/* <Route path="edit/:id" element={<EditTemplate1 />} /> */}
+        {/* <Route path="view/:id" element={<ViewTemplate1 />} /> */}
       </Route>
     </Routes>
   );
