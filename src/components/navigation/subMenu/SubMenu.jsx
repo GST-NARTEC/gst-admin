@@ -11,23 +11,40 @@ import {
   Input,
   Spinner,
   Chip,
+  pagination,
+  Pagination,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import { FaSearch, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import { useGetSubMenusQuery } from "../../../store/apis/endpoints/websiteEndpoints/subMenu";
 import AddSubMenu from "./AddSubMenu";
 import EditSubMenu from "./EditSubMenu";
 import DeleteSubMenu from "./DeleteSubMenu";
+import { useDebounce } from "../../../hooks/useDebounce";
 
 function SubMenu() {
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
   const [isAddSubMenuModalOpen, setIsAddSubMenuModalOpen] = useState(false);
   const [isEditSubMenuModalOpen, setIsEditSubMenuModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedSubMenu, setSelectedSubMenu] = useState(null);
 
-  const { data, isLoading } = useGetSubMenusQuery();
+  const queryParams = useMemo(() => {
+    const params = { page, limit };
+    if (debouncedSearch) {
+      params.search = debouncedSearch;
+    }
+    return params;
+  }, [page, limit, debouncedSearch]);
+
+  const { data, isLoading } = useGetSubMenusQuery(queryParams);
   const subMenus = data?.data?.subMenus || [];
+  const pagination = data?.data?.pagination || {};
+  const { total, totalPages } = pagination;
 
   const columns = [
     { name: "SUB MENU NAME (EN)", uid: "nameEn" },
@@ -132,12 +149,60 @@ function SubMenu() {
     [search]
   );
 
+  const bottomContent = useMemo(
+    () => (
+      <div className="py-2 px-2 flex justify-between items-center">
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-gray-500">
+            {`${subMenus.length} of ${total} sub menus`}
+          </span>
+          <Select
+            size="sm"
+            className="w-28"
+            defaultSelectedKeys={[limit.toString()]}
+            onChange={(e) => {
+              setLimit(Number(e.target.value));
+              setPage(1);
+            }}
+          >
+            <SelectItem key="5" value="5">
+              5
+            </SelectItem>
+            <SelectItem key="10" value="10">
+              10
+            </SelectItem>
+            <SelectItem key="15" value="15">
+              15
+            </SelectItem>
+            <SelectItem key="20" value="20">
+              20
+            </SelectItem>
+            <SelectItem key="25" value="25">
+              25
+            </SelectItem>
+          </Select>
+        </div>
+        <Pagination
+          isCompact
+          showControls
+          showShadow
+          color="primary"
+          page={page}
+          total={totalPages}
+          onChange={setPage}
+        />
+      </div>
+    ),
+    [page, total, totalPages, subMenus.length, limit]
+  );
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Sub Menu Items</h1>
       <Table
         aria-label="Sub menu items table"
         topContent={topContent}
+        bottomContent={bottomContent}
         classNames={{
           wrapper: "shadow-md rounded-lg",
         }}

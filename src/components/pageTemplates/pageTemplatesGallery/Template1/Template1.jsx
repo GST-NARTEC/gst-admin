@@ -25,11 +25,11 @@ function Template1() {
   const [rowsPerPage] = useState(10);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState(null);
-  
-  const { data: templatesData, isLoading } = useGetTemplatesQuery({ 
+
+  const { data: templatesData, isLoading } = useGetTemplatesQuery({
     templateType: "template1",
     page,
-    limit: rowsPerPage 
+    limit: rowsPerPage,
   });
 
   const templates = templatesData?.data?.templates || [];
@@ -40,7 +40,7 @@ function Template1() {
   };
 
   const handleEdit = (template) => {
-    navigate(`edit/${template.id}`);
+    navigate(`edit/${template?.page?.id}`);
   };
 
   const handleDelete = (id) => {
@@ -54,7 +54,7 @@ function Template1() {
   };
 
   const handleView = (template) => {
-    navigate(`view/${template.id}`);
+    navigate(`view/${template?.page?.id}`);
   };
 
   const handlePageChange = (newPage) => {
@@ -84,11 +84,11 @@ function Template1() {
   const bottomContent = useMemo(() => {
     return (
       <div className="flex justify-center items-center">
-      <Pagination 
-        showControls 
-        total={pagination.totalPages || 1}
-        page={page}
-        onChange={handlePageChange}
+        <Pagination
+          showControls
+          total={pagination.totalPages || 1}
+          page={page}
+          onChange={handlePageChange}
         />
       </div>
     );
@@ -105,6 +105,8 @@ function Template1() {
           <TableHeader>
             <TableColumn>TITLE (EN)</TableColumn>
             <TableColumn>TITLE (AR)</TableColumn>
+            <TableColumn>PAGE SLUG</TableColumn>
+            <TableColumn>PAGE NAME</TableColumn>
             <TableColumn>STATUS</TableColumn>
             <TableColumn>ACTIONS</TableColumn>
           </TableHeader>
@@ -117,7 +119,11 @@ function Template1() {
               <TableRow key={template.id}>
                 <TableCell>{template.nameEn}</TableCell>
                 <TableCell>{template.nameAr}</TableCell>
-                <TableCell>{template.isActive ? "Active" : "Inactive"}</TableCell>
+                <TableCell>{template.page.slug}</TableCell>
+                <TableCell>{template.page.nameEn}</TableCell>
+                <TableCell>
+                  {template.isActive ? "Active" : "Inactive"}
+                </TableCell>
                 <TableCell>
                   <div className="flex gap-2">
                     <Tooltip content="View">
@@ -157,7 +163,7 @@ function Template1() {
           </TableBody>
         </Table>
       </div>
-      <DeleteTemplate1 
+      <DeleteTemplate1
         isOpen={deleteModalOpen}
         onClose={handleDeleteModalClose}
         templateId={selectedTemplateId}

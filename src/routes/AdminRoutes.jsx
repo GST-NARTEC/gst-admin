@@ -24,8 +24,8 @@ import PageTemplatesSetup from "../pages/WebsitesManagement/GSTSA/PageTemplatesS
 import PageTemplatesGallery from "../pages/WebsitesManagement/GSTSA/PageTemplatesGallery";
 import Template1 from "../components/pageTemplates/pageTemplatesGallery/Template1/Template1";
 import AddTemplate1 from "../components/pageTemplates/pageTemplatesGallery/Template1/AddTemplate1/AddTemplate1";
-// import EditTemplate1 from "../components/pageTemplates/pageTemplatesGallery/Template1/EditTemplate1/EditTemplate1";
-// import ViewTemplate1 from "../components/pageTemplates/pageTemplatesGallery/Template1/ViewTemplate1/ViewTemplate1";
+import ViewTemplate1 from "../components/pageTemplates/pageTemplatesGallery/Template1/ViewTemplate1";
+import EditTemplate1 from "../components/pageTemplates/pageTemplatesGallery/Template1/EditTemplate1/EditTemplate1";
 
 function AdminRoutes() {
   return (
@@ -69,8 +69,8 @@ function AdminRoutes() {
       <Route path="/admin/gstsa1/page-templates/templates/template1">
         <Route index element={<Template1 />} />
         <Route path="add" element={<AddTemplate1 />} />
-        {/* <Route path="edit/:id" element={<EditTemplate1 />} /> */}
-        {/* <Route path="view/:id" element={<ViewTemplate1 />} /> */}
+        <Route path="edit/:id" element={<EditTemplate1 />} />
+        <Route path="view/:id" element={<ViewTemplate1 />} />
       </Route>
     </Routes>
   );

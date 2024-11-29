@@ -26,6 +26,7 @@ function OrderDetailsModal({ isOpen, onOpenChange, order }) {
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
+      scrollBehavior="inside"
       size="3xl"
       classNames={{
         base: "bg-white",
@@ -41,7 +42,9 @@ function OrderDetailsModal({ isOpen, onOpenChange, order }) {
               <h3 className="text-xl font-semibold text-navy-700">
                 Order Details
               </h3>
-              <p className="text-sm text-gray-500">Order ID: {order.id}</p>
+              <p className="text-sm text-gray-500">
+                Order ID: {order?.orderNumber}
+              </p>
             </ModalHeader>
             <ModalBody>
               <div className="space-y-6">

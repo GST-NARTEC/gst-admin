@@ -6,7 +6,6 @@ import { MdMail } from "react-icons/md";
 import { Images } from "../../assets/Index";
 import { useGetActiveMenuItemsQuery } from "../../store/apis/endpoints/websiteEndpoints/menuItems";
 import { useNavigate } from "react-router-dom";
-import { Skeleton } from "@nextui-org/react";
 import OverlayLoader from "../../components/common/OverlayLoader";
 
 export default function Header() {
@@ -22,7 +21,6 @@ export default function Header() {
     if (!menuData?.data?.menus) return [];
 
     return menuData.data.menus.map((menu) => {
-      // Handle empty submenus
       if (menu.subMenus.length === 0) {
         return {
           title: menu.nameEn,
@@ -30,20 +28,21 @@ export default function Header() {
         };
       }
 
-      // Group submenus by heading
       const groupedSubmenus = menu.subMenus.reduce((acc, item) => {
         const heading = item.headingEn === "null" ? "" : item.headingEn;
         if (!acc[heading]) {
           acc[heading] = [];
         }
-        acc[heading].push(item);
+        acc[heading].push({
+          name: item.nameEn,
+          page: item.page,
+        });
         return acc;
       }, {});
 
-      // Transform grouped items into final format
       const items = Object.entries(groupedSubmenus).map(([section, items]) => ({
         section: section || undefined,
-        links: items.map((item) => item.nameEn),
+        links: items,
       }));
 
       return {
@@ -76,6 +75,12 @@ export default function Header() {
       }
     };
   }, []);
+
+  const handleLinkClick = (link) => {
+    if (link.page) {
+      navigate(`/${link.page.template}/${link.page.slug}`);
+    }
+  };
 
   if (isLoading) {
     return <OverlayLoader />;
@@ -119,7 +124,12 @@ export default function Header() {
               {/* <div className="w-10 h-10 bg-gradient-to-br from-[#1B365D] to-[#335082] rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-lg uppercas">GST</span>
               </div> */}
-              <img src={Images.Logo} alt="Logo" className="w-20 h-auto " />
+              <img
+                src={Images.Logo}
+                alt="Logo"
+                className="w-20 h-auto cursor-pointer hover:opacity-80 transition-all duration-300"
+                onClick={() => navigate("/")}
+              />
               <div>
                 <h1 className="text-[#1B365D] font-bold text-lg">
                   Global Standard Technology
@@ -199,7 +209,7 @@ export default function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute left-0 right-0 bg-white shadow-xl z-10"
+            className="absolute left-0 right-0 bg-white shadow-xl z-50"
             onMouseEnter={() => handleMouseEnter(activeMenu)}
             onMouseLeave={handleMouseLeave}
           >
@@ -222,15 +232,18 @@ export default function Header() {
                         {section.links.map((link, linkIndex) => (
                           <motion.a
                             key={linkIndex}
-                            href="#"
+                            onClick={() => handleLinkClick(link)}
+                            style={{ cursor: link.page ? 'pointer' : 'default' }}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: linkIndex * 0.03 }}
                             className="group flex items-center text-sm text-gray-700 hover:text-[#1B365D] py-1 transition-colors duration-200"
                           >
                             <span className="relative overflow-hidden">
-                              {link}
-                              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#1B365D] transform origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
+                              {link.name}
+                              {link.page && (
+                                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#1B365D] transform origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
+                              )}
                             </span>
                           </motion.a>
                         ))}

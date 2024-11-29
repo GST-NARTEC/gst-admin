@@ -3,7 +3,10 @@ import { apiSlice } from "../../apiSlice";
 const subMenuApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getSubMenus: builder.query({
-      query: () => "/submenu/v1",
+      query: (params) => ({
+        url: "/submenu/v1",
+        params,
+      }),
       providesTags: ["SubMenus"],
     }),
     getActiveSubMenus: builder.query({

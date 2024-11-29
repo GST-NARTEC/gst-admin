@@ -5,45 +5,52 @@ const templatesApi = apiSlice.injectEndpoints({
     // Get all templates by type
     getTemplates: builder.query({
       query: ({ templateType, page = 1, limit = 10 }) =>
-        `/templates/${templateType}/list?page=${page}&limit=${limit}`,
+        `/v1/template/${templateType}/list?page=${page}&limit=${limit}`,
       providesTags: ["Templates"],
     }),
 
-    // Get single template
+    // Get single template by pageId
     getTemplate: builder.query({
       query: ({ templateType, pageId }) => ({
-        url: `/templates/${templateType}`,
-        params: { pageId }
+        url: `/v1/template/${templateType}`,
+        params: { pageId },
       }),
+      providesTags: ["TemplatesByPageId"],
+    }),
+    // get single template by slug
+    getTemplateBySlug: builder.query({
+      query: ({ templateType, slug }) =>
+        `/v1/template/${templateType}/slug?slug=${slug}`,
+      providesTags: ["TemplatesBySlug"],
     }),
 
     // Create template
     createTemplate: builder.mutation({
       query: ({ templateType, data }) => ({
-        url: `/templates/${templateType}`,
+        url: `/v1/template/${templateType}`,
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Templates"],
+      invalidatesTags: ["Templates", "TemplatesBySlug", "TemplatesByPageId"],
     }),
 
     // Update template
     updateTemplate: builder.mutation({
       query: ({ templateType, id, data }) => ({
-        url: `/templates/${templateType}/${id}`,
+        url: `/v1/template/${templateType}/${id}`,
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["Templates"],
+      invalidatesTags: ["Templates", "TemplatesBySlug", "TemplatesByPageId"],
     }),
 
     // Delete template
     deleteTemplate: builder.mutation({
       query: ({ templateType, id }) => ({
-        url: `/templates/${templateType}/${id}`,
+        url: `/v1/template/${templateType}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Templates"],
+      invalidatesTags: ["Templates", "TemplatesBySlug", "TemplatesByPageId"],
     }),
   }),
 });
@@ -54,4 +61,5 @@ export const {
   useCreateTemplateMutation,
   useUpdateTemplateMutation,
   useDeleteTemplateMutation,
+  useGetTemplateBySlugQuery,
 } = templatesApi;

@@ -61,8 +61,10 @@ function OrdersTable() {
     switch (columnKey) {
       case "id":
         return (
-          <Tooltip content={order.id}>
-            <p className="text-sm cursor-pointer">{order.id.slice(0, 8)}...</p>
+          <Tooltip content={order.orderNumber}>
+            <p className="text-sm cursor-pointer">
+              {order.orderNumber}
+            </p>
           </Tooltip>
         );
       case "totalAmount":
