@@ -82,7 +82,7 @@ function PageTemplatesSetup() {
           variant="shadow"
           onPress={() => setAddModalOpen(true)}
         >
-          Add Page
+          Add Page Setup
         </Button>
       </div>
     );

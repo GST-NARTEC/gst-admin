@@ -150,13 +150,13 @@ export default function Header() {
               <button
                 onClick={() =>
                   window.open(
-                    "https://buybarcodeupc.com/register/membership-form",
+                    "https://buybarcodeupc.com/",
                     "_blank"
                   )
                 }
                 className="px-3 py-1.5 text-sm border-2 border-[#1B365D] text-[#1B365D] rounded hover:bg-[#1B365D] hover:text-white transition-all duration-300"
               >
-                Get Started
+                Buy Barcode
               </button>
               <button
                 onClick={() => navigate("/admin/login")}

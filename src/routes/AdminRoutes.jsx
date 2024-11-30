@@ -22,11 +22,24 @@ import HomePage from "../components/managePages/homePage/HomePage";
 import PageTemplates from "../pages/WebsitesManagement/GSTSA/PageTemplates";
 import PageTemplatesSetup from "../pages/WebsitesManagement/GSTSA/PageTemplatesSetup";
 import PageTemplatesGallery from "../pages/WebsitesManagement/GSTSA/PageTemplatesGallery";
-import Template1 from "../components/pageTemplates/pageTemplatesGallery/Template1/Template1";
-import AddTemplate1 from "../components/pageTemplates/pageTemplatesGallery/Template1/AddTemplate1/AddTemplate1";
-import ViewTemplate1 from "../components/pageTemplates/pageTemplatesGallery/Template1/ViewTemplate1";
-import EditTemplate1 from "../components/pageTemplates/pageTemplatesGallery/Template1/EditTemplate1/EditTemplate1";
 
+// Template 1 Management
+import Template1 from "../components/pageTemplates/pageTemplatesGallery/Template1/Template1";
+import AddTemplate1 from "../components/pageTemplates/pageTemplatesGallery/Template1/AddTemplate1";
+import ViewTemplate1 from "../components/pageTemplates/pageTemplatesGallery/Template1/ViewTemplate1";
+import EditTemplate1 from "../components/pageTemplates/pageTemplatesGallery/Template1/EditTemplate1";
+
+// Template 2 Management
+import Template2 from "../components/pageTemplates/pageTemplatesGallery/Template2/Template2";
+import AddTemplate2 from "../components/pageTemplates/pageTemplatesGallery/Template2/AddTemplate2";
+import ViewTemplate2 from "../components/pageTemplates/pageTemplatesGallery/Template2/ViewTemplate2";
+import EditTemplate2 from "../components/pageTemplates/pageTemplatesGallery/Template2/EditTemplate2";
+
+// Template 3 Management
+import Template3 from "../components/pageTemplates/pageTemplatesGallery/Template3/Template3";
+import AddTemplate3 from "../components/pageTemplates/pageTemplatesGallery/Template3/AddTemplate3";
+import EditTemplate3 from "../components/pageTemplates/pageTemplatesGallery/Template3/EditTemplate3";
+import ViewTemplate3 from "../components/pageTemplates/pageTemplatesGallery/Template3/ViewTemplate3";
 function AdminRoutes() {
   return (
     <Routes>
@@ -71,6 +84,20 @@ function AdminRoutes() {
         <Route path="add" element={<AddTemplate1 />} />
         <Route path="edit/:id" element={<EditTemplate1 />} />
         <Route path="view/:id" element={<ViewTemplate1 />} />
+      </Route>
+
+      <Route path="/admin/gstsa1/page-templates/templates/template2">
+        <Route index element={<Template2 />} />
+        <Route path="add" element={<AddTemplate2 />} />
+        <Route path="view/:id" element={<ViewTemplate2 />} />
+        <Route path="edit/:id" element={<EditTemplate2 />} />
+      </Route>
+
+      <Route path="/admin/gstsa1/page-templates/templates/template3">
+        <Route index element={<Template3 />} />
+        <Route path="add" element={<AddTemplate3 />} />
+        <Route path="edit/:id" element={<EditTemplate3 />} />
+        <Route path="view/:id" element={<ViewTemplate3 />} />
       </Route>
     </Routes>
   );

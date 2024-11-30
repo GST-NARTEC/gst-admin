@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import MainLayout from "../../../../../layout/AdminLayouts/MainLayout";
+import MainLayout from "../../../../layout/AdminLayouts/MainLayout";
 import {
   Button,
   Input,
@@ -10,14 +10,14 @@ import {
   CardBody,
 } from "@nextui-org/react";
 import { IoArrowBack } from "react-icons/io5";
-import RichTextEditor from "./RichTextEditor";
-import SlugInput from "./SlugInput";
+import RichTextEditor from "../common/RichTextEditor";
+import SlugInput from "../common/SlugInput";
 import { toast } from "react-hot-toast";
 
 // api
-import { useCreateTemplateMutation } from "../../../../../store/apis/endpoints/templates";
+import { useCreateTemplateMutation } from "../../../../store/apis/endpoints/templates";
 
-function AddTemplate1() {
+function AddTemplate2() {
   const navigate = useNavigate();
 
   const [createTemplate, { isLoading, isError, isSuccess, error }] =
@@ -39,6 +39,10 @@ function AddTemplate1() {
     image1: null,
     image2: null,
     image3: null,
+    buttonTextEn: "",
+    buttonTextAr: "",
+    buttonNavigationEn: "",
+    buttonNavigationAr: "",
   });
 
   const [previewImages, setPreviewImages] = useState({
@@ -95,6 +99,12 @@ function AddTemplate1() {
     formDataToSend.append("description3En", formData.description3En);
     formDataToSend.append("description3Ar", formData.description3Ar);
 
+    // Add button data
+    formDataToSend.append("buttonTextEn", formData.buttonTextEn);
+    formDataToSend.append("buttonTextAr", formData.buttonTextAr);
+    formDataToSend.append("buttonNavigationEn", formData.buttonNavigationEn);
+    formDataToSend.append("buttonNavigationAr", formData.buttonNavigationAr);
+
     // Add files if they exist
     if (formData.image1) formDataToSend.append("image1", formData.image1);
     if (formData.image2) formDataToSend.append("image2", formData.image2);
@@ -102,7 +112,7 @@ function AddTemplate1() {
 
     try {
       await createTemplate({
-        templateType: "template1",
+        templateType: "template2",
         data: formDataToSend,
       }).unwrap();
     } catch (err) {
@@ -118,7 +128,7 @@ function AddTemplate1() {
           <Button isIconOnly variant="light" onPress={() => navigate("..")}>
             <IoArrowBack className="text-xl" />
           </Button>
-          <h1 className="text-2xl font-bold">Add New Template</h1>
+          <h1 className="text-2xl font-bold">Add New Page</h1>
         </div>
 
         <div className="max-w-[1400px] mx-auto space-y-6">
@@ -128,20 +138,21 @@ function AddTemplate1() {
               <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Input
-                  label="Template Name"
-                  placeholder="Enter Template Name"
+                  label="Page Name"
+                  placeholder="Enter Page Name"
                   value={formData.nameEn}
                   onChange={(e) => handleInputChange("nameEn", e.target.value)}
                 />
                 <Input
-                  label="Template Name [Arabic]"
-                  placeholder="Enter Template Name in Arabic"
+                  label="Page Name [Arabic]"
+                  placeholder="Enter Page Name in Arabic"
                   value={formData.nameAr}
                   onChange={(e) => handleInputChange("nameAr", e.target.value)}
                 />
                 <SlugInput
                   value={formData.pageId}
                   onChange={(id) => handleInputChange("pageId", id)}
+                  templateType="template2"
                 />
               </div>
 
@@ -337,9 +348,9 @@ function AddTemplate1() {
                           </svg>
                           Upload Image
                         </label>
-                        <p className="text-gray-500 mt-2">
+                        {/* <p className="text-gray-500 mt-2">
                           Recommended size: 800x500px
-                        </p>
+                        </p> */}
                       </div>
                     )}
                   </div>
@@ -347,18 +358,79 @@ function AddTemplate1() {
               </div>
             </section>
 
-            {/* Bottom Section - Similar structure to Info Section but reversed */}
+            {/* Navigation Buttons */}
+            <div className="container mx-auto px-4 mb-8">
+              <div className="grid grid-cols-2 gap-4">
+                <Input
+                  label="Button Text (English)"
+                  placeholder="Enter button text"
+                  value={formData.buttonTextEn}
+                  onChange={(e) =>
+                    handleInputChange("buttonTextEn", e.target.value)
+                  }
+                />
+                <Input
+                  label="Button Text (Arabic)"
+                  placeholder="اكتب النص هنا"
+                  value={formData.buttonTextAr}
+                  onChange={(e) =>
+                    handleInputChange("buttonTextAr", e.target.value)
+                  }
+                />
+                <Input
+                  label="Button Navigation (English)"
+                  placeholder="Enter navigation link"
+                  value={formData.buttonNavigationEn}
+                  onChange={(e) =>
+                    handleInputChange("buttonNavigationEn", e.target.value)
+                  }
+                />
+                <Input
+                  label="Button Navigation (Arabic)"
+                  placeholder="اكتب التنقل هنا"
+                  value={formData.buttonNavigationAr}
+                  onChange={(e) =>
+                    handleInputChange("buttonNavigationAr", e.target.value)
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Bottom Section - Content above, image below */}
             <section className="py-12 bg-gradient-to-b from-white to-gray-100">
               <div className="container mx-auto px-4">
-                <div className="grid md:grid-cols-2 gap-8 items-start">
-                  {/* Image Section */}
-                  <div className="bg-white/95 rounded-xl p-2 shadow-lg h-[450px]">
+                <div className="grid grid-cols-1 gap-8">
+                  {/* Content Editors */}
+                  <div className="space-y-6">
+                    {/* English Editor */}
+                    <RichTextEditor
+                      label="English Content"
+                      value={formData.description3En}
+                      onChange={(value) =>
+                        handleInputChange("description3En", value)
+                      }
+                      placeholder="Enter English content here..."
+                    />
+                    {/* Arabic Editor */}
+                    <RichTextEditor
+                      label="Arabic Content"
+                      value={formData.description3Ar}
+                      onChange={(value) =>
+                        handleInputChange("description3Ar", value)
+                      }
+                      placeholder="Enter Arabic content here..."
+                      isRTL
+                    />
+                  </div>
+
+                  {/* Image Section - Now below the content */}
+                  <div className="bg-white/95 rounded-xl p-2 shadow-lg h-[370px] mx-auto w-full max-w-4xl">
                     {previewImages.image3 ? (
                       <div className="relative group">
                         <img
                           src={previewImages.image3}
                           alt="Section 2"
-                          className="w-full h-[450px] object-cover"
+                          className="w-full h-[350px] object-cover"
                         />
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <input
@@ -377,7 +449,7 @@ function AddTemplate1() {
                         </div>
                       </div>
                     ) : (
-                      <div className="h-[430px] bg-gray-100 flex flex-col items-center justify-center">
+                      <div className="h-[350px] bg-gray-100 flex flex-col items-center justify-center">
                         <input
                           type="file"
                           id="image3"
@@ -410,29 +482,6 @@ function AddTemplate1() {
                       </div>
                     )}
                   </div>
-
-                  {/* Content Editors */}
-                  <div className="space-y-6">
-                    {/* English Editor */}
-                    <RichTextEditor
-                      label="English Content"
-                      value={formData.description3En}
-                      onChange={(value) =>
-                        handleInputChange("description3En", value)
-                      }
-                      placeholder="Enter English content here..."
-                    />
-                    {/* Arabic Editor */}
-                    <RichTextEditor
-                      label="Arabic Content"
-                      value={formData.description3Ar}
-                      onChange={(value) =>
-                        handleInputChange("description3Ar", value)
-                      }
-                      placeholder="Enter Arabic content here..."
-                      isRTL
-                    />
-                  </div>
                 </div>
               </div>
             </section>
@@ -452,7 +501,7 @@ function AddTemplate1() {
               onPress={handleSubmit}
               isLoading={isLoading}
             >
-              {isLoading ? "Creating..." : "Add Template"}
+              {isLoading ? "Creating..." : "Add Page"}
             </Button>
           </div>
         </div>
@@ -461,4 +510,4 @@ function AddTemplate1() {
   );
 }
 
-export default AddTemplate1;
+export default AddTemplate2;

@@ -75,7 +75,7 @@ function AddPageSetup({ isOpen, onOpenChange }) {
         {(onClose) => (
           <form onSubmit={handleSubmit(onSubmit)}>
             <ModalHeader className="text-xl font-semibold">
-              Add New Page
+              Add New Page Setup
             </ModalHeader>
             <ModalBody>
               <div className="grid grid-cols-2 gap-4">
@@ -161,7 +161,7 @@ function AddPageSetup({ isOpen, onOpenChange }) {
                 type="submit"
                 isLoading={isLoading}
               >
-                Create Page
+                Create Page Setup
               </Button>
             </ModalFooter>
           </form>

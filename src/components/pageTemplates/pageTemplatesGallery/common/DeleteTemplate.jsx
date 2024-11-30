@@ -9,14 +9,14 @@ import {
 } from "@nextui-org/react";
 import { useDeleteTemplateMutation } from "../../../../store/apis/endpoints/templates";
 
-function DeleteTemplate1({ isOpen, onClose, templateId }) {
+function DeleteTemplate({ isOpen, onClose, templateId, templateType }) {
   const [deleteTemplate, { isLoading }] = useDeleteTemplateMutation();
 
   const handleDelete = async () => {
     try {
-      await deleteTemplate({ 
-        templateType: "template1", 
-        id: templateId 
+      await deleteTemplate({
+        templateType: templateType,
+        id: templateId,
       }).unwrap();
       onClose();
     } catch (error) {
@@ -29,17 +29,14 @@ function DeleteTemplate1({ isOpen, onClose, templateId }) {
       <ModalContent>
         <ModalHeader>Confirm Delete</ModalHeader>
         <ModalBody>
-          Are you sure you want to delete this template? This action cannot be undone.
+          Are you sure you want to delete this template? This action cannot be
+          undone.
         </ModalBody>
         <ModalFooter>
           <Button variant="light" onPress={onClose}>
             Cancel
           </Button>
-          <Button 
-            color="danger" 
-            onPress={handleDelete}
-            isLoading={isLoading}
-          >
+          <Button color="danger" onPress={handleDelete} isLoading={isLoading}>
             Delete
           </Button>
         </ModalFooter>
@@ -48,4 +45,4 @@ function DeleteTemplate1({ isOpen, onClose, templateId }) {
   );
 }
 
-export default DeleteTemplate1;
+export default DeleteTemplate;

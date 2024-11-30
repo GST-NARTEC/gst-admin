@@ -19,7 +19,7 @@ import { IoArrowBack, IoEyeOutline } from "react-icons/io5";
 import { useGetTemplatesQuery } from "../../../../store/apis/endpoints/templates";
 import DeleteTemplate from "../common/DeleteTemplate";
 
-function Template1() {
+function Template3() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(10);
@@ -27,7 +27,7 @@ function Template1() {
   const [selectedTemplateId, setSelectedTemplateId] = useState(null);
 
   const { data: templatesData, isLoading } = useGetTemplatesQuery({
-    templateType: "template1",
+    templateType: "template3",
     page,
     limit: rowsPerPage,
   });
@@ -72,7 +72,7 @@ function Template1() {
           >
             <IoArrowBack className="text-xl" />
           </Button>
-          <h1 className="text-2xl font-bold">Template 1 Management</h1>
+          <h1 className="text-2xl font-bold">Template 3 Management</h1>
         </div>
         <Button color="primary" onPress={handleAdd}>
           Add New Page
@@ -167,10 +167,10 @@ function Template1() {
         isOpen={deleteModalOpen}
         onClose={handleDeleteModalClose}
         templateId={selectedTemplateId}
-        templateType="template1"
+        templateType="template3"
       />
     </MainLayout>
   );
 }
 
-export default Template1;
+export default Template3;
