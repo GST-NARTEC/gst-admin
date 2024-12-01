@@ -11,13 +11,27 @@ import {
   Spinner,
   Chip,
   Tooltip,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
 } from "@nextui-org/react";
-import { FaSearch, FaEye, FaFileInvoice } from "react-icons/fa";
+import {
+  FaSearch,
+  FaEye,
+  FaFileInvoice,
+  FaEllipsisV,
+  FaCheckCircle,
+} from "react-icons/fa";
+import { BsReceiptCutoff } from "react-icons/bs";
 import { useGetUserByIdQuery } from "../../store/apis/endpoints/user";
 import OrderDetailsModal from "./OrderDetailsModal";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectCurrencySymbol } from "../../store/slice/currencySlice";
+import BankSlipModal from "./BankSlipModal";
+import ActivateOrderModal from "./ActivateOrderModal";
 
 function OrdersTable() {
   const { id } = useParams();
@@ -25,6 +39,8 @@ function OrdersTable() {
   const [search, setSearch] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBankSlipModalOpen, setIsBankSlipModalOpen] = useState(false);
+  const [isActivateModalOpen, setIsActivateModalOpen] = useState(false);
   const currencySymbol = useSelector(selectCurrencySymbol);
   const { data: ordersData, isLoading } = useGetUserByIdQuery(
     {
@@ -62,9 +78,7 @@ function OrdersTable() {
       case "id":
         return (
           <Tooltip content={order.orderNumber}>
-            <p className="text-sm cursor-pointer">
-              {order.orderNumber}
-            </p>
+            <p className="text-sm cursor-pointer">{order.orderNumber}</p>
           </Tooltip>
         );
       case "totalAmount":
@@ -72,8 +86,7 @@ function OrdersTable() {
       case "overallAmount":
         return (
           <p className="text-sm">
-            {currencySymbol} {" "}
-            {order[columnKey].toFixed(2)}
+            {currencySymbol} {order[columnKey].toFixed(2)}
           </p>
         );
       case "status":
@@ -109,19 +122,52 @@ function OrdersTable() {
         );
       case "actions":
         return (
-          <div className="relative flex items-center justify-center gap-2">
-            <Tooltip content="View Order Details">
-              <span
-                className="text-lg text-navy-700 cursor-pointer active:opacity-50"
+          <Dropdown>
+            <DropdownTrigger>
+              <Button
+                isIconOnly
+                variant="light"
+                className="text-lg cursor-pointer text-default-400 hover:text-default-500"
+              >
+                <FaEllipsisV />
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              aria-label="Order Actions"
+              className="text-default-500"
+            >
+              <DropdownItem
+                key="details"
+                startContent={<FaEye className="text-primary" />}
                 onClick={() => {
                   setSelectedOrder(order);
                   setIsModalOpen(true);
                 }}
               >
-                <FaEye />
-              </span>
-            </Tooltip>
-          </div>
+                View Order Details
+              </DropdownItem>
+              <DropdownItem
+                key="bankSlip"
+                startContent={<BsReceiptCutoff className="text-warning" />}
+                onClick={() => {
+                  setSelectedOrder(order);
+                  setIsBankSlipModalOpen(true);
+                }}
+              >
+                View Payment Slip
+              </DropdownItem>
+              <DropdownItem
+                key="activate"
+                startContent={<FaCheckCircle className="text-success" />}
+                onClick={() => {
+                  setSelectedOrder(order);
+                  setIsActivateModalOpen(true);
+                }}
+              >
+                Activate Order
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         );
       case "totalItems":
         return <p className="text-sm">{order.orderItems?.length || 0}</p>;
@@ -149,25 +195,25 @@ function OrdersTable() {
     [search]
   );
 
-//   const bottomContent = useMemo(
-//     () => (
-//       <div className="py-2 px-2 flex justify-between items-center">
-//         <span className="w-[30%] text-sm text-gray-500">
-//           {orders.length} orders in total
-//         </span>
-//         <Pagination
-//           isCompact
-//           showControls
-//           showShadow
-//           color="primary"
-//           page={page}
-//           total={10}
-//           onChange={setPage}
-//         />
-//       </div>
-//     ),
-//     [page]
-//   );
+  //   const bottomContent = useMemo(
+  //     () => (
+  //       <div className="py-2 px-2 flex justify-between items-center">
+  //         <span className="w-[30%] text-sm text-gray-500">
+  //           {orders.length} orders in total
+  //         </span>
+  //         <Pagination
+  //           isCompact
+  //           showControls
+  //           showShadow
+  //           color="primary"
+  //           page={page}
+  //           total={10}
+  //           onChange={setPage}
+  //         />
+  //       </div>
+  //     ),
+  //     [page]
+  //   );
 
   return (
     <>
@@ -209,6 +255,18 @@ function OrdersTable() {
       <OrderDetailsModal
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
+        order={selectedOrder}
+      />
+
+      <BankSlipModal
+        isOpen={isBankSlipModalOpen}
+        onOpenChange={setIsBankSlipModalOpen}
+        order={selectedOrder}
+      />
+
+      <ActivateOrderModal
+        isOpen={isActivateModalOpen}
+        onOpenChange={setIsActivateModalOpen}
         order={selectedOrder}
       />
     </>
