@@ -40,6 +40,13 @@ import Template3 from "../components/pageTemplates/pageTemplatesGallery/Template
 import AddTemplate3 from "../components/pageTemplates/pageTemplatesGallery/Template3/AddTemplate3";
 import EditTemplate3 from "../components/pageTemplates/pageTemplatesGallery/Template3/EditTemplate3";
 import ViewTemplate3 from "../components/pageTemplates/pageTemplatesGallery/Template3/ViewTemplate3";
+
+// Template 4 Management
+import Template4 from "../components/pageTemplates/pageTemplatesGallery/Template4/Template4";
+import AddTemplate4 from "../components/pageTemplates/pageTemplatesGallery/Template4/AddTemplate4";
+import EditTemplate4 from "../components/pageTemplates/pageTemplatesGallery/Template4/EditTemplate4";
+import ViewTemplate4 from "../components/pageTemplates/pageTemplatesGallery/Template4/ViewTemplate4";
+
 function AdminRoutes() {
   return (
     <Routes>
@@ -98,6 +105,13 @@ function AdminRoutes() {
         <Route path="add" element={<AddTemplate3 />} />
         <Route path="edit/:id" element={<EditTemplate3 />} />
         <Route path="view/:id" element={<ViewTemplate3 />} />
+      </Route>
+
+      <Route path="/admin/gstsa1/page-templates/templates/template4">
+        <Route index element={<Template4 />} />
+        <Route path="add" element={<AddTemplate4 />} />
+        <Route path="edit/:id" element={<EditTemplate4 />} />
+        <Route path="view/:id" element={<ViewTemplate4 />} />
       </Route>
     </Routes>
   );
