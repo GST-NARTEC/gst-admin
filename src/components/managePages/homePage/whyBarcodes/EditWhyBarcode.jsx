@@ -13,6 +13,7 @@ import {
 import { toast } from "react-hot-toast";
 import { useUpdateWhyBarcodeMutation } from "../../../../store/apis/endpoints/websiteEndpoints/whyBarcode";
 import { FaUpload } from "react-icons/fa";
+import PageSelector from "../PageSelector";
 
 function EditWhyBarcode({ isOpen, onOpenChange, whyBarcode }) {
   const [updateWhyBarcode, { isLoading }] = useUpdateWhyBarcodeMutation();
@@ -24,6 +25,7 @@ function EditWhyBarcode({ isOpen, onOpenChange, whyBarcode }) {
     descriptionAr: "",
     image: null,
     isActive: true,
+    pageId: "",
   });
 
   const [preview, setPreview] = useState(null);
@@ -37,6 +39,7 @@ function EditWhyBarcode({ isOpen, onOpenChange, whyBarcode }) {
         descriptionAr: whyBarcode.descriptionAr,
         isActive: whyBarcode.isActive,
         image: null,
+        pageId: whyBarcode.pageId,
       });
       setPreview(whyBarcode.image);
     }
@@ -68,6 +71,7 @@ function EditWhyBarcode({ isOpen, onOpenChange, whyBarcode }) {
       formDataToSend.append("descriptionEn", formData.descriptionEn);
       formDataToSend.append("descriptionAr", formData.descriptionAr);
       formDataToSend.append("isActive", formData.isActive);
+      formDataToSend.append("pageId", formData.pageId);
 
       if (formData.image) {
         formDataToSend.append("image", formData.image);
@@ -179,6 +183,15 @@ function EditWhyBarcode({ isOpen, onOpenChange, whyBarcode }) {
                   >
                     {formData.isActive ? "Active" : "Inactive"}
                   </Switch>
+                </div>
+
+                <div className="col-span-2">
+                  <PageSelector
+                    value={formData.pageId}
+                    onChange={(id) =>
+                      setFormData((prev) => ({ ...prev, pageId: id }))
+                    }
+                  />
                 </div>
               </div>
             </ModalBody>

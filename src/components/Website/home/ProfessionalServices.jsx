@@ -6,6 +6,7 @@ import { BiBarcode, BiPrinter } from 'react-icons/bi';
 import { MdOutlineLocalPrintshop } from 'react-icons/md';
 import { TbTruckDelivery } from 'react-icons/tb';
 import { useGetActiveProServicesQuery } from "../../../store/apis/endpoints/websiteEndpoints/proServices";
+import { useNavigate } from "react-router-dom";
 
 const serviceIcons = [
   {
@@ -55,6 +56,13 @@ const itemVariants = {
 export default function ProfessionalServices() {
   const { data: proServicesData, isLoading } = useGetActiveProServicesQuery();
   const proServices = proServicesData?.data?.proServices || [];
+  const navigate = useNavigate();
+
+  const handleServiceClick = (service) => {
+    if (service.page) {
+      navigate(`/${service.page.template}/${service.page.slug}`);
+    }
+  };
 
   const SkeletonCard = () => (
     <div className="group relative">
@@ -117,7 +125,10 @@ export default function ProfessionalServices() {
             <motion.div
               key={service.id}
               variants={itemVariants}
-              className="group relative"
+              onClick={() => handleServiceClick(service)}
+              className={`group relative ${
+                service.page ? 'cursor-pointer' : 'cursor-default'
+              }`}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-cyan-500/5 rounded-2xl transform group-hover:scale-105 transition-transform duration-300" />
 
@@ -156,6 +167,12 @@ export default function ProfessionalServices() {
                     />
                   </svg>
                 </button>
+
+                {service.page && (
+                  <div className="absolute top-4 right-4">
+                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                  </div>
+                )}
               </div>
             </motion.div>
           ))}

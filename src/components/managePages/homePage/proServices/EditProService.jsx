@@ -13,6 +13,7 @@ import {
 import { toast } from "react-hot-toast";
 import { useUpdateProServiceMutation } from "../../../../store/apis/endpoints/websiteEndpoints/proServices";
 import { FaUpload } from "react-icons/fa";
+import PageSelector from "../PageSelector";
 
 function EditProService({ isOpen, onOpenChange, proService }) {
   const [updateProService, { isLoading }] = useUpdateProServiceMutation();
@@ -26,6 +27,7 @@ function EditProService({ isOpen, onOpenChange, proService }) {
     captionAr: "",
     image: null,
     status: 1,
+    pageId: null,
   });
 
   const [preview, setPreview] = useState(null);
@@ -40,6 +42,7 @@ function EditProService({ isOpen, onOpenChange, proService }) {
         captionEn: proService.captionEn || "",
         captionAr: proService.captionAr || "",
         status: proService.status,
+        pageId: proService.pageId || null,
       });
       setPreview(proService.image);
     }
@@ -162,6 +165,17 @@ function EditProService({ isOpen, onOpenChange, proService }) {
                     className="hidden"
                     onChange={handleImageChange}
                     accept="image/*"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <PageSelector
+                    value={formData.pageId}
+                    onChange={(value) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        pageId: value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="col-span-2">

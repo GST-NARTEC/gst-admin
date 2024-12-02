@@ -50,12 +50,12 @@ function WhyBarcodes() {
 
       case "description":
         return (
-          <div className="flex flex-col max-w-xs">
+          <div className="flex flex-col max-w-[230px]">
             <Tooltip content={item.descriptionEn}>
-              <p className="text-small truncate">{item.descriptionEn}</p>
+              <p className="text-small line-clamp-2">{item.descriptionEn}</p>
             </Tooltip>
             <Tooltip content={item.descriptionAr}>
-              <p className="text-tiny text-default-500 truncate">
+              <p className="text-tiny text-default-500 truncate line-clamp-2">
                 {item.descriptionAr}
               </p>
             </Tooltip>
@@ -82,6 +82,18 @@ function WhyBarcodes() {
             variant="flat"
           >
             {item.isActive ? "Active" : "Inactive"}
+          </Chip>
+        );
+
+      case "page":
+        return (
+          <Chip
+            className="capitalize"
+            color={item.page ? "primary" : "default"}
+            size="sm"
+            variant="flat"
+          >
+            {item.page ? item.page.nameEn : "Unlinked"}
           </Chip>
         );
 
@@ -140,6 +152,7 @@ function WhyBarcodes() {
           <TableColumn>DESCRIPTION</TableColumn>
           <TableColumn>IMAGE</TableColumn>
           <TableColumn>STATUS</TableColumn>
+          <TableColumn>PAGE</TableColumn>
           <TableColumn>ACTIONS</TableColumn>
         </TableHeader>
         <TableBody
@@ -149,26 +162,32 @@ function WhyBarcodes() {
         >
           {whyBarcodes.map((item) => (
             <TableRow key={item.id}>
-              {["title", "description", "image", "status", "actions"].map((columnKey) => (
-                <TableCell key={columnKey}>{renderCell(item, columnKey)}</TableCell>
+              {[
+                "title",
+                "description",
+                "image",
+                "status",
+                "page",
+                "actions",
+              ].map((columnKey) => (
+                <TableCell key={columnKey}>
+                  {renderCell(item, columnKey)}
+                </TableCell>
               ))}
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
-      <AddWhyBarcode 
-        isOpen={isAddModalOpen}
-        onOpenChange={setIsAddModalOpen}
-      />
-      
-      <EditWhyBarcode 
+      <AddWhyBarcode isOpen={isAddModalOpen} onOpenChange={setIsAddModalOpen} />
+
+      <EditWhyBarcode
         isOpen={isEditModalOpen}
         onOpenChange={setIsEditModalOpen}
         whyBarcode={selectedItem}
       />
-      
-      <DeleteWhyBarcode 
+
+      <DeleteWhyBarcode
         isOpen={isDeleteModalOpen}
         onOpenChange={setIsDeleteModalOpen}
         whyBarcode={selectedItem}

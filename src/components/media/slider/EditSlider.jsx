@@ -13,6 +13,7 @@ import {
 import { toast } from "react-hot-toast";
 import { useUpdateSliderMutation } from "../../../store/apis/endpoints/websiteEndpoints/slider";
 import { FaUpload } from "react-icons/fa";
+import PageSelector from "../../managePages/homePage/PageSelector";
 
 function EditSlider({ isOpen, onOpenChange, slider }) {
   const [updateSlider, { isLoading }] = useUpdateSliderMutation();
@@ -27,6 +28,7 @@ function EditSlider({ isOpen, onOpenChange, slider }) {
     imageEn: null,
     imageAr: null,
     status: 1,
+    pageId: null,
   });
 
   const [previews, setPreviews] = useState({
@@ -46,6 +48,7 @@ function EditSlider({ isOpen, onOpenChange, slider }) {
         imageEn: null,
         imageAr: null,
         status: slider.status,
+        pageId: slider.pageId || null,
       });
       setPreviews({
         imageEn: slider.imageEn,
@@ -85,6 +88,7 @@ function EditSlider({ isOpen, onOpenChange, slider }) {
       formDataToSend.append("captionEn", formData.captionEn);
       formDataToSend.append("captionAr", formData.captionAr);
       formDataToSend.append("status", formData.status);
+      formDataToSend.append("pageId", formData.pageId);
 
       if (formData.imageEn instanceof File) {
         formDataToSend.append("imageEn", formData.imageEn);
@@ -228,6 +232,18 @@ function EditSlider({ isOpen, onOpenChange, slider }) {
                     className="hidden"
                     onChange={handleImageChange("imageAr")}
                     accept="image/*"
+                  />
+                </div>
+
+                <div className="col-span-2">
+                  <PageSelector
+                    value={formData.pageId}
+                    onChange={(value) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        pageId: value,
+                      }))
+                    }
                   />
                 </div>
 

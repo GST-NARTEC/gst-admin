@@ -41,8 +41,10 @@ function Slider() {
       case "title":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{slider.titleEn}</p>
-            <p className="text-bold text-tiny text-default-500">
+            <p className="text-bold text-small line-clamp-2">
+              {slider.titleEn}
+            </p>
+            <p className="text-bold text-tiny text-default-500 line-clamp-2 ">
               {slider.titleAr}
             </p>
           </div>
@@ -50,12 +52,14 @@ function Slider() {
 
       case "description":
         return (
-          <div className="flex flex-col max-w-xs">
+          <div className="flex flex-col max-w-[100px] line-clamp-2 p-0">
             <Tooltip content={slider.descriptionEn}>
-              <p className="text-small truncate">{slider.descriptionEn}</p>
+              <p className="text-small  line-clamp-2">
+                {slider.descriptionEn}
+              </p>
             </Tooltip>
             <Tooltip content={slider.descriptionAr}>
-              <p className="text-tiny text-default-500 truncate">
+              <p className="text-tiny text-default-500 line-clamp-2">
                 {slider.descriptionAr}
               </p>
             </Tooltip>
@@ -104,6 +108,18 @@ function Slider() {
           </Chip>
         );
 
+      case "page":
+        return (
+          <Chip
+            className="capitalize"
+            color={slider.page ? "primary" : "default"}
+            size="sm"
+            variant="flat"
+          >
+            {slider.page ? slider.page.nameEn : "Unlinked"}
+          </Chip>
+        );
+
       case "actions":
         return (
           <div className="flex gap-2">
@@ -141,7 +157,7 @@ function Slider() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl font-bold">Sliders</h1>
-        <Button 
+        <Button
           className="bg-navy-600 text-white"
           onPress={() => setIsAddModalOpen(true)}
         >
@@ -156,6 +172,7 @@ function Slider() {
           <TableColumn>CAPTION</TableColumn>
           <TableColumn>IMAGES</TableColumn>
           <TableColumn>STATUS</TableColumn>
+          <TableColumn>PAGE</TableColumn>
           <TableColumn>ACTIONS</TableColumn>
         </TableHeader>
         <TableBody
@@ -171,6 +188,7 @@ function Slider() {
                 "caption",
                 "images",
                 "status",
+                "page",
                 "actions",
               ].map((columnKey) => (
                 <TableCell key={columnKey}>
@@ -182,18 +200,15 @@ function Slider() {
         </TableBody>
       </Table>
 
-      <AddSlider 
-        isOpen={isAddModalOpen} 
-        onOpenChange={setIsAddModalOpen} 
-      />
-      
-      <EditSlider 
+      <AddSlider isOpen={isAddModalOpen} onOpenChange={setIsAddModalOpen} />
+
+      <EditSlider
         isOpen={isEditModalOpen}
         onOpenChange={setIsEditModalOpen}
         slider={selectedSlider}
       />
-      
-      <DeleteSlider 
+
+      <DeleteSlider
         isOpen={isDeleteModalOpen}
         onOpenChange={setIsDeleteModalOpen}
         slider={selectedSlider}

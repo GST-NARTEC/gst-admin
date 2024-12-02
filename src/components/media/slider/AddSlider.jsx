@@ -13,6 +13,7 @@ import {
 import { toast } from "react-hot-toast";
 import { useCreateSliderMutation } from "../../../store/apis/endpoints/websiteEndpoints/slider";
 import { FaUpload } from "react-icons/fa";
+import PageSelector from "../../managePages/homePage/PageSelector";
 
 function AddSlider({ isOpen, onOpenChange }) {
   const [createSlider, { isLoading }] = useCreateSliderMutation();
@@ -27,6 +28,7 @@ function AddSlider({ isOpen, onOpenChange }) {
     imageEn: null,
     imageAr: null,
     status: 1,
+    pageId: null,
   });
 
   const [previews, setPreviews] = useState({
@@ -65,6 +67,7 @@ function AddSlider({ isOpen, onOpenChange }) {
       formDataToSend.append("captionEn", formData.captionEn);
       formDataToSend.append("captionAr", formData.captionAr);
       formDataToSend.append("status", formData.status ? 1 : 0);
+      formDataToSend.append("pageId", formData.pageId);
 
       if (formData.imageEn) {
         formDataToSend.append("imageEn", formData.imageEn);
@@ -86,6 +89,7 @@ function AddSlider({ isOpen, onOpenChange }) {
         imageEn: null,
         imageAr: null,
         status: 1,
+        pageId: null,
       });
       setPreviews({ imageEn: null, imageAr: null });
     } catch (error) {
@@ -212,6 +216,18 @@ function AddSlider({ isOpen, onOpenChange }) {
                     className="hidden"
                     onChange={handleImageChange("imageAr")}
                     accept="image/*"
+                  />
+                </div>
+
+                <div className="col-span-2">
+                  <PageSelector
+                    value={formData.pageId}
+                    onChange={(value) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        pageId: value,
+                      }))
+                    }
                   />
                 </div>
 

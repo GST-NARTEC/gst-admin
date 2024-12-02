@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BsArrowRight } from "react-icons/bs";
 import { useGetActiveSlidersQuery } from "../../../store/apis/endpoints/websiteEndpoints/slider";
 import { Skeleton } from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -10,6 +11,8 @@ export default function Hero() {
 
   const { data: sliderData, isLoading } = useGetActiveSlidersQuery();
   const slides = sliderData?.data?.sliders || [];
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isAutoPlaying || !slides.length) return;
@@ -22,6 +25,12 @@ export default function Hero() {
   const handleDotClick = (index) => {
     setCurrentSlide(index);
     setIsAutoPlaying(false);
+  };
+
+  const handleButtonClick = (slide) => {
+    if (slide.page) {
+      navigate(`/${slide.page.template}/${slide.page.slug}`);
+    }
   };
 
   if (isLoading) {
@@ -90,6 +99,7 @@ export default function Hero() {
                   initial={{ x: -50, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.4 }}
+                  onClick={() => handleButtonClick(slides[currentSlide])}
                   className="bg-[#1B365D] text-white px-8 py-4 rounded-md inline-flex items-center space-x-2 hover:bg-[#335082] transition-colors group"
                 >
                   <span>{slides[currentSlide].captionEn}</span>

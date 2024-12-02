@@ -13,6 +13,7 @@ import {
 import { toast } from "react-hot-toast";
 import { useCreateWhyBarcodeMutation } from "../../../../store/apis/endpoints/websiteEndpoints/whyBarcode";
 import { FaUpload } from "react-icons/fa";
+import PageSelector from "../PageSelector";
 
 function AddWhyBarcode({ isOpen, onOpenChange }) {
   const [createWhyBarcode, { isLoading }] = useCreateWhyBarcodeMutation();
@@ -24,6 +25,7 @@ function AddWhyBarcode({ isOpen, onOpenChange }) {
     descriptionAr: "",
     image: null,
     isActive: true,
+    pageId: "",
   });
 
   const [preview, setPreview] = useState(null);
@@ -54,6 +56,7 @@ function AddWhyBarcode({ isOpen, onOpenChange }) {
       formDataToSend.append("descriptionEn", formData.descriptionEn);
       formDataToSend.append("descriptionAr", formData.descriptionAr);
       formDataToSend.append("isActive", formData.isActive);
+      formDataToSend.append("pageId", formData.pageId);
 
       if (formData.image) {
         formDataToSend.append("image", formData.image);
@@ -69,6 +72,7 @@ function AddWhyBarcode({ isOpen, onOpenChange }) {
         descriptionAr: "",
         image: null,
         isActive: true,
+        pageId: "",
       });
       setPreview(null);
     } catch (error) {
@@ -129,6 +133,15 @@ function AddWhyBarcode({ isOpen, onOpenChange }) {
                 />
 
                 <div className="col-span-2">
+                  <PageSelector
+                    value={formData.pageId}
+                    onChange={(id) =>
+                      setFormData((prev) => ({ ...prev, pageId: id }))
+                    }
+                  />
+                </div>
+
+                <div className="col-span-2">
                   <p className="text-sm mb-2">Image</p>
                   <div
                     onClick={() => document.getElementById("image").click()}
@@ -162,7 +175,7 @@ function AddWhyBarcode({ isOpen, onOpenChange }) {
                     onValueChange={(value) =>
                       setFormData((prev) => ({
                         ...prev,
-                        isActive: value
+                        isActive: value,
                       }))
                     }
                   >

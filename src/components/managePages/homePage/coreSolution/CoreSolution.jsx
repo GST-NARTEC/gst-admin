@@ -84,6 +84,18 @@ function CoreSolution() {
           </Chip>
         );
 
+      case "page":
+        return (
+          <Chip
+            className="capitalize"
+            color={item.page ? "primary" : "default"}
+            size="sm"
+            variant="flat"
+          >
+            {item.page ? item.page.nameEn : "Unlinked"}
+          </Chip>
+        );
+
       case "actions":
         return (
           <div className="flex gap-2">
@@ -139,6 +151,7 @@ function CoreSolution() {
           <TableColumn>DESCRIPTION</TableColumn>
           <TableColumn>IMAGE</TableColumn>
           <TableColumn>STATUS</TableColumn>
+          <TableColumn>PAGE</TableColumn>
           <TableColumn>ACTIONS</TableColumn>
         </TableHeader>
         <TableBody
@@ -149,7 +162,7 @@ function CoreSolution() {
         >
           {(coreSolutionsData?.data?.coreSolutions || []).map((item) => (
             <TableRow key={item.id}>
-              {["title", "description", "image", "status", "actions"].map(
+              {["title", "description", "image", "status", "page", "actions"].map(
                 (columnKey) => (
                   <TableCell key={columnKey}>
                     {renderCell(item, columnKey)}

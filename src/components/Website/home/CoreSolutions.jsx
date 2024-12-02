@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Images } from "../../../assets/Index";
 import { useGetActiveCoreSolutionsQuery } from "../../../store/apis/endpoints/websiteEndpoints/CoreSolution";
+import { useNavigate } from "react-router-dom";
 
 const containerVariants = {
   hidden: {},
@@ -40,8 +41,16 @@ const SkeletonCard = () => (
 );
 
 export default function CoreSolutions() {
-  const { data: coreSolutionsData, isLoading } = useGetActiveCoreSolutionsQuery();
+  const { data: coreSolutionsData, isLoading } =
+    useGetActiveCoreSolutionsQuery();
   const coreSolutions = coreSolutionsData?.data?.coreSolutions || [];
+  const navigate = useNavigate();
+
+  const handleSolutionClick = (solution) => {
+    if (solution.page) {
+      navigate(`/${solution.page.template}/${solution.page.slug}`);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -49,7 +58,7 @@ export default function CoreSolutions() {
         <div className="absolute inset-0 bg-gradient-to-b from-secondary/5 to-quaternary/5" />
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-quaternary/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-        
+
         <div className="mx-16 px-4 relative">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3, 4, 5, 6].map((index) => (
@@ -79,7 +88,6 @@ export default function CoreSolutions() {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-     
           <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-tertiary to-quaternary bg-clip-text text-transparent">
             Featured Core Solutions
           </h2>
@@ -101,7 +109,10 @@ export default function CoreSolutions() {
             <motion.div
               key={solution.id}
               variants={itemVariants}
-              className="group relative rounded-2xl overflow-hidden bg-white hover:shadow-2xl hover:shadow-quaternary/20 transition-all duration-500"
+              onClick={() => handleSolutionClick(solution)}
+              className={`group relative rounded-2xl overflow-hidden bg-white hover:shadow-2xl hover:shadow-quaternary/20 transition-all duration-500 ${
+                solution.page ? "cursor-pointer" : "cursor-default"
+              }`}
             >
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img
@@ -109,7 +120,7 @@ export default function CoreSolutions() {
                   alt={solution.titleEn}
                   className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                 />
-            
+
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
               </div>
 
@@ -145,6 +156,12 @@ export default function CoreSolutions() {
                   <div className="w-10 h-10 rounded-full bg-quaternary/10 group-hover:bg-quaternary/20 transition-colors duration-300" />
                 </div>
               </div>
+
+              {solution.page && (
+                <div className="absolute top-4 right-4">
+                  <div className="w-2 h-2 rounded-full bg-quaternary animate-pulse" />
+                </div>
+              )}
             </motion.div>
           ))}
         </motion.div>

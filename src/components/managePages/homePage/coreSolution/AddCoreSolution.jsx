@@ -13,6 +13,7 @@ import {
 import { toast } from "react-hot-toast";
 import { useCreateCoreSolutionMutation } from "../../../../store/apis/endpoints/websiteEndpoints/CoreSolution";
 import { FaUpload } from "react-icons/fa";
+import PageSelector from "../PageSelector";
 
 function AddCoreSolution({ isOpen, onOpenChange }) {
   const [createCoreSolution, { isLoading }] = useCreateCoreSolutionMutation();
@@ -26,6 +27,7 @@ function AddCoreSolution({ isOpen, onOpenChange }) {
     captionAr: "",
     image: null,
     isActive: true,
+    pageId: null,
   });
 
   const [preview, setPreview] = useState(null);
@@ -73,6 +75,7 @@ function AddCoreSolution({ isOpen, onOpenChange }) {
         captionAr: "",
         image: null,
         isActive: true,
+        pageId: null,
       });
       setPreview(null);
     } catch (error) {
@@ -169,6 +172,18 @@ function AddCoreSolution({ isOpen, onOpenChange }) {
                     className="hidden"
                     onChange={handleImageChange}
                     accept="image/*"
+                  />
+                </div>
+
+                <div className="col-span-2">
+                  <PageSelector
+                    value={formData.pageId}
+                    onChange={(value) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        pageId: value,
+                      }))
+                    }
                   />
                 </div>
 
