@@ -36,7 +36,10 @@ import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import { useGetUserQuery } from "../../store/apis/endpoints/user";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useNavigate } from "react-router-dom";
-import { useDeleteUserMutation } from "../../store/apis/endpoints/user";
+import {
+  useDeleteUserMutation,
+  useUpdateUserStatusMutation,
+} from "../../store/apis/endpoints/user";
 import OverlayLoader from "../../components/common/OverlayLoader";
 import toast from "react-hot-toast";
 
@@ -47,6 +50,7 @@ const TABLE_COLUMNS = [
   { name: "MOBILE", uid: "mobile" },
   { name: "LICENSE NO", uid: "companyLicenseNo" },
   { name: "COUNTRY", uid: "country" },
+  { name: "STATUS", uid: "isActive" },
   { name: "ACTIONS", uid: "actions" },
 ];
 
@@ -63,6 +67,16 @@ function Members() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState("10");
+
+  const [
+    updateUserStatus,
+    {
+      isLoading: isUpdating,
+      isSuccess: isUpdated,
+      isError: isUpdatedError,
+      error: updatedError,
+    },
+  ] = useUpdateUserStatusMutation();
 
   const [
     deleteUser,
@@ -107,8 +121,31 @@ function Members() {
     navigate(`/admin/view-member/${member.id}`);
   };
 
+  const handleStatusUpdate = async (member, action) => {
+    try {
+      await updateUserStatus({ id: member.id, params: { action } });
+      toast.success(
+        `Member ${action === "active" ? "activated" : "suspended"} successfully`
+      );
+    } catch (error) {
+      toast.error(error?.data?.message || "Status update failed");
+    }
+  };
+
   const renderCell = (member, columnKey) => {
     switch (columnKey) {
+      case "isActive":
+        return (
+          <div
+            className={`px-2 py-1 rounded-full text-xs font-medium inline-block ${
+              member.isActive
+                ? "bg-success/20 text-success"
+                : "bg-danger/20 text-danger"
+            }`}
+          >
+            {member.isActive ? "Active" : "Inactive"}
+          </div>
+        );
       case "actions":
         return (
           <Dropdown>
@@ -135,6 +172,7 @@ function Members() {
               <DropdownItem
                 key="activation"
                 startContent={<FaCheckCircle className="text-success" />}
+                onClick={() => handleStatusUpdate(member, "active")}
               >
                 Activation
               </DropdownItem>
@@ -161,6 +199,7 @@ function Members() {
                 className="text-danger"
                 color="danger"
                 startContent={<FaBan className="text-danger" />}
+                onClick={() => handleStatusUpdate(member, "inactive")}
               >
                 Suspend User
               </DropdownItem>
@@ -205,7 +244,7 @@ function Members() {
             // onClick={() => navigate("/add-member")}
             onPress={() =>
               window.open(
-                "https://buybarcodeupc.com/register/membership-form",
+                "https://buybarcodeupc.com/register/barcodes",
                 "_blank"
               )
             }

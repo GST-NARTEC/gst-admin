@@ -12,6 +12,9 @@ import {
   CardFooter,
   Spinner,
   Switch,
+  Autocomplete,
+  AutocompleteItem,
+  Chip,
 } from "@nextui-org/react";
 import { FaArrowLeft, FaUpload } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
@@ -23,11 +26,16 @@ import { useGetCategoriesQuery } from "../../store/apis/endpoints/categories";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { selectCurrencySymbol } from "../../store/slice/currencySlice";
-
+import { useGetActiveAddonsQuery } from "../../store/apis/endpoints/addons";
 function EditProduct() {
   const currencySymbol = useSelector(selectCurrencySymbol);
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const { data: addonsData } = useGetActiveAddonsQuery({
+    page: 1,
+    limit: 100,
+  });
 
   const { data: productData, isLoading: isProductLoading } =
     useGetProductByIdQuery(id);
@@ -43,8 +51,11 @@ function EditProduct() {
     description: "",
     price: "",
     image: null,
-    status: "inactive"
+    status: "inactive",
+    selectedAddons: [],
   });
+
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
     if (productData?.data?.product) {
@@ -55,7 +66,8 @@ function EditProduct() {
         description: product.description,
         price: product.price.toString(),
         image: null,
-        status: product.status || "inactive"
+        status: product.status || "inactive",
+        selectedAddons: product.addons || [],
       });
     }
   }, [productData]);
@@ -81,6 +93,14 @@ function EditProduct() {
       if (formData.image) {
         productData.append("image", formData.image);
       }
+
+      if (formData.selectedAddons.length > 0) {
+        const addonIds = formData.selectedAddons.map((addon) => addon.id);
+        productData.append("addonIds", JSON.stringify(addonIds));
+      } else {
+        productData.append("addonIds", JSON.stringify([]));
+      }
+
       const payload = {
         id,
         data: productData,
@@ -92,6 +112,23 @@ function EditProduct() {
     } catch (error) {
       toast.error(error?.data?.message || "Failed to update product");
     }
+  };
+
+  const handleSelectAddon = (addonId) => {
+    const selectedAddon = addonsData?.data?.addons.find((addon) => addon.id === addonId);
+    if (selectedAddon) {
+      setFormData((prev) => ({
+        ...prev,
+        selectedAddons: [...prev.selectedAddons, selectedAddon],
+      }));
+    }
+  };
+
+  const handleDeleteAddon = (addonId) => {
+    setFormData((prev) => ({
+      ...prev,
+      selectedAddons: prev.selectedAddons.filter((addon) => addon.id !== addonId),
+    }));
   };
 
   if (isProductLoading) {
@@ -197,6 +234,49 @@ function EditProduct() {
                 >
                   {formData.status === "active" ? "Active" : "Inactive"}
                 </Switch>
+              </div>
+
+              <div className="space-y-4">
+                <h2 className="font-semibold my-4 font-sans">
+                  Addons (Optional)
+                </h2>
+                <Autocomplete
+                  label="Add Addon"
+                  placeholder="Search addons"
+                  className="max-w-xs"
+                  onSelectionChange={handleSelectAddon}
+                  onInputChange={setSearchValue}
+                  defaultItems={addonsData?.data?.addons || []}
+                  items={addonsData?.data?.addons?.filter(
+                    (addon) =>
+                      !formData.selectedAddons.find((a) => a.id === addon.id) &&
+                      addon.name.toLowerCase().includes(searchValue.toLowerCase())
+                  )}
+                >
+                  {(addon) => (
+                    <AutocompleteItem key={addon.id} value={addon.id}>
+                      <div className="flex justify-between items-center">
+                        <span>{addon.name}</span>
+                        <span>
+                          {currencySymbol} {addon.price.toFixed(2)}
+                        </span>
+                      </div>
+                    </AutocompleteItem>
+                  )}
+                </Autocomplete>
+
+                <div className="flex mt-2 flex-wrap">
+                  {formData.selectedAddons.map((addon) => (
+                    <Chip
+                      key={addon.id}
+                      onClose={() => handleDeleteAddon(addon.id)}
+                      variant="flat"
+                      className="mr-2 mb-2"
+                    >
+                      {addon.name} ({currencySymbol} {addon.price.toFixed(2)})
+                    </Chip>
+                  ))}
+                </div>
               </div>
             </div>
 

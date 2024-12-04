@@ -28,6 +28,7 @@ const TABLE_COLUMNS = [
   { name: "CATEGORY", uid: "category" },
   { name: "DESCRIPTION", uid: "description" },
   { name: "PRICE", uid: "price" },
+  { name: "ADDONS", uid: "addons" },
   { name: "STATUS", uid: "status" },
   { name: "ACTIONS", uid: "actions" },
 ];
@@ -95,6 +96,25 @@ function Products() {
           <span>
             {currencySymbol} {Number(product.price).toFixed(2)}
           </span>
+        );
+      case "addons":
+        return (
+          <Tooltip 
+            content={
+              product.addons.length > 0 
+                ? product.addons.map(addon => `${addon.name} (${currencySymbol}${addon.price})`).join(', ')
+                : 'No addons available'
+            }
+          >
+            <Chip
+              className="cursor-pointer"
+              color={product.addons.length > 0 ? "primary" : "default"}
+              size="sm"
+              variant="flat"
+            >
+              {product.addons.length} Addon{product.addons.length !== 1 ? 's' : ''}
+            </Chip>
+          </Tooltip>
         );
       case "status":
         return (

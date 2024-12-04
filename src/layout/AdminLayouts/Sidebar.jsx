@@ -25,6 +25,7 @@ import {
   FaGlobeAsia,
   FaImages,
   FaSearch,
+  FaPuzzlePiece,
 } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import { Images } from "../../assets";
@@ -146,6 +147,7 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
     },
     { path: "/admin/categories", icon: <FaList />, label: "Categories" },
     { path: "/admin/products", icon: <FaBox />, label: "Products" },
+    { path: "/admin/addons", icon: <FaPuzzlePiece />, label: "Addons" },
     { path: "/admin/languages", icon: <FaLanguage />, label: "Languages" },
     { path: "/admin/roles", icon: <FaUserShield />, label: "User Roles" },
     { path: "/admin/settings", icon: <FaCog />, label: "Settings" },

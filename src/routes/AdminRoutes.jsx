@@ -16,6 +16,8 @@ import ViewMember from "../pages/members/ViewMember";
 import Navigation from "../pages/WebsitesManagement/GSTSA/Navigation";
 import Media from "../pages/WebsitesManagement/GSTSA/Media";
 
+import Addons from "../pages/Addons/Addons";
+
 // Pages Management
 import Pages from "../pages/WebsitesManagement/GSTSA/Pages";
 import HomePage from "../components/managePages/homePage/HomePage";
@@ -62,6 +64,8 @@ function AdminRoutes() {
       <Route path="/admin/products" element={<Products />} />
       <Route path="/admin/add-product" element={<AddProduct />} />
       <Route path="/admin/edit-product/:id" element={<EditProduct />} />
+
+      <Route path="/admin/addons" element={<Addons />} />
 
       <Route path="/admin/members" element={<Members />} />
       <Route path="/admin/view-member/:id" element={<ViewMember />} />

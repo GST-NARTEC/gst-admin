@@ -60,12 +60,22 @@ const user = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+
     deleteUser: builder.mutation({
       query: (id) => ({
         url: `/user/v1/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["users"],
+    }),
+
+    updateUserStatus: builder.mutation({
+      query: ({ id, params }) => ({
+        url: `/user/v1/${id}/status`,
+        method: "PATCH",
+        params,
+      }),
+      invalidatesTags: ["userDetails", "users"],
     }),
   }),
 });
@@ -79,4 +89,5 @@ export const {
   useGetUserByIdQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useUpdateUserStatusMutation,
 } = user;
