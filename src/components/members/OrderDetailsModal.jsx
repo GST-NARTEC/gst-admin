@@ -20,6 +20,8 @@ import { selectCurrencySymbol } from "../../store/slice/currencySlice";
 function OrderDetailsModal({ isOpen, onOpenChange, order }) {
   if (!order) return null;
 
+  console.log(order);
+
   const currencySymbol = useSelector(selectCurrencySymbol);
 
   return (
@@ -94,6 +96,19 @@ function OrderDetailsModal({ isOpen, onOpenChange, order }) {
                             )}
                             <span>{item.product.title}</span>
                           </div>
+                          {/* Addons Section */}
+                          {item.addons && item.addons.length > 0 && (
+                            <div className="mt-2">
+                              <p className="text-sm text-gray-500">Addons:</p>
+                              <ul className="list-disc list-inside">
+                                {item.addons.map((addon) => (
+                                  <li key={addon.id} className="text-sm">
+                                    {addon.name} - {currencySymbol} {addon.price}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                         </TableCell>
                         <TableCell>{item.quantity}</TableCell>
                         <TableCell>

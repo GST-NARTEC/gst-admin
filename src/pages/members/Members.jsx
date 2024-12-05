@@ -176,18 +176,18 @@ function Members() {
               >
                 Activation
               </DropdownItem>
-              <DropdownItem
+              {/* <DropdownItem
                 key="renew"
                 startContent={<FaSync className="text-primary" />}
               >
                 Renew Membership
-              </DropdownItem>
-              <DropdownItem
+              </DropdownItem> */}
+              {/* <DropdownItem
                 key="assign"
                 startContent={<FaUserPlus className="text-warning" />}
               >
                 Assign To
-              </DropdownItem>
+              </DropdownItem> */}
               <DropdownItem
                 key="login"
                 startContent={<FaSignInAlt className="text-secondary" />}

@@ -94,7 +94,7 @@ function OrdersTable() {
           <Chip
             size="sm"
             variant="flat"
-            color={order.status === "COMPLETED" ? "success" : "warning"}
+            color={order.status === "Activated" ? "success" : "warning"}
           >
             {order.status}
           </Chip>
@@ -135,6 +135,7 @@ function OrdersTable() {
             <DropdownMenu
               aria-label="Order Actions"
               className="text-default-500"
+              disabledKeys={order.status === "Activated" ? ["activate"] : []}
             >
               <DropdownItem
                 key="details"

@@ -15,6 +15,9 @@ import {
 } from "../../store/apis/endpoints/order";
 import toast from "react-hot-toast";
 
+import { useSelector } from "react-redux";
+import { selectCurrencySymbol } from "../../store/slice/currencySlice";
+
 function BankSlipModal({ isOpen, onOpenChange, order }) {
   const [
     uploadBankSlip,
@@ -34,6 +37,8 @@ function BankSlipModal({ isOpen, onOpenChange, order }) {
       isError: isDeleteError,
     },
   ] = useDeleteBankSlipMutation();
+
+  const currencySymbol = useSelector(selectCurrencySymbol);
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -117,7 +122,9 @@ function BankSlipModal({ isOpen, onOpenChange, order }) {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Amount</p>
-                    <p className="font-medium">${order?.overallAmount}</p>
+                    <p className="font-medium">
+                      {currencySymbol}  {order?.overallAmount}
+                    </p>
                   </div>
                 </div>
 
