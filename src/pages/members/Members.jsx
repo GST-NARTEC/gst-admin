@@ -301,7 +301,7 @@ function Members() {
 
   return (
     <MainLayout>
-      <div className="p-6">
+      <div className="p-4">
         <h1 className="text-2xl font-bold pb-4">Members</h1>
         <Table
           topContent={topContent}
