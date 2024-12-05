@@ -24,6 +24,16 @@ function OrderDetailsModal({ isOpen, onOpenChange, order }) {
 
   const currencySymbol = useSelector(selectCurrencySymbol);
 
+  const calculateItemTotal = (item) => {
+    const productTotal = item.price * item.quantity;
+    const addonsTotal =
+      item.addonItems?.reduce(
+        (sum, addon) => sum + addon.price * addon.quantity,
+        0
+      ) || 0;
+    return productTotal + addonsTotal;
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -74,74 +84,115 @@ function OrderDetailsModal({ isOpen, onOpenChange, order }) {
                   </div>
                 </div>
 
-                {/* Order Items Table */}
-                <Table aria-label="Order items">
-                  <TableHeader>
-                    <TableColumn>PRODUCT</TableColumn>
-                    <TableColumn>QUANTITY</TableColumn>
-                    <TableColumn>PRICE</TableColumn>
-                    <TableColumn>TOTAL</TableColumn>
-                  </TableHeader>
-                  <TableBody>
-                    {order.orderItems?.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            {item.product.image && (
-                              <Image
-                                src={item.product.image}
-                                alt={item.product.title}
-                                className="w-10 h-10 object-cover rounded"
-                              />
-                            )}
-                            <span>{item.product.title}</span>
-                          </div>
-                          {/* Addons Section */}
-                          {item.addons && item.addons.length > 0 && (
-                            <div className="mt-2">
-                              <p className="text-sm text-gray-500">Addons:</p>
-                              <ul className="list-disc list-inside">
-                                {item.addons.map((addon) => (
-                                  <li key={addon.id} className="text-sm">
-                                    {addon.name} - {currencySymbol} {addon.price}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                        </TableCell>
-                        <TableCell>{item.quantity}</TableCell>
-                        <TableCell>
-                          {currencySymbol} {item.price}
-                        </TableCell>
-                        <TableCell>
-                          {currencySymbol} {item.price * item.quantity}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                {/* Updated Order Items Display */}
+                <div className="space-y-6">
+                  {order.orderItems?.map((item, index) => (
+                    <div
+                      key={item.id}
+                      className="border rounded-lg p-4 bg-gray-50"
+                    >
+                      <div className="flex justify-between items-center mb-3">
+                        <h4 className="text-lg font-semibold">
+                          Order Item #{index + 1}
+                        </h4>
+                        <span className="text-sm text-gray-500">
+                          Total: {currencySymbol} {calculateItemTotal(item)}
+                        </span>
+                      </div>
 
-                {/* Order Totals */}
-                <div className="space-y-2 text-right">
-                  <p className="text-sm">
-                    Subtotal:{" "}
-                    <span className="font-medium">
-                      {currencySymbol} {order.totalAmount}
-                    </span>
-                  </p>
-                  <p className="text-sm">
-                    VAT:{" "}
-                    <span className="font-medium">
-                      {currencySymbol} {order.vat}
-                    </span>
-                  </p>
-                  <p className="text-lg font-semibold">
-                    Total:{" "}
-                    <span className="font-medium">
-                      {currencySymbol} {order.overallAmount}
-                    </span>
-                  </p>
+                      {/* Main Product */}
+                      <div className="bg-white p-4 rounded-md mb-3">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h5 className="font-medium text-navy-700">
+                              {item.product.title}
+                            </h5>
+                            <p className="text-sm text-gray-600">
+                              {item.product.description}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-medium">
+                              {currencySymbol} {item.price}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                              Qty: {item.quantity}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Addons Section */}
+                      {item.addonItems && item.addonItems.length > 0 && (
+                        <div className="ml-4">
+                          <p className="text-sm font-medium text-gray-700 mb-2">
+                            Add-ons:
+                          </p>
+                          <div className="space-y-2">
+                            {item.addonItems.map((addonItem) => (
+                              <div
+                                key={addonItem.id}
+                                className="bg-white p-3 rounded-md flex justify-between items-center border border-gray-100"
+                              >
+                                <div>
+                                  <p className="font-medium text-sm">
+                                    {addonItem.addon.name}
+                                  </p>
+                                  {addonItem.addon.unit && (
+                                    <p className="text-xs text-gray-500">
+                                      Unit: {addonItem.addon.unit}
+                                    </p>
+                                  )}
+                                </div>
+                                <div className="text-right">
+                                  <p className="font-medium text-sm">
+                                    {currencySymbol} {addonItem.price}
+                                  </p>
+                                  <p className="text-xs text-gray-500">
+                                    Qty: {addonItem.quantity}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Order Totals - with divider */}
+                <div className="border-t pt-4 mt-6">
+                  <div className="space-y-2 text-right">
+                    <p className="text-sm">
+                      Subtotal:{" "}
+                      <span className="font-medium">
+                        {currencySymbol} {order.totalAmount}
+                      </span>
+                    </p>
+                    {order.taxAmount > 0 && (
+                      <p className="text-sm">
+                        Tax:{" "}
+                        <span className="font-medium">
+                          {currencySymbol} {order.taxAmount}
+                        </span>
+                      </p>
+                    )}
+                    {order.vat > 0 && (
+                      <p className="text-sm">
+                        VAT:{" "}
+                        <span className="font-medium">
+                          {currencySymbol} {order.vat}
+                        </span>
+                      </p>
+                    )}
+                    <p className="text-lg font-semibold border-t pt-2">
+                      Total:{" "}
+                      <span>
+                        {currencySymbol} {order.overallAmount}
+                      </span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </ModalBody>
