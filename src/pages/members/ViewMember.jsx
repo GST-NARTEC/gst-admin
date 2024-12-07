@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { MdArrowBackIosNew } from "react-icons/md";
 import MemberPersonalInfo from "../../components/members/MemberPersonalInfo";
 import OrdersTable from "../../components/members/OrdersTable";
+import MemberDocuments from "../../components/members/MemberDocuments";
 
 function ViewMember() {
   const navigate = useNavigate();
@@ -25,6 +26,9 @@ function ViewMember() {
       </Card>
       <Card className="m-4">
         <OrdersTable />
+      </Card>
+      <Card className="m-4">
+        <MemberDocuments />
       </Card>
     </MainLayout>
   );
