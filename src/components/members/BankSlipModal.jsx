@@ -135,9 +135,9 @@ function BankSlipModal({ isOpen, onOpenChange, order }) {
                         <h4 className="text-lg font-medium text-gray-900">
                           Current Payment Slip
                         </h4>
-                        <p className="text-sm text-gray-500">
+                        {/* <p className="text-sm text-gray-500">
                           {order.bankSlip}
-                        </p>
+                        </p> */}
                       </div>
                       <div className="flex gap-2">
                         <Button

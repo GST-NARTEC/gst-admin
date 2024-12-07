@@ -95,7 +95,7 @@ function MemberPersonalInfo() {
           delete changedValues.mobileNumber;
         }
 
-        const payload = {   
+        const payload = {
           id,
           data: changedValues,
         };
@@ -133,7 +133,7 @@ function MemberPersonalInfo() {
             <input
               type="email"
               {...register("email")}
-              className="w-full px-3 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50"
+              className="w-full h-[42px] px-3 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50"
             />
           </div>
 
@@ -145,7 +145,7 @@ function MemberPersonalInfo() {
             <input
               type="text"
               {...register("companyLicenseNo")}
-              className="w-full px-3 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50"
+              className="w-full h-[42px] px-3 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-navy-600 focus:border-transparent outline-none bg-gray-50"
             />
           </div>
 
@@ -162,9 +162,10 @@ function MemberPersonalInfo() {
                   country={"sa"}
                   value={value}
                   onChange={onChange}
-                  inputClass="!w-full !h-[40px] !text-base !border-gray-400 !rounded-lg"
+                  inputClass="!w-full !h-[42px] !text-base !border-gray-400 !bg-gray-50 !rounded-lg"
                   containerClass="!w-full"
-                  buttonClass="!border-gray-400 !border !rounded-l-lg !h-[40px]"
+                  buttonClass="!border-gray-400 !border !rounded-l-lg !h-[42px]"
+                  // inputStyle={""}
                 />
               )}
             />
@@ -216,7 +217,7 @@ function MemberPersonalInfo() {
                   country={"sa"}
                   value={value}
                   onChange={onChange}
-                  inputClass="!w-full !h-[40px] !text-base !border-gray-400 !rounded-lg"
+                  inputClass="!w-full !h-[40px] !text-base !border-gray-400 !bg-gray-50 !rounded-lg"
                   containerClass="!w-full"
                   buttonClass="!border-gray-400 !border !rounded-l-lg !h-[40px]"
                 />
