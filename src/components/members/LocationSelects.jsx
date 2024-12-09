@@ -20,11 +20,11 @@ function LocationSelects({ control, errors, defaultValues }) {
     useGetCountriesQuery();
   const { data: regionsResponse, isLoading: isLoadingRegions } =
     useGetRegionsQuery(selectedCountry, {
-      skip: !selectedCountry && !initialLoad,
+      skip: !selectedCountry 
     });
   const { data: citiesResponse, isLoading: isLoadingCities } =
     useGetCitiesQuery(selectedRegion, {
-      skip: !selectedRegion && !initialLoad,
+      skip:!selectedRegion 
     });
 
   const countries = countriesResponse?.data?.countries || [];

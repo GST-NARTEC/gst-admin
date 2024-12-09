@@ -135,7 +135,7 @@ function OrdersTable() {
             <DropdownMenu
               aria-label="Order Actions"
               className="text-default-500"
-              disabledKeys={order.status === "Activated" ? ["activate"] : []}
+
             >
               <DropdownItem
                 key="details"
@@ -158,6 +158,7 @@ function OrdersTable() {
                 View Payment Slip
               </DropdownItem>
               <DropdownItem
+              isDisabled={order.status === "Activated" || order.status === "Pending Payment"}
                 key="activate"
                 startContent={<FaCheckCircle className="text-success" />}
                 onClick={() => {

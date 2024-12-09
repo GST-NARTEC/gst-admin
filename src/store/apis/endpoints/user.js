@@ -77,6 +77,7 @@ const user = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["userDetails", "users"],
     }),
+    
   }),
 });
 

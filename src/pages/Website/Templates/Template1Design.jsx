@@ -20,7 +20,7 @@ function Template1Design() {
     <WebsiteLayout>
       <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
         {/* Hero Section */}
-        <section className="relative h-[80vh] overflow-hidden">
+        <section className="relative h-[80vh] xl:h-[45vh] overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/50 to-quaternary/50" />
           <div
             className="absolute inset-0 bg-cover bg-center"

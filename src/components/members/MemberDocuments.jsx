@@ -12,7 +12,7 @@ import {
   Tooltip,
   Button,
 } from "@nextui-org/react";
-import { FaSearch, FaFileDownload, FaFileInvoice } from "react-icons/fa";
+import { FaSearch, FaFileDownload, FaFileInvoice, FaFileContract } from "react-icons/fa";
 import { useGetUserByIdQuery } from "../../store/apis/endpoints/user";
 import { useParams } from "react-router-dom";
 
@@ -33,14 +33,23 @@ function MemberDocuments() {
   // Flatten all document types into a single array
   const documents = useMemo(() => {
     const docs = docsData?.data?.user?.documents;
-    if (!docs) return [];
-
-    return [
+    const baseDocuments = !docs ? [] : [
       ...docs.receipts.map((doc) => ({ ...doc, category: "Receipt" })),
       ...docs.certificates.map((doc) => ({ ...doc, category: "Certificate" })),
       ...docs.bankSlips.map((doc) => ({ ...doc, category: "Bank Slip" })),
       ...docs.invoices.map((doc) => ({ ...doc, category: "Invoice" })),
     ];
+
+    // Add static Terms & Conditions row
+    const staticRow = {
+      orderNumber: "TC-001",
+      category: "Terms & Conditions",
+      status: "Active",
+      createdAt: new Date().toISOString(),
+      path: "https://api.gstsa1.org/assets/docs/terms-and-conditions.pdf"
+    };
+
+    return [...baseDocuments, staticRow];
   }, [docsData]);
 
   const columns = [
@@ -77,7 +86,7 @@ function MemberDocuments() {
         );
       case "actions":
         return (
-          <Tooltip content="View Document">
+          <Tooltip content={doc.category === "Terms & Conditions" ? "View Terms & Conditions" : "View Document"}>
             <Button
               isIconOnly
               variant="light"
@@ -87,7 +96,7 @@ function MemberDocuments() {
               rel="noopener noreferrer"
               className="text-lg cursor-pointer text-default-400 hover:text-default-500"
             >
-              <FaFileInvoice />
+              {doc.category === "Terms & Conditions" ? <FaFileContract /> : <FaFileInvoice />}
             </Button>
           </Tooltip>
         );
@@ -127,6 +136,7 @@ function MemberDocuments() {
         {(column) => (
           <TableColumn
             key={column.uid}
+            
             align={column.uid === "actions" ? "center" : "start"}
             className="bg-gray-50 text-gray-600"
           >

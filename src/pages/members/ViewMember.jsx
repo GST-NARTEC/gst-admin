@@ -6,6 +6,7 @@ import { MdArrowBackIosNew } from "react-icons/md";
 import MemberPersonalInfo from "../../components/members/MemberPersonalInfo";
 import OrdersTable from "../../components/members/OrdersTable";
 import MemberDocuments from "../../components/members/MemberDocuments";
+import MemberBrands from "../../components/members/MemberBrands";
 
 function ViewMember() {
   const navigate = useNavigate();
@@ -29,6 +30,9 @@ function ViewMember() {
       </Card>
       <Card className="m-4">
         <MemberDocuments />
+      </Card>
+      <Card className="m-4">
+        <MemberBrands />
       </Card>
     </MainLayout>
   );

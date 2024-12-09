@@ -21,7 +21,7 @@ function Template3Design() {
     <WebsiteLayout>
       <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100">
         {/* Hero Section */}
-        <section className="relative h-[75vh] overflow-hidden shadow-2xl">
+        <section className="relative h-[80vh] xl:h-[40vh] overflow-hidden shadow-2xl">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/60 to-quaternary/60" />
           <div
             className="absolute inset-0 bg-cover bg-center transform hover:scale-105 transition-transform duration-700"
@@ -30,13 +30,15 @@ function Template3Design() {
             }}
           />
           <div className="relative z-10 container mx-auto h-full flex flex-col justify-center">
-            <div className="text-3xl font-light text-white max-w-2xl p-6 shadow-lg">
+            <div className="text-3xl font-light text-white max-w-2xl p-6 ">
               {template?.description1En && parse(template.description1En)}
             </div>
           </div>
         </section>
 
         {/* Content Section */}
+        {
+          template?.description3En && (
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-gray-50 via-white to-gray-50 backdrop-blur-sm rounded-3xl mx-4 shadow-lg">
           <div className="w-full max-w-[1280px] mx-auto">
             <div className="prose max-w-none prose-lg prose-headings:text-primary">
@@ -44,6 +46,8 @@ function Template3Design() {
             </div>
           </div>
         </section>
+          )
+        }
 
         {/* Info Section with Side Image */}
         <section className="py-16 bg-gradient-to-br from-white via-gray-50/50 to-white">
