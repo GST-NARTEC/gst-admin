@@ -84,6 +84,16 @@ function SubMenu() {
           </div>
         );
       case "page":
+        if (subMenu.externalUrl) {
+          return (
+            <div className="flex flex-col">
+              <p className="text-sm">External Link</p>
+              <p className="text-xs text-gray-400 truncate max-w-[200px]">
+                {subMenu.externalUrl}
+              </p>
+            </div>
+          );
+        }
         return subMenu.page ? (
           <div className="flex flex-col">
             <p className="text-sm">{subMenu.page.nameEn}</p>

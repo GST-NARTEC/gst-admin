@@ -36,6 +36,7 @@ export default function Header() {
         acc[heading].push({
           name: item.nameEn,
           page: item.page,
+          externalUrl: item.externalUrl,
         });
         return acc;
       }, {});
@@ -77,7 +78,9 @@ export default function Header() {
   }, []);
 
   const handleLinkClick = (link) => {
-    if (link.page) {
+    if (link.externalUrl) {
+      window.open(link.externalUrl, "_blank");
+    } else if (link.page) {
       navigate(`/${link.page.template}/${link.page.slug}`);
     }
   };
@@ -149,10 +152,7 @@ export default function Header() {
             >
               <button
                 onClick={() =>
-                  window.open(
-                    "https://buybarcodeupc.com/",
-                    "_blank"
-                  )
+                  window.open("https://buybarcodeupc.com/", "_blank")
                 }
                 className="px-3 py-1.5 text-sm border-2 border-[#1B365D] text-[#1B365D] rounded hover:bg-[#1B365D] hover:text-white transition-all duration-300"
               >
@@ -233,7 +233,12 @@ export default function Header() {
                           <motion.a
                             key={linkIndex}
                             onClick={() => handleLinkClick(link)}
-                            style={{ cursor: link.page ? 'pointer' : 'default' }}
+                            style={{
+                              cursor:
+                                link.page || link.externalUrl
+                                  ? "pointer"
+                                  : "default",
+                            }}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: linkIndex * 0.03 }}
@@ -241,7 +246,7 @@ export default function Header() {
                           >
                             <span className="relative overflow-hidden">
                               {link.name}
-                              {link.page && (
+                              {(link.page || link.externalUrl) && (
                                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#1B365D] transform origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
                               )}
                             </span>

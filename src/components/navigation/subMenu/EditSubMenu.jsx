@@ -36,6 +36,8 @@ function EditSubMenu({ isOpen, onOpenChange, subMenu }) {
     headingAr: "",
     menuId: "",
     pageId: "",
+    externalUrl: "",
+    urlType: "page"
   });
 
   useEffect(() => {
@@ -47,6 +49,8 @@ function EditSubMenu({ isOpen, onOpenChange, subMenu }) {
         headingAr: subMenu.headingAr === "null" ? "" : subMenu.headingAr,
         menuId: subMenu.menuId,
         pageId: subMenu.pageId || "",
+        externalUrl: subMenu.externalUrl || "",
+        urlType: subMenu.externalUrl ? "external" : "page"
       });
     }
   }, [subMenu]);
@@ -58,6 +62,27 @@ function EditSubMenu({ isOpen, onOpenChange, subMenu }) {
     }));
   };
 
+  const handleUrlTypeChange = (keys) => {
+    const selectedType = Array.from(keys)[0];
+    setFormData((prev) => ({
+      ...prev,
+      urlType: selectedType,
+      pageId: "",
+      externalUrl: ""
+    }));
+  };
+
+  const formatExternalUrl = (url) => {
+    if (!url) return null;
+    try {
+      const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
+      new URL(formattedUrl); // Validate URL format
+      return formattedUrl;
+    } catch (error) {
+      throw new Error("Please enter a valid URL");
+    }
+  };
+
   const handleSubmit = async () => {
     try {
       if (!formData.nameEn || !formData.nameAr || !formData.menuId) {
@@ -65,12 +90,73 @@ function EditSubMenu({ isOpen, onOpenChange, subMenu }) {
         return;
       }
 
-      await updateSubMenu({ id: subMenu.id, ...formData }).unwrap();
+      if (formData.urlType === "page" && !formData.pageId) {
+        toast.error("Please select a page");
+        return;
+      }
+
+      if (formData.urlType === "external" && !formData.externalUrl) {
+        toast.error("Please enter an external URL");
+        return;
+      }
+
+      const submissionData = {
+        id: subMenu.id,
+        nameEn: formData.nameEn,
+        nameAr: formData.nameAr,
+        headingEn: formData.headingEn || null,
+        headingAr: formData.headingAr || null,
+        menuId: formData.menuId,
+        pageId: formData.urlType === "page" ? formData.pageId : null,
+        externalUrl: formData.urlType === "external" ? formatExternalUrl(formData.externalUrl) : null
+      };
+
+      await updateSubMenu(submissionData).unwrap();
       toast.success("Submenu updated successfully");
       onOpenChange(false);
     } catch (error) {
-      toast.error(error.data?.message || "Failed to update submenu");
+      toast.error(error.message || error.data?.message || "Failed to update submenu");
     }
+  };
+
+  const renderUrlInput = () => {
+    if (formData.urlType === "page") {
+      return (
+        <Autocomplete
+          label="Select Page"
+          placeholder="Search for a page"
+          defaultItems={pages}
+          selectedKey={formData.pageId}
+          onSelectionChange={(id) => 
+            setFormData(prev => ({ ...prev, pageId: id }))
+          }
+          className="col-span-2"
+          isRequired
+        >
+          {(item) => (
+            <AutocompleteItem key={item.value} textValue={item.label}>
+              <div className="flex flex-col">
+                <span>{item.label}</span>
+                <span className="text-small text-default-400">
+                  {item.description}
+                </span>
+              </div>
+            </AutocompleteItem>
+          )}
+        </Autocomplete>
+      );
+    }
+
+    return (
+      <Input
+        label="External URL"
+        placeholder="Enter external URL (e.g., https://example.com)"
+        value={formData.externalUrl}
+        onChange={handleChange("externalUrl")}
+        className="col-span-2"
+        isRequired
+      />
+    );
   };
 
   return (
@@ -143,27 +229,18 @@ function EditSubMenu({ isOpen, onOpenChange, subMenu }) {
                   ))}
                 </Select>
 
-                <Autocomplete
-                  label="Select Page"
-                  placeholder="Search for a page"
-                  defaultItems={pages}
-                  selectedKey={formData.pageId}
-                  onSelectionChange={(id) => 
-                    setFormData(prev => ({ ...prev, pageId: id }))
-                  }
-                  className="col-span-1"
+                <Select
+                  label="URL Type"
+                  placeholder="Select URL type"
+                  selectedKeys={[formData.urlType]}
+                  onSelectionChange={handleUrlTypeChange}
+                  className="col-span-2"
                 >
-                  {(item) => (
-                    <AutocompleteItem key={item.value} textValue={item.label}>
-                      <div className="flex flex-col">
-                        <span>{item.label}</span>
-                        <span className="text-small text-default-400">
-                          {item.description}
-                        </span>
-                      </div>
-                    </AutocompleteItem>
-                  )}
-                </Autocomplete>
+                  <SelectItem key="page" value="page">Internal Page</SelectItem>
+                  <SelectItem key="external" value="external">External URL</SelectItem>
+                </Select>
+
+                {renderUrlInput()}
               </div>
             </ModalBody>
             <ModalFooter>

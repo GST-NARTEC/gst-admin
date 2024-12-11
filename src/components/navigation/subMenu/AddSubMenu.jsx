@@ -17,57 +17,153 @@ import { useCreateSubMenuMutation } from "../../../store/apis/endpoints/websiteE
 import { useGetMenuItemsQuery } from "../../../store/apis/endpoints/websiteEndpoints/menuItems";
 import { useGetPagesQuery } from "../../../store/apis/endpoints/pageSetup";
 
+const initialFormState = {
+  nameEn: "",
+  nameAr: "",
+  headingEn: "",
+  headingAr: "",
+  menuId: "",
+  pageId: "",
+  externalUrl: "",
+  urlType: "page"
+};
+
 function AddSubMenu({ isOpen, onOpenChange }) {
   const [createSubMenu, { isLoading }] = useCreateSubMenuMutation();
   const { data: pagesData } = useGetPagesQuery();
-
   const { data: menuData } = useGetMenuItemsQuery();
+  const [formData, setFormData] = useState(initialFormState);
+
   const menus = menuData?.data?.menus || [];
+  const pages = pagesData?.data?.pages?.map((page) => ({
+    label: page.nameEn,
+    value: page.id,
+    description: page.slug,
+  })) || [];
 
-  const pages =
-    pagesData?.data?.pages?.map((page) => ({
-      label: page.nameEn,
-      value: page.id,
-      description: page.slug,
-    })) || [];
-
-  const [formData, setFormData] = useState({
-    nameEn: "",
-    nameAr: "",
-    headingEn: "",
-    headingAr: "",
-    menuId: "",
-    pageId: "",
-  });
-
-  const handleChange = (field) => (e) => {
+  const handleInputChange = (field) => (e) => {
     setFormData((prev) => ({
       ...prev,
       [field]: e.target.value,
     }));
   };
 
-  const handleSubmit = async () => {
-    try {
-      if (!formData.nameEn || !formData.nameAr || !formData.menuId) {
-        toast.error("Please fill in all required fields");
-        return;
-      }
+  const handleUrlTypeChange = (keys) => {
+    const selectedType = Array.from(keys)[0];
+    setFormData((prev) => ({
+      ...prev,
+      urlType: selectedType,
+      pageId: "",
+      externalUrl: ""
+    }));
+  };
 
-      await createSubMenu(formData).unwrap();
-      toast.success("Submenu created successfully");
-      onOpenChange(false);
-      setFormData({
-        nameEn: "",
-        nameAr: "",
-        headingEn: "",
-        headingAr: "",
-        menuId: "",
-        pageId: "",
-      });
-    } catch (error) {
-      toast.error(error.data?.message || "Failed to create submenu");
+  const handleMenuSelection = (keys) => {
+    const selectedKey = Array.from(keys)[0];
+    setFormData((prev) => ({ ...prev, menuId: selectedKey }));
+  };
+
+  const handlePageSelection = (id) => {
+    setFormData((prev) => ({ ...prev, pageId: id }));
+  };
+
+  const validateFormData = () => {
+    if (!formData.nameEn || !formData.nameAr || !formData.menuId) {
+      throw new Error("Please fill in all required fields");
     }
+
+    if (formData.urlType === "page" && !formData.pageId) {
+      throw new Error("Please select a page");
+    }
+
+    if (formData.urlType === "external" && !formData.externalUrl) {
+      throw new Error("Please enter an external URL");
+    }
+  };
+
+  const formatExternalUrl = (url) => {
+    try {
+      const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
+      new URL(formattedUrl); // Validate URL format
+      return formattedUrl;
+    } catch (error) {
+      throw new Error("Please enter a valid URL");
+    }
+  };
+
+  const prepareSubmissionData = () => {
+    const baseData = {
+      nameEn: formData.nameEn,
+      nameAr: formData.nameAr,
+      headingEn: formData.headingEn || null,
+      headingAr: formData.headingAr || null,
+      menuId: formData.menuId,
+    };
+
+    if (formData.urlType === "external") {
+      const formattedUrl = formatExternalUrl(formData.externalUrl);
+      return {
+        ...baseData,
+        pageId: null,
+        externalUrl: formattedUrl,
+      };
+    }
+
+    return {
+      ...baseData,
+      pageId: formData.pageId,
+      externalUrl: null,
+    };
+  };
+
+  const handleSubmit = async (onClose) => {
+    try {
+      validateFormData();
+      const submissionData = prepareSubmissionData();
+      await createSubMenu(submissionData).unwrap();
+      toast.success("Submenu created successfully");
+      onClose();
+    } catch (error) {
+      toast.error(error.message || error.data?.message || "Failed to create submenu");
+    }
+  };
+
+  const renderUrlInput = () => {
+    if (formData.urlType === "page") {
+      return (
+        <Autocomplete
+          label="Select Page"
+          placeholder="Search for a page"
+          defaultItems={pages}
+          selectedKey={formData.pageId}
+          onSelectionChange={handlePageSelection}
+          className="col-span-2"
+          isRequired
+        >
+          {(item) => (
+            <AutocompleteItem key={item.value} textValue={item.label}>
+              <div className="flex flex-col">
+                <span>{item.label}</span>
+                <span className="text-small text-default-400">
+                  {item.description}
+                </span>
+              </div>
+            </AutocompleteItem>
+          )}
+        </Autocomplete>
+      );
+    }
+
+    return (
+      <Input
+        label="External URL"
+        placeholder="Enter external URL (e.g., https://example.com)"
+        value={formData.externalUrl}
+        onChange={handleInputChange("externalUrl")}
+        className="col-span-2"
+        isRequired
+      />
+    );
   };
 
   return (
@@ -94,93 +190,68 @@ function AddSubMenu({ isOpen, onOpenChange }) {
                   label="Name (English)"
                   placeholder="Enter name in English"
                   value={formData.nameEn}
-                  onChange={handleChange("nameEn")}
+                  onChange={handleInputChange("nameEn")}
                   isRequired
                 />
                 <Input
                   label="Name (Arabic)"
                   placeholder="Enter name in Arabic"
                   value={formData.nameAr}
-                  onChange={handleChange("nameAr")}
+                  onChange={handleInputChange("nameAr")}
                   isRequired
                 />
                 <Input
                   label="Heading (English)"
                   placeholder="Enter heading in English (optional)"
                   value={formData.headingEn}
-                  onChange={handleChange("headingEn")}
+                  onChange={handleInputChange("headingEn")}
                 />
                 <Input
                   label="Heading (Arabic)"
                   placeholder="Enter heading in Arabic (optional)"
                   value={formData.headingAr}
-                  onChange={handleChange("headingAr")}
+                  onChange={handleInputChange("headingAr")}
                 />
                 <Select
                   label="Parent Menu"
                   placeholder="Select parent menu"
                   selectedKeys={formData.menuId ? [formData.menuId] : []}
-                  onSelectionChange={(keys) => {
-                    const selectedKey = Array.from(keys)[0];
-                    setFormData((prev) => ({ ...prev, menuId: selectedKey }));
-                  }}
+                  onSelectionChange={handleMenuSelection}
                   className="col-span-1"
                   isRequired
-                  classNames={{
-                    trigger: "h-12",
-                    value: "text-base",
-                  }}
                 >
                   {menus.map((menu) => (
-                    <SelectItem
-                      key={menu.id}
-                      textValue={`${menu.nameEn} (${menu.nameAr})`}
-                    >
+                    <SelectItem key={menu.id} textValue={`${menu.nameEn} (${menu.nameAr})`}>
                       <div className="flex flex-col">
                         <span>{menu.nameEn}</span>
-                        <span className="text-small text-default-500">
-                          {menu.nameAr}
-                        </span>
+                        <span className="text-small text-default-500">{menu.nameAr}</span>
                       </div>
                     </SelectItem>
                   ))}
                 </Select>
 
-                <Autocomplete
-                  label="Select Page"
-                  placeholder="Search for a page"
-                  defaultItems={pages}
-                  selectedKey={formData.pageId}
-                  onSelectionChange={(id) =>
-                    setFormData((prev) => ({ ...prev, pageId: id }))
-                  }
-                  className="col-span-1"
+                <Select
+                  label="URL Type"
+                  placeholder="Select URL type"
+                  selectedKeys={[formData.urlType]}
+                  onSelectionChange={handleUrlTypeChange}
+                  className="col-span-2"
                 >
-                  {(item) => (
-                    <AutocompleteItem key={item.value} textValue={item.label}>
-                      <div className="flex flex-col">
-                        <span>{item.label}</span>
-                        <span className="text-small text-default-400">
-                          {item.description}
-                        </span>
-                      </div>
-                    </AutocompleteItem>
-                  )}
-                </Autocomplete>
+                  <SelectItem key="page" value="page">Internal Page</SelectItem>
+                  <SelectItem key="external" value="external">External URL</SelectItem>
+                </Select>
+
+                {renderUrlInput()}
               </div>
             </ModalBody>
             <ModalFooter>
-              <Button
-                variant="light"
-                onPress={onClose}
-                className="text-gray-600 hover:bg-gray-100"
-              >
+              <Button variant="light" onPress={onClose}>
                 Cancel
               </Button>
               <Button
                 isLoading={isLoading}
-                onPress={handleSubmit}
-                className="bg-navy-600 text-white hover:bg-navy-700"
+                onPress={() => handleSubmit(onClose)}
+                className="bg-navy-600 text-white"
               >
                 Add Submenu
               </Button>
