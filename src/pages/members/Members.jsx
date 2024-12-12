@@ -42,6 +42,7 @@ import {
 } from "../../store/apis/endpoints/user";
 import OverlayLoader from "../../components/common/OverlayLoader";
 import toast from "react-hot-toast";
+import { encrypt } from "../../utils/encryption.js";
 
 const TABLE_COLUMNS = [
   { name: "COMPANY (EN)", uid: "companyNameEn" },
@@ -132,6 +133,18 @@ function Members() {
     }
   };
 
+  const handleLoginAsMember = (member) => {
+    // Encrypt the member's credentials
+    const credentials = encrypt({
+      email: member.email,
+      companyLicenseNo: member.companyLicenseNo
+    });
+
+    // Redirect to member portal with encrypted credentials
+    const memberPortalURL = `http://localhost:5173/member-portal/login?auth=${credentials}`;
+    window.open(memberPortalURL, '_blank');
+  };
+
   const renderCell = (member, columnKey) => {
     switch (columnKey) {
       case "isActive":
@@ -191,6 +204,7 @@ function Members() {
               <DropdownItem
                 key="login"
                 startContent={<FaSignInAlt className="text-secondary" />}
+                onClick={() => handleLoginAsMember(member)}
               >
                 Login as Member
               </DropdownItem>
