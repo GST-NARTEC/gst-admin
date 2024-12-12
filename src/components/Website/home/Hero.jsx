@@ -30,6 +30,8 @@ export default function Hero() {
   const handleButtonClick = (slide) => {
     if (slide.page) {
       navigate(`/${slide.page.template}/${slide.page.slug}`);
+    } else if (slide.externalUrl) {
+      window.open(slide.externalUrl, '_blank', 'noopener,noreferrer');
     }
   };
 

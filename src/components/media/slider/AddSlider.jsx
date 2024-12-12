@@ -9,14 +9,19 @@ import {
   Input,
   Textarea,
   Switch,
+  Select,
+  SelectItem,
+  Autocomplete,
+  AutocompleteItem,
 } from "@nextui-org/react";
 import { toast } from "react-hot-toast";
 import { useCreateSliderMutation } from "../../../store/apis/endpoints/websiteEndpoints/slider";
 import { FaUpload } from "react-icons/fa";
-import PageSelector from "../../managePages/homePage/PageSelector";
+import { useGetPagesQuery } from "../../../store/apis/endpoints/pageSetup";
 
 function AddSlider({ isOpen, onOpenChange }) {
   const [createSlider, { isLoading }] = useCreateSliderMutation();
+  const { data: pagesData } = useGetPagesQuery();
 
   const [formData, setFormData] = useState({
     titleEn: "",
@@ -28,13 +33,22 @@ function AddSlider({ isOpen, onOpenChange }) {
     imageEn: null,
     imageAr: null,
     status: 1,
-    pageId: null,
+    pageId: "",
+    urlType: "page",
+    externalUrl: "",
   });
 
   const [previews, setPreviews] = useState({
     imageEn: null,
     imageAr: null,
   });
+
+  const pages =
+    pagesData?.data?.pages?.map((page) => ({
+      label: page.nameEn,
+      value: page.id,
+      description: page.slug,
+    })) || [];
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({
@@ -57,6 +71,20 @@ function AddSlider({ isOpen, onOpenChange }) {
     }
   };
 
+  const handleUrlTypeChange = (keys) => {
+    const selectedType = Array.from(keys)[0];
+    setFormData((prev) => ({
+      ...prev,
+      urlType: selectedType,
+      pageId: "",
+      externalUrl: "",
+    }));
+  };
+
+  const handlePageSelection = (id) => {
+    setFormData((prev) => ({ ...prev, pageId: id }));
+  };
+
   const handleSubmit = async () => {
     try {
       const formDataToSend = new FormData();
@@ -66,8 +94,16 @@ function AddSlider({ isOpen, onOpenChange }) {
       formDataToSend.append("descriptionAr", formData.descriptionAr);
       formDataToSend.append("captionEn", formData.captionEn);
       formDataToSend.append("captionAr", formData.captionAr);
-      formDataToSend.append("status", formData.status ? 1 : 0);
-      formDataToSend.append("pageId", formData.pageId);
+      formDataToSend.append("status", formData.status);
+
+      if (formData.urlType === "external") {
+        const formattedUrl = formData.externalUrl.startsWith("http")
+          ? formData.externalUrl
+          : `https://${formData.externalUrl}`;
+        formDataToSend.append("externalUrl", formattedUrl);
+      } else {
+        formDataToSend.append("pageId", formData.pageId);
+      }
 
       if (formData.imageEn) {
         formDataToSend.append("imageEn", formData.imageEn);
@@ -89,12 +125,52 @@ function AddSlider({ isOpen, onOpenChange }) {
         imageEn: null,
         imageAr: null,
         status: 1,
-        pageId: null,
+        pageId: "",
+        urlType: "page",
+        externalUrl: "",
       });
       setPreviews({ imageEn: null, imageAr: null });
     } catch (error) {
       toast.error(error.data?.message || "Failed to create slider");
     }
+  };
+
+  const renderUrlInput = () => {
+    if (formData.urlType === "page") {
+      return (
+        <Autocomplete
+          label="Select Page"
+          placeholder="Search for a page"
+          defaultItems={pages}
+          selectedKey={formData.pageId}
+          onSelectionChange={handlePageSelection}
+          className="col-span-2"
+          isRequired
+        >
+          {(item) => (
+            <AutocompleteItem key={item.value} textValue={item.label}>
+              <div className="flex flex-col">
+                <span>{item.label}</span>
+                <span className="text-small text-default-400">
+                  {item.description}
+                </span>
+              </div>
+            </AutocompleteItem>
+          )}
+        </Autocomplete>
+      );
+    }
+
+    return (
+      <Input
+        label="External URL"
+        placeholder="Enter external URL (e.g., https://example.com)"
+        value={formData.externalUrl}
+        onChange={handleChange("externalUrl")}
+        className="col-span-2"
+        isRequired
+      />
+    );
   };
 
   return (
@@ -149,7 +225,7 @@ function AddSlider({ isOpen, onOpenChange }) {
                   isRequired
                 />
                 <Input
-                  label=" Button Caption (English)"
+                  label="Button Caption (English)"
                   placeholder="Enter caption in English"
                   value={formData.captionEn}
                   onChange={handleChange("captionEn")}
@@ -219,17 +295,22 @@ function AddSlider({ isOpen, onOpenChange }) {
                   />
                 </div>
 
-                <div className="col-span-2">
-                  <PageSelector
-                    value={formData.pageId}
-                    onChange={(value) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        pageId: value,
-                      }))
-                    }
-                  />
-                </div>
+                <Select
+                  label="URL Type"
+                  placeholder="Select URL type"
+                  selectedKeys={[formData.urlType]}
+                  onSelectionChange={handleUrlTypeChange}
+                  className="col-span-2"
+                >
+                  <SelectItem key="page" value="page">
+                    Internal Page
+                  </SelectItem>
+                  <SelectItem key="external" value="external">
+                    External URL
+                  </SelectItem>
+                </Select>
+
+                {renderUrlInput()}
 
                 <div className="col-span-2">
                   <Switch
@@ -237,7 +318,7 @@ function AddSlider({ isOpen, onOpenChange }) {
                     onValueChange={(value) =>
                       setFormData((prev) => ({
                         ...prev,
-                        status: value ? 1 : 0
+                        status: value ? 1 : 0,
                       }))
                     }
                   >

@@ -23,10 +23,10 @@ const proServicesApi = apiSlice.injectEndpoints({
       invalidatesTags: ["ProServices"],
     }),
     updateProService: builder.mutation({
-      query: ({ id, ...data }) => ({
-        url: `/pro-service/v1/${id}`,
+      query: (args) => ({
+        url: `/pro-service/v1/${args.id}`,
         method: "PUT",
-        body: data,
+        body: args.data,
       }),
       invalidatesTags: ["ProServices"],
     }),

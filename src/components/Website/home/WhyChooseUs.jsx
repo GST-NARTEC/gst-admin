@@ -31,6 +31,8 @@ export default function WhyChooseUs() {
   const handleCardClick = (feature) => {
     if (feature.page) {
       navigate(`/${feature.page.template}/${feature.page.slug}`);
+    } else if (feature.externalUrl) {
+      window.open(feature.externalUrl, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -85,7 +87,7 @@ export default function WhyChooseUs() {
               key={feature.id}
               variants={itemVariants}
               className={`group relative overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-2xl hover:shadow-quaternary/20 transition-all duration-500 ${
-                feature.page ? 'cursor-pointer' : 'cursor-default'
+                feature.page || feature.externalUrl ? 'cursor-pointer' : 'cursor-default'
               }`}
               onClick={() => handleCardClick(feature)}
             >

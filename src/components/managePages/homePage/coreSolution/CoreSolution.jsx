@@ -11,8 +11,8 @@ import {
   Spinner,
   Chip,
 } from "@nextui-org/react";
+import { useGetCoreSolutionsQuery } from "../../../../store/apis/endpoints/websiteEndpoints/coreSolution";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { useGetCoreSolutionsQuery } from "../../../../store/apis/endpoints/websiteEndpoints/CoreSolution";
 import AddCoreSolution from "./AddCoreSolution";
 import EditCoreSolution from "./EditCoreSolution";
 import DeleteCoreSolution from "./DeleteCoreSolution";
@@ -23,7 +23,8 @@ function CoreSolution() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const { data: coreSolutionsData, isLoading } = useGetCoreSolutionsQuery();
+  const { data, isLoading, isError } = useGetCoreSolutionsQuery();
+  const coreSolutions = data?.data?.coreSolutions || [];
 
   const handleEdit = (item) => {
     setSelectedItem(item);
@@ -49,12 +50,12 @@ function CoreSolution() {
 
       case "description":
         return (
-          <div className="flex flex-col max-w-xs">
+          <div className="flex flex-col max-w-[230px]">
             <Tooltip content={item.descriptionEn}>
-              <p className="text-small truncate">{item.descriptionEn}</p>
+              <p className="text-small line-clamp-2">{item.descriptionEn}</p>
             </Tooltip>
             <Tooltip content={item.descriptionAr}>
-              <p className="text-tiny text-default-500 truncate">
+              <p className="text-tiny text-default-500 truncate line-clamp-2">
                 {item.descriptionAr}
               </p>
             </Tooltip>
@@ -86,14 +87,19 @@ function CoreSolution() {
 
       case "page":
         return (
-          <Chip
-            className="capitalize"
-            color={item.page ? "primary" : "default"}
-            size="sm"
-            variant="flat"
-          >
-            {item.page ? item.page.nameEn : "Unlinked"}
-          </Chip>
+          <div className="flex items-center">
+            {item.pageId ? (
+              <div className="text-primary text-small underline">
+                {item.page.nameEn}
+              </div>
+            ) : item.externalUrl ? (
+              <div className="text-primary text-small underline">
+                {item.externalUrl}
+              </div>
+            ) : (
+              <div className="text-default-400 text-small">Unlinked</div>
+            )}
+          </div>
         );
 
       case "actions":
@@ -158,44 +164,39 @@ function CoreSolution() {
           isLoading={isLoading}
           loadingContent={<Spinner />}
           emptyContent={"No records found"}
-          items={coreSolutionsData?.data?.coreSolutions || []}
         >
-          {(coreSolutionsData?.data?.coreSolutions || []).map((item) => (
+          {coreSolutions.map((item) => (
             <TableRow key={item.id}>
-              {["title", "description", "image", "status", "page", "actions"].map(
-                (columnKey) => (
-                  <TableCell key={columnKey}>
-                    {renderCell(item, columnKey)}
-                  </TableCell>
-                )
-              )}
+              {[
+                "title",
+                "description",
+                "image",
+                "status",
+                "page",
+                "actions",
+              ].map((columnKey) => (
+                <TableCell key={columnKey}>
+                  {renderCell(item, columnKey)}
+                </TableCell>
+              ))}
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
-      {isAddModalOpen && (
-        <AddCoreSolution
-          isOpen={isAddModalOpen}
-          onOpenChange={setIsAddModalOpen}
-        />
-      )}
+      <AddCoreSolution isOpen={isAddModalOpen} onOpenChange={setIsAddModalOpen} />
 
-      {isEditModalOpen && (
-        <EditCoreSolution
-          isOpen={isEditModalOpen}
-          onOpenChange={setIsEditModalOpen}
-          coreSolution={selectedItem}
-        />
-      )}
+      <EditCoreSolution
+        isOpen={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}
+        coreSolution={selectedItem}
+      />
 
-      {isDeleteModalOpen && (
-        <DeleteCoreSolution
-          isOpen={isDeleteModalOpen}
-          onOpenChange={setIsDeleteModalOpen}
-          coreSolution={selectedItem}
-        />
-      )}
+      <DeleteCoreSolution
+        isOpen={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        coreSolution={selectedItem}
+      />
     </div>
   );
 }

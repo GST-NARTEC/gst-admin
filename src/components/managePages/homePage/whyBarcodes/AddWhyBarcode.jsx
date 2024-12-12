@@ -9,14 +9,20 @@ import {
   Input,
   Textarea,
   Switch,
+  Select,
+  SelectItem,
+  Autocomplete,
+  AutocompleteItem,
 } from "@nextui-org/react";
 import { toast } from "react-hot-toast";
 import { useCreateWhyBarcodeMutation } from "../../../../store/apis/endpoints/websiteEndpoints/whyBarcode";
 import { FaUpload } from "react-icons/fa";
 import PageSelector from "../PageSelector";
+import { useGetPagesQuery } from "../../../../store/apis/endpoints/pageSetup";
 
 function AddWhyBarcode({ isOpen, onOpenChange }) {
   const [createWhyBarcode, { isLoading }] = useCreateWhyBarcodeMutation();
+  const { data: pagesData } = useGetPagesQuery();
 
   const [formData, setFormData] = useState({
     titleEn: "",
@@ -26,9 +32,18 @@ function AddWhyBarcode({ isOpen, onOpenChange }) {
     image: null,
     isActive: true,
     pageId: "",
+    urlType: "page",
+    externalUrl: "",
   });
 
   const [preview, setPreview] = useState(null);
+
+  const pages =
+    pagesData?.data?.pages?.map((page) => ({
+      label: page.nameEn,
+      value: page.id,
+      description: page.slug,
+    })) || [];
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({
@@ -48,6 +63,20 @@ function AddWhyBarcode({ isOpen, onOpenChange }) {
     }
   };
 
+  const handleUrlTypeChange = (keys) => {
+    const selectedType = Array.from(keys)[0];
+    setFormData((prev) => ({
+      ...prev,
+      urlType: selectedType,
+      pageId: "",
+      externalUrl: "",
+    }));
+  };
+
+  const handlePageSelection = (id) => {
+    setFormData((prev) => ({ ...prev, pageId: id }));
+  };
+
   const handleSubmit = async () => {
     try {
       const formDataToSend = new FormData();
@@ -56,7 +85,15 @@ function AddWhyBarcode({ isOpen, onOpenChange }) {
       formDataToSend.append("descriptionEn", formData.descriptionEn);
       formDataToSend.append("descriptionAr", formData.descriptionAr);
       formDataToSend.append("isActive", formData.isActive);
-      formDataToSend.append("pageId", formData.pageId);
+
+      if (formData.urlType === "external") {
+        const formattedUrl = formData.externalUrl.startsWith("http")
+          ? formData.externalUrl
+          : `https://${formData.externalUrl}`;
+        formDataToSend.append("externalUrl", formattedUrl);
+      } else {
+        formDataToSend.append("pageId", formData.pageId);
+      }
 
       if (formData.image) {
         formDataToSend.append("image", formData.image);
@@ -73,11 +110,51 @@ function AddWhyBarcode({ isOpen, onOpenChange }) {
         image: null,
         isActive: true,
         pageId: "",
+        urlType: "page",
+        externalUrl: "",
       });
       setPreview(null);
     } catch (error) {
       toast.error(error.data?.message || "Failed to create why barcode");
     }
+  };
+
+  const renderUrlInput = () => {
+    if (formData.urlType === "page") {
+      return (
+        <Autocomplete
+          label="Select Page"
+          placeholder="Search for a page"
+          defaultItems={pages}
+          selectedKey={formData.pageId}
+          onSelectionChange={handlePageSelection}
+          className="col-span-2"
+          isRequired
+        >
+          {(item) => (
+            <AutocompleteItem key={item.value} textValue={item.label}>
+              <div className="flex flex-col">
+                <span>{item.label}</span>
+                <span className="text-small text-default-400">
+                  {item.description}
+                </span>
+              </div>
+            </AutocompleteItem>
+          )}
+        </Autocomplete>
+      );
+    }
+
+    return (
+      <Input
+        label="External URL"
+        placeholder="Enter external URL (e.g., https://example.com)"
+        value={formData.externalUrl}
+        onChange={handleChange("externalUrl")}
+        className="col-span-2"
+        isRequired
+      />
+    );
   };
 
   return (
@@ -87,7 +164,7 @@ function AddWhyBarcode({ isOpen, onOpenChange }) {
       onOpenChange={onOpenChange}
       size="3xl"
       classNames={{
-        base: "bg-white",
+        base: "bg-white ",
         header: "border-b border-gray-200",
         body: "py-6",
         footer: "border-t border-gray-200",
@@ -132,14 +209,22 @@ function AddWhyBarcode({ isOpen, onOpenChange }) {
                   isRequired
                 />
 
-                <div className="col-span-2">
-                  <PageSelector
-                    value={formData.pageId}
-                    onChange={(id) =>
-                      setFormData((prev) => ({ ...prev, pageId: id }))
-                    }
-                  />
-                </div>
+                <Select
+                  label="URL Type"
+                  placeholder="Select URL type"
+                  selectedKeys={[formData.urlType]}
+                  onSelectionChange={handleUrlTypeChange}
+                  className="col-span-2"
+                >
+                  <SelectItem key="page" value="page">
+                    Internal Page
+                  </SelectItem>
+                  <SelectItem key="external" value="external">
+                    External URL
+                  </SelectItem>
+                </Select>
+
+                {renderUrlInput()}
 
                 <div className="col-span-2">
                   <p className="text-sm mb-2">Image</p>

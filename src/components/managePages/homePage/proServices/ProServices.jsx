@@ -11,8 +11,8 @@ import {
   Spinner,
   Chip,
 } from "@nextui-org/react";
-import { FaEdit, FaTrash } from "react-icons/fa";
 import { useGetProServicesQuery } from "../../../../store/apis/endpoints/websiteEndpoints/proServices";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import AddProService from "./AddProService";
 import EditProService from "./EditProService";
 import DeleteProService from "./DeleteProService";
@@ -23,7 +23,8 @@ function ProServices() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const { data: proServicesData, isLoading } = useGetProServicesQuery();
+  const { data, isLoading, isError } = useGetProServicesQuery();
+  const proServices = data?.data?.proServices || [];
 
   const handleEdit = (item) => {
     setSelectedItem(item);
@@ -49,12 +50,12 @@ function ProServices() {
 
       case "description":
         return (
-          <div className="flex flex-col max-w-xs">
+          <div className="flex flex-col max-w-[230px]">
             <Tooltip content={item.descriptionEn}>
-              <p className="text-small truncate">{item.descriptionEn}</p>
+              <p className="text-small line-clamp-2">{item.descriptionEn}</p>
             </Tooltip>
             <Tooltip content={item.descriptionAr}>
-              <p className="text-tiny text-default-500 truncate">
+              <p className="text-tiny text-default-500 truncate line-clamp-2">
                 {item.descriptionAr}
               </p>
             </Tooltip>
@@ -86,14 +87,19 @@ function ProServices() {
 
       case "page":
         return (
-          <Chip
-            className="capitalize"
-            color={item.page ? "primary" : "default"}
-            size="sm"
-            variant="flat"
-          >
-            {item.page ? item.page.nameEn : "Unlinked"}
-          </Chip>
+          <div className="flex items-center">
+            {item.pageId ? (
+              <div className="text-primary text-small underline">
+                {item.page.nameEn}
+              </div>
+            ) : item.externalUrl ? (
+              <div className="text-primary text-small underline">
+                {item.externalUrl}
+              </div>
+            ) : (
+              <div className="text-default-400 text-small">Unlinked</div>
+            )}
+          </div>
         );
 
       case "actions":
@@ -107,7 +113,7 @@ function ProServices() {
                 className="text-default-400 cursor-pointer active:opacity-50"
                 onPress={() => handleEdit(item)}
               >
-                <FaEdit />
+                <FaEdit className="text-base" />
               </Button>
             </Tooltip>
             <Tooltip color="danger" content="Delete">
@@ -118,7 +124,7 @@ function ProServices() {
                 className="text-danger cursor-pointer active:opacity-50"
                 onPress={() => handleDelete(item)}
               >
-                <FaTrash />
+                <FaTrash className="text-base" />
               </Button>
             </Tooltip>
           </div>
@@ -158,44 +164,39 @@ function ProServices() {
           isLoading={isLoading}
           loadingContent={<Spinner />}
           emptyContent={"No records found"}
-          items={proServicesData?.data?.proServices || []}
         >
-          {(proServicesData?.data?.proServices || []).map((item) => (
+          {proServices.map((item) => (
             <TableRow key={item.id}>
-              {["title", "description", "image", "status", "page", "actions"].map(
-                (columnKey) => (
-                  <TableCell key={columnKey}>
-                    {renderCell(item, columnKey)}
-                  </TableCell>
-                )
-              )}
+              {[
+                "title",
+                "description",
+                "image",
+                "status",
+                "page",
+                "actions",
+              ].map((columnKey) => (
+                <TableCell key={columnKey}>
+                  {renderCell(item, columnKey)}
+                </TableCell>
+              ))}
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
-      {isAddModalOpen && (
-        <AddProService
-          isOpen={isAddModalOpen}
-          onOpenChange={setIsAddModalOpen}
-        />
-      )}
+      <AddProService isOpen={isAddModalOpen} onOpenChange={setIsAddModalOpen} />
 
-      {isEditModalOpen && (
-        <EditProService
-          isOpen={isEditModalOpen}
-          onOpenChange={setIsEditModalOpen}
-          proService={selectedItem}
-        />
-      )}
+      <EditProService
+        isOpen={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}
+        proService={selectedItem}
+      />
 
-      {isDeleteModalOpen && (
-        <DeleteProService
-          isOpen={isDeleteModalOpen}
-          onOpenChange={setIsDeleteModalOpen}
-          proService={selectedItem}
-        />
-      )}
+      <DeleteProService
+        isOpen={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        proService={selectedItem}
+      />
     </div>
   );
 }

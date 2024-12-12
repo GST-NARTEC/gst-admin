@@ -110,14 +110,19 @@ function Slider() {
 
       case "page":
         return (
-          <Chip
-            className="capitalize"
-            color={slider.page ? "primary" : "default"}
-            size="sm"
-            variant="flat"
-          >
-            {slider.page ? slider.page.nameEn : "Unlinked"}
-          </Chip>
+          <div className="flex items-center">
+            {slider.pageId ? (
+              <div className="text-primary text-small underline">
+                {slider.page.nameEn}
+              </div>
+            ) : slider.externalUrl ? (
+              <div className="text-primary text-small underline">
+                {slider.externalUrl}
+              </div>
+            ) : (
+              <div className="text-default-400 text-small">Unlinked</div>
+            )}
+          </div>
         );
 
       case "actions":
@@ -131,7 +136,7 @@ function Slider() {
                 className="text-default-400 cursor-pointer active:opacity-50"
                 onPress={() => handleEdit(slider)}
               >
-                <FaEdit />
+                <FaEdit className="text-base" />
               </Button>
             </Tooltip>
             <Tooltip color="danger" content="Delete slider">
@@ -142,7 +147,7 @@ function Slider() {
                 className="text-danger cursor-pointer active:opacity-50"
                 onPress={() => handleDelete(slider)}
               >
-                <FaTrash />
+                <FaTrash className="text-base" />
               </Button>
             </Tooltip>
           </div>

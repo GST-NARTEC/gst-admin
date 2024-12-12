@@ -61,6 +61,8 @@ export default function ProfessionalServices() {
   const handleServiceClick = (service) => {
     if (service.page) {
       navigate(`/${service.page.template}/${service.page.slug}`);
+    } else if (service.externalUrl) {
+      window.open(service.externalUrl, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -127,7 +129,7 @@ export default function ProfessionalServices() {
               variants={itemVariants}
               onClick={() => handleServiceClick(service)}
               className={`group relative ${
-                service.page ? 'cursor-pointer' : 'cursor-default'
+                service.page || service.externalUrl ? 'cursor-pointer' : 'cursor-default'
               }`}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-cyan-500/5 rounded-2xl transform group-hover:scale-105 transition-transform duration-300" />

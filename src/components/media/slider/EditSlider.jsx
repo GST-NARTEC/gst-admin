@@ -9,14 +9,19 @@ import {
   Input,
   Textarea,
   Switch,
+  Select,
+  SelectItem,
+  Autocomplete,
+  AutocompleteItem,
 } from "@nextui-org/react";
 import { toast } from "react-hot-toast";
 import { useUpdateSliderMutation } from "../../../store/apis/endpoints/websiteEndpoints/slider";
 import { FaUpload } from "react-icons/fa";
-import PageSelector from "../../managePages/homePage/PageSelector";
+import { useGetPagesQuery } from "../../../store/apis/endpoints/pageSetup";
 
 function EditSlider({ isOpen, onOpenChange, slider }) {
   const [updateSlider, { isLoading }] = useUpdateSliderMutation();
+  const { data: pagesData } = useGetPagesQuery();
 
   const [formData, setFormData] = useState({
     titleEn: "",
@@ -28,13 +33,22 @@ function EditSlider({ isOpen, onOpenChange, slider }) {
     imageEn: null,
     imageAr: null,
     status: 1,
-    pageId: null,
+    pageId: "",
+    urlType: "page",
+    externalUrl: "",
   });
 
   const [previews, setPreviews] = useState({
     imageEn: null,
     imageAr: null,
   });
+
+  const pages =
+    pagesData?.data?.pages?.map((page) => ({
+      label: page.nameEn,
+      value: page.id,
+      description: page.slug,
+    })) || [];
 
   useEffect(() => {
     if (slider) {
@@ -48,7 +62,9 @@ function EditSlider({ isOpen, onOpenChange, slider }) {
         imageEn: null,
         imageAr: null,
         status: slider.status,
-        pageId: slider.pageId || null,
+        pageId: slider.pageId || "",
+        urlType: slider.pageId ? "page" : "external",
+        externalUrl: slider.externalUrl || "",
       });
       setPreviews({
         imageEn: slider.imageEn,
@@ -78,6 +94,20 @@ function EditSlider({ isOpen, onOpenChange, slider }) {
     }
   };
 
+  const handleUrlTypeChange = (keys) => {
+    const selectedType = Array.from(keys)[0];
+    setFormData((prev) => ({
+      ...prev,
+      urlType: selectedType,
+      pageId: "",
+      externalUrl: "",
+    }));
+  };
+
+  const handlePageSelection = (id) => {
+    setFormData((prev) => ({ ...prev, pageId: id }));
+  };
+
   const handleSubmit = async () => {
     try {
       const formDataToSend = new FormData();
@@ -88,7 +118,31 @@ function EditSlider({ isOpen, onOpenChange, slider }) {
       formDataToSend.append("captionEn", formData.captionEn);
       formDataToSend.append("captionAr", formData.captionAr);
       formDataToSend.append("status", formData.status);
-      formDataToSend.append("pageId", formData.pageId);
+
+      if (formData.urlType === "page" && !formData.pageId) {
+        toast.error("Please select a page");
+        return;
+      }
+
+      if (formData.urlType === "external" && !formData.externalUrl) {
+        toast.error("Please enter an external URL");
+        return;
+      }
+
+      if (formData.urlType === "external") {
+        try {
+          const formattedUrl = formData.externalUrl.startsWith("http")
+            ? formData.externalUrl
+            : `https://${formData.externalUrl}`;
+          new URL(formattedUrl);
+          formDataToSend.append("externalUrl", formattedUrl);
+        } catch (error) {
+          toast.error("Please enter a valid URL");
+          return;
+        }
+      } else {
+        formDataToSend.append("pageId", formData.pageId);
+      }
 
       if (formData.imageEn instanceof File) {
         formDataToSend.append("imageEn", formData.imageEn);
@@ -107,6 +161,44 @@ function EditSlider({ isOpen, onOpenChange, slider }) {
     } catch (error) {
       toast.error(error.data?.message || "Failed to update slider");
     }
+  };
+
+  const renderUrlInput = () => {
+    if (formData.urlType === "page") {
+      return (
+        <Autocomplete
+          label="Select Page"
+          placeholder="Search for a page"
+          defaultItems={pages}
+          selectedKey={formData.pageId}
+          onSelectionChange={handlePageSelection}
+          className="col-span-2"
+          isRequired
+        >
+          {(item) => (
+            <AutocompleteItem key={item.value} textValue={item.label}>
+              <div className="flex flex-col">
+                <span>{item.label}</span>
+                <span className="text-small text-default-400">
+                  {item.description}
+                </span>
+              </div>
+            </AutocompleteItem>
+          )}
+        </Autocomplete>
+      );
+    }
+
+    return (
+      <Input
+        label="External URL"
+        placeholder="Enter external URL (e.g., https://example.com)"
+        value={formData.externalUrl}
+        onChange={handleChange("externalUrl")}
+        className="col-span-2"
+        isRequired
+      />
+    );
   };
 
   return (
@@ -178,9 +270,7 @@ function EditSlider({ isOpen, onOpenChange, slider }) {
                 <div className="col-span-1">
                   <p className="text-sm mb-2">English Image</p>
                   <div
-                    onClick={() =>
-                      document.getElementById("editImageEn").click()
-                    }
+                    onClick={() => document.getElementById("editImageEn").click()}
                     className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-gray-400 transition-colors"
                   >
                     {previews.imageEn ? (
@@ -208,9 +298,7 @@ function EditSlider({ isOpen, onOpenChange, slider }) {
                 <div className="col-span-1">
                   <p className="text-sm mb-2">Arabic Image</p>
                   <div
-                    onClick={() =>
-                      document.getElementById("editImageAr").click()
-                    }
+                    onClick={() => document.getElementById("editImageAr").click()}
                     className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-gray-400 transition-colors"
                   >
                     {previews.imageAr ? (
@@ -235,17 +323,22 @@ function EditSlider({ isOpen, onOpenChange, slider }) {
                   />
                 </div>
 
-                <div className="col-span-2">
-                  <PageSelector
-                    value={formData.pageId}
-                    onChange={(value) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        pageId: value,
-                      }))
-                    }
-                  />
-                </div>
+                <Select
+                  label="URL Type"
+                  placeholder="Select URL type"
+                  selectedKeys={[formData.urlType]}
+                  onSelectionChange={handleUrlTypeChange}
+                  className="col-span-2"
+                >
+                  <SelectItem key="page" value="page">
+                    Internal Page
+                  </SelectItem>
+                  <SelectItem key="external" value="external">
+                    External URL
+                  </SelectItem>
+                </Select>
+
+                {renderUrlInput()}
 
                 <div className="col-span-2">
                   <Switch

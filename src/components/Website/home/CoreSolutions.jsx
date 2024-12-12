@@ -49,6 +49,8 @@ export default function CoreSolutions() {
   const handleSolutionClick = (solution) => {
     if (solution.page) {
       navigate(`/${solution.page.template}/${solution.page.slug}`);
+    } else if (solution.externalUrl) {
+      window.open(solution.externalUrl, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -111,7 +113,9 @@ export default function CoreSolutions() {
               variants={itemVariants}
               onClick={() => handleSolutionClick(solution)}
               className={`group relative rounded-2xl overflow-hidden bg-white hover:shadow-2xl hover:shadow-quaternary/20 transition-all duration-500 ${
-                solution.page ? "cursor-pointer" : "cursor-default"
+                solution.page || solution.externalUrl
+                  ? "cursor-pointer"
+                  : "cursor-default"
               }`}
             >
               <div className="relative aspect-[4/3] overflow-hidden">

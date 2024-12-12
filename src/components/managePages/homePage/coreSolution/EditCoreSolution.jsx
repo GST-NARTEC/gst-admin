@@ -9,40 +9,53 @@ import {
   Input,
   Textarea,
   Switch,
+  Select,
+  SelectItem,
+  Autocomplete,
+  AutocompleteItem,
 } from "@nextui-org/react";
 import { toast } from "react-hot-toast";
-import { useUpdateCoreSolutionMutation } from "../../../../store/apis/endpoints/websiteEndpoints/CoreSolution";
+import { useUpdateCoreSolutionMutation } from "../../../../store/apis/endpoints/websiteEndpoints/coreSolution";
 import { FaUpload } from "react-icons/fa";
-import PageSelector from "../PageSelector";
+import { useGetPagesQuery } from "../../../../store/apis/endpoints/pageSetup";
 
 function EditCoreSolution({ isOpen, onOpenChange, coreSolution }) {
   const [updateCoreSolution, { isLoading }] = useUpdateCoreSolutionMutation();
+  const { data: pagesData } = useGetPagesQuery();
 
   const [formData, setFormData] = useState({
     titleEn: "",
     titleAr: "",
     descriptionEn: "",
     descriptionAr: "",
-    captionEn: "",
-    captionAr: "",
     image: null,
     isActive: true,
-    pageId: null,
+    pageId: "",
+    urlType: "page",
+    externalUrl: "",
   });
 
   const [preview, setPreview] = useState(null);
 
+  const pages =
+    pagesData?.data?.pages?.map((page) => ({
+      label: page.nameEn,
+      value: page.id,
+      description: page.slug,
+    })) || [];
+
   useEffect(() => {
     if (coreSolution) {
       setFormData({
-        titleEn: coreSolution.titleEn || "",
-        titleAr: coreSolution.titleAr || "",
-        descriptionEn: coreSolution.descriptionEn || "",
-        descriptionAr: coreSolution.descriptionAr || "",
-        captionEn: coreSolution.captionEn || "",
-        captionAr: coreSolution.captionAr || "",
+        titleEn: coreSolution.titleEn,
+        titleAr: coreSolution.titleAr,
+        descriptionEn: coreSolution.descriptionEn,
+        descriptionAr: coreSolution.descriptionAr,
         isActive: coreSolution.isActive,
-        pageId: coreSolution.pageId || null,
+        image: null,
+        pageId: coreSolution.pageId || "",
+        urlType: coreSolution.pageId ? "page" : "external",
+        externalUrl: coreSolution.externalUrl || "",
       });
       setPreview(coreSolution.image);
     }
@@ -66,14 +79,53 @@ function EditCoreSolution({ isOpen, onOpenChange, coreSolution }) {
     }
   };
 
+  const handleUrlTypeChange = (keys) => {
+    const selectedType = Array.from(keys)[0];
+    setFormData((prev) => ({
+      ...prev,
+      urlType: selectedType,
+      pageId: "",
+      externalUrl: "",
+    }));
+  };
+
+  const handlePageSelection = (id) => {
+    setFormData((prev) => ({ ...prev, pageId: id }));
+  };
+
   const handleSubmit = async () => {
     try {
       const formDataToSend = new FormData();
-      Object.keys(formData).forEach((key) => {
-        if (key !== "image") {
-          formDataToSend.append(key, formData[key]);
+      formDataToSend.append("titleEn", formData.titleEn);
+      formDataToSend.append("titleAr", formData.titleAr);
+      formDataToSend.append("descriptionEn", formData.descriptionEn);
+      formDataToSend.append("descriptionAr", formData.descriptionAr);
+      formDataToSend.append("isActive", formData.isActive);
+
+      if (formData.urlType === "page" && !formData.pageId) {
+        toast.error("Please select a page");
+        return;
+      }
+
+      if (formData.urlType === "external" && !formData.externalUrl) {
+        toast.error("Please enter an external URL");
+        return;
+      }
+
+      if (formData.urlType === "external") {
+        try {
+          const formattedUrl = formData.externalUrl.startsWith("http")
+            ? formData.externalUrl
+            : `https://${formData.externalUrl}`;
+          new URL(formattedUrl);
+          formDataToSend.append("externalUrl", formattedUrl);
+        } catch (error) {
+          toast.error("Please enter a valid URL");
+          return;
         }
-      });
+      } else {
+        formDataToSend.append("pageId", formData.pageId);
+      }
 
       if (formData.image) {
         formDataToSend.append("image", formData.image);
@@ -89,6 +141,44 @@ function EditCoreSolution({ isOpen, onOpenChange, coreSolution }) {
     } catch (error) {
       toast.error(error.data?.message || "Failed to update core solution");
     }
+  };
+
+  const renderUrlInput = () => {
+    if (formData.urlType === "page") {
+      return (
+        <Autocomplete
+          label="Select Page"
+          placeholder="Search for a page"
+          defaultItems={pages}
+          selectedKey={formData.pageId}
+          onSelectionChange={handlePageSelection}
+          className="col-span-2"
+          isRequired
+        >
+          {(item) => (
+            <AutocompleteItem key={item.value} textValue={item.label}>
+              <div className="flex flex-col">
+                <span>{item.label}</span>
+                <span className="text-small text-default-400">
+                  {item.description}
+                </span>
+              </div>
+            </AutocompleteItem>
+          )}
+        </Autocomplete>
+      );
+    }
+
+    return (
+      <Input
+        label="External URL"
+        placeholder="Enter external URL (e.g., https://example.com)"
+        value={formData.externalUrl}
+        onChange={handleChange("externalUrl")}
+        className="col-span-2"
+        isRequired
+      />
+    );
   };
 
   return (
@@ -142,18 +232,23 @@ function EditCoreSolution({ isOpen, onOpenChange, coreSolution }) {
                   className="col-span-1"
                   isRequired
                 />
-                <Input
-                  label="Caption (English)"
-                  placeholder="Enter caption in English"
-                  value={formData.captionEn}
-                  onChange={handleChange("captionEn")}
-                />
-                <Input
-                  label="Caption (Arabic)"
-                  placeholder="Enter caption in Arabic"
-                  value={formData.captionAr}
-                  onChange={handleChange("captionAr")}
-                />
+
+                <Select
+                  label="URL Type"
+                  placeholder="Select URL type"
+                  selectedKeys={[formData.urlType]}
+                  onSelectionChange={handleUrlTypeChange}
+                  className="col-span-2"
+                >
+                  <SelectItem key="page" value="page">
+                    Internal Page
+                  </SelectItem>
+                  <SelectItem key="external" value="external">
+                    External URL
+                  </SelectItem>
+                </Select>
+
+                {renderUrlInput()}
 
                 <div className="col-span-2">
                   <p className="text-sm mb-2">Image</p>
@@ -180,18 +275,6 @@ function EditCoreSolution({ isOpen, onOpenChange, coreSolution }) {
                     className="hidden"
                     onChange={handleImageChange}
                     accept="image/*"
-                  />
-                </div>
-
-                <div className="col-span-2">
-                  <PageSelector
-                    value={formData.pageId}
-                    onChange={(value) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        pageId: value,
-                      }))
-                    }
                   />
                 </div>
 

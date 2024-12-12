@@ -87,14 +87,19 @@ function WhyBarcodes() {
 
       case "page":
         return (
-          <Chip
-            className="capitalize"
-            color={item.page ? "primary" : "default"}
-            size="sm"
-            variant="flat"
-          >
-            {item.page ? item.page.nameEn : "Unlinked"}
-          </Chip>
+          <div className="flex items-center">
+            {item.pageId ? (
+              <div className="text-primary text-small underline">
+                {item.page.nameEn}
+              </div>
+            ) : item.externalUrl ? (
+              <div className="text-primary text-small underline">
+                {item.externalUrl}
+              </div>
+            ) : (
+              <div className="text-default-400 text-small">Unlinked</div>
+            )}
+          </div>
         );
 
       case "actions":

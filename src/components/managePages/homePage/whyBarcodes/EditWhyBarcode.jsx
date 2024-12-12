@@ -9,14 +9,19 @@ import {
   Input,
   Textarea,
   Switch,
+  Select,
+  SelectItem,
+  Autocomplete,
+  AutocompleteItem,
 } from "@nextui-org/react";
 import { toast } from "react-hot-toast";
 import { useUpdateWhyBarcodeMutation } from "../../../../store/apis/endpoints/websiteEndpoints/whyBarcode";
 import { FaUpload } from "react-icons/fa";
-import PageSelector from "../PageSelector";
+import { useGetPagesQuery } from "../../../../store/apis/endpoints/pageSetup";
 
 function EditWhyBarcode({ isOpen, onOpenChange, whyBarcode }) {
   const [updateWhyBarcode, { isLoading }] = useUpdateWhyBarcodeMutation();
+  const { data: pagesData } = useGetPagesQuery();
 
   const [formData, setFormData] = useState({
     titleEn: "",
@@ -26,9 +31,18 @@ function EditWhyBarcode({ isOpen, onOpenChange, whyBarcode }) {
     image: null,
     isActive: true,
     pageId: "",
+    urlType: "page",
+    externalUrl: "",
   });
 
   const [preview, setPreview] = useState(null);
+
+  const pages =
+    pagesData?.data?.pages?.map((page) => ({
+      label: page.nameEn,
+      value: page.id,
+      description: page.slug,
+    })) || [];
 
   useEffect(() => {
     if (whyBarcode) {
@@ -39,7 +53,9 @@ function EditWhyBarcode({ isOpen, onOpenChange, whyBarcode }) {
         descriptionAr: whyBarcode.descriptionAr,
         isActive: whyBarcode.isActive,
         image: null,
-        pageId: whyBarcode.pageId,
+        pageId: whyBarcode.pageId || "",
+        urlType: whyBarcode.pageId ? "page" : "external",
+        externalUrl: whyBarcode.externalUrl || "",
       });
       setPreview(whyBarcode.image);
     }
@@ -63,6 +79,20 @@ function EditWhyBarcode({ isOpen, onOpenChange, whyBarcode }) {
     }
   };
 
+  const handleUrlTypeChange = (keys) => {
+    const selectedType = Array.from(keys)[0];
+    setFormData((prev) => ({
+      ...prev,
+      urlType: selectedType,
+      pageId: "",
+      externalUrl: "",
+    }));
+  };
+
+  const handlePageSelection = (id) => {
+    setFormData((prev) => ({ ...prev, pageId: id }));
+  };
+
   const handleSubmit = async () => {
     try {
       const formDataToSend = new FormData();
@@ -71,7 +101,31 @@ function EditWhyBarcode({ isOpen, onOpenChange, whyBarcode }) {
       formDataToSend.append("descriptionEn", formData.descriptionEn);
       formDataToSend.append("descriptionAr", formData.descriptionAr);
       formDataToSend.append("isActive", formData.isActive);
-      formDataToSend.append("pageId", formData.pageId);
+
+      if (formData.urlType === "page" && !formData.pageId) {
+        toast.error("Please select a page");
+        return;
+      }
+
+      if (formData.urlType === "external" && !formData.externalUrl) {
+        toast.error("Please enter an external URL");
+        return;
+      }
+
+      if (formData.urlType === "external") {
+        try {
+          const formattedUrl = formData.externalUrl.startsWith("http")
+            ? formData.externalUrl
+            : `https://${formData.externalUrl}`;
+          new URL(formattedUrl);
+          formDataToSend.append("externalUrl", formattedUrl);
+        } catch (error) {
+          toast.error("Please enter a valid URL");
+          return;
+        }
+      } else {
+        formDataToSend.append("pageId", formData.pageId);
+      }
 
       if (formData.image) {
         formDataToSend.append("image", formData.image);
@@ -85,9 +139,46 @@ function EditWhyBarcode({ isOpen, onOpenChange, whyBarcode }) {
       toast.success("Why Barcode updated successfully");
       onOpenChange(false);
     } catch (error) {
-      console.error("Update Error:", error);
       toast.error(error.data?.message || "Failed to update why barcode");
     }
+  };
+
+  const renderUrlInput = () => {
+    if (formData.urlType === "page") {
+      return (
+        <Autocomplete
+          label="Select Page"
+          placeholder="Search for a page"
+          defaultItems={pages}
+          selectedKey={formData.pageId}
+          onSelectionChange={handlePageSelection}
+          className="col-span-2"
+          isRequired
+        >
+          {(item) => (
+            <AutocompleteItem key={item.value} textValue={item.label}>
+              <div className="flex flex-col">
+                <span>{item.label}</span>
+                <span className="text-small text-default-400">
+                  {item.description}
+                </span>
+              </div>
+            </AutocompleteItem>
+          )}
+        </Autocomplete>
+      );
+    }
+
+    return (
+      <Input
+        label="External URL"
+        placeholder="Enter external URL (e.g., https://example.com)"
+        value={formData.externalUrl}
+        onChange={handleChange("externalUrl")}
+        className="col-span-2"
+        isRequired
+      />
+    );
   };
 
   return (
@@ -111,7 +202,6 @@ function EditWhyBarcode({ isOpen, onOpenChange, whyBarcode }) {
             </ModalHeader>
             <ModalBody>
               <div className="grid grid-cols-2 gap-4">
-                {/* Same form fields as AddWhyBarcode */}
                 <Input
                   label="Title (English)"
                   placeholder="Enter title in English"
@@ -185,14 +275,22 @@ function EditWhyBarcode({ isOpen, onOpenChange, whyBarcode }) {
                   </Switch>
                 </div>
 
-                <div className="col-span-2">
-                  <PageSelector
-                    value={formData.pageId}
-                    onChange={(id) =>
-                      setFormData((prev) => ({ ...prev, pageId: id }))
-                    }
-                  />
-                </div>
+                <Select
+                  label="URL Type"
+                  placeholder="Select URL type"
+                  selectedKeys={[formData.urlType]}
+                  onSelectionChange={handleUrlTypeChange}
+                  className="col-span-2"
+                >
+                  <SelectItem key="page" value="page">
+                    Internal Page
+                  </SelectItem>
+                  <SelectItem key="external" value="external">
+                    External URL
+                  </SelectItem>
+                </Select>
+
+                {renderUrlInput()}
               </div>
             </ModalBody>
             <ModalFooter>
