@@ -137,12 +137,12 @@ function Members() {
     // Encrypt the member's credentials
     const credentials = encrypt({
       email: member.email,
-      companyLicenseNo: member.companyLicenseNo
+      companyLicenseNo: member.companyLicenseNo,
     });
 
     // Redirect to member portal with encrypted credentials
-    const memberPortalURL = `http://localhost:5173/member-portal/login?auth=${credentials}`;
-    window.open(memberPortalURL, '_blank');
+    const memberPortalURL = `https://buybarcodeupc.com/member-portal/login?auth=${credentials}`;
+    window.open(memberPortalURL, "_blank");
   };
 
   const renderCell = (member, columnKey) => {
