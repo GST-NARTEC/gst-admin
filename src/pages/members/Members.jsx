@@ -36,13 +36,11 @@ import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import { useGetUserQuery } from "../../store/apis/endpoints/user";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useNavigate } from "react-router-dom";
-import {
-  useDeleteUserMutation,
-  useUpdateUserStatusMutation,
-} from "../../store/apis/endpoints/user";
+import { useUpdateUserStatusMutation } from "../../store/apis/endpoints/user";
 import OverlayLoader from "../../components/common/OverlayLoader";
 import toast from "react-hot-toast";
 import { encrypt } from "../../utils/encryption.js";
+import DeleteConfirmationModal from "../../components/members/DeleteConfirmationModal.jsx";
 
 const TABLE_COLUMNS = [
   { name: "COMPANY (EN)", uid: "companyNameEn" },
@@ -79,16 +77,6 @@ function Members() {
     },
   ] = useUpdateUserStatusMutation();
 
-  const [
-    deleteUser,
-    {
-      isLoading: isDeleting,
-      isSuccess: isDeleted,
-      isError: isDeletedError,
-      error: deletedError,
-    },
-  ] = useDeleteUserMutation();
-
   // Debounce search term
   const debouncedSearch = useDebounce(search, 500);
 
@@ -102,20 +90,29 @@ function Members() {
   const pagination = data?.data?.pagination;
 
   useEffect(() => {
-    if (isDeleted) {
-      toast.success("Member deleted successfully");
+    if (isUpdated) {
+      toast.success("Member updated successfully");
     }
-    if (isDeletedError) {
-      toast.error(deletedError?.data?.message);
+    if (isUpdatedError) {
+      toast.error(updatedError?.data?.message);
     }
-  }, [isDeleted, isDeletedError, deletedError]);
+  }, [isUpdated, isUpdatedError, updatedError]);
 
   const handleEdit = (member) => {
     navigate(`/edit-member/${member.id}`);
   };
 
-  const handleDelete = async (member) => {
-    await deleteUser(member.id);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [memberToDelete, setMemberToDelete] = useState(null);
+
+  const handleDelete = (member) => {
+    setMemberToDelete(member);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setMemberToDelete(null);
   };
 
   const handleView = (member) => {
@@ -184,6 +181,7 @@ function Members() {
               </DropdownItem>
               <DropdownItem
                 key="activation"
+                isDisabled={member.isActive}
                 startContent={<FaCheckCircle className="text-success" />}
                 onClick={() => handleStatusUpdate(member, "active")}
               >
@@ -344,8 +342,15 @@ function Members() {
         </Table>
       </div>
 
-      {/* loadings */}
-      {isDeleting && <OverlayLoader />}
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        itemName={`member "${memberToDelete?.companyNameEn}"`}
+        memberId={memberToDelete?.id}
+        onDeleteSuccess={() => {
+          // Any additional cleanup or refetch if needed
+        }}
+      />
     </MainLayout>
   );
 }

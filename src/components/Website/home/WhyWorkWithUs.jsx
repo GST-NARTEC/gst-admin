@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { FaChartLine, FaHandshake, FaUsersCog } from "react-icons/fa";
 import { IoShieldCheckmark } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 const features = [
   {
@@ -30,6 +31,7 @@ const features = [
 ];
 
 export default function WhyWorkWithUs() {
+  const navigate = useNavigate();
   return (
     <section className="py-24 relative overflow-hidden">
       {/* Background Elements */}
@@ -86,8 +88,8 @@ export default function WhyWorkWithUs() {
           viewport={{ once: true }}
           className="mt-16 text-center"
         >
-          <a
-            href="/contact"
+          <button
+            onClick={() => navigate("/template3/contact-us")}
             className="inline-flex items-center gap-3 bg-gradient-to-r from-primary to-quaternary text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 group"
           >
             Contact Us Discuss Your Technology Need
@@ -104,7 +106,7 @@ export default function WhyWorkWithUs() {
                 d="M17 8l4 4m0 0l-4 4m4-4H3"
               />
             </svg>
-          </a>
+          </button>
         </motion.div>
       </div>
     </section>

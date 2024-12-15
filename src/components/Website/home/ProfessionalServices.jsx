@@ -206,6 +206,8 @@ export default function ProfessionalServices() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className="inline-flex items-center gap-3 bg-gradient-to-r from-primary to-quaternary text-white px-8 py-4 rounded-xl font-semibold self-start hover:shadow-lg hover:shadow-primary/20 transition-shadow group"
+                  onClick={() => navigate("/template3/contact-us")}
+
                 >
                   Learn More
                   <svg
