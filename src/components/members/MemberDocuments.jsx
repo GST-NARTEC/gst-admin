@@ -11,14 +11,32 @@ import {
   Chip,
   Tooltip,
   Button,
+  Card,
 } from "@nextui-org/react";
-import { FaSearch, FaFileDownload, FaFileInvoice, FaFileContract } from "react-icons/fa";
+import {
+  FaSearch,
+  FaFileInvoice,
+  FaEdit,
+  FaTrash,
+  FaIdCard,
+  FaPlus,
+  FaFileContract,
+  FaFilePdf,
+} from "react-icons/fa";
 import { useGetUserByIdQuery } from "../../store/apis/endpoints/user";
 import { useParams } from "react-router-dom";
+import AddDocument from "./AddDocument";
+import EditDocument from "./EditDocument";
+import DeleteDocument from "./DeleteDocument";
+// import DeleteDocument from "./DeleteDocument";
 
 function MemberDocuments() {
   const { id } = useParams();
   const [search, setSearch] = useState("");
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState(null);
 
   const { data: docsData, isLoading } = useGetUserByIdQuery(
     {
@@ -30,135 +48,268 @@ function MemberDocuments() {
     }
   );
 
-  // Flatten all document types into a single array
-  const documents = useMemo(() => {
+  // Separate general documents and categorized documents
+  const generalDocs = useMemo(() => {
+    return docsData?.data?.user?.docs || [];
+  }, [docsData]);
+
+  const categorizedDocs = useMemo(() => {
     const docs = docsData?.data?.user?.documents;
-    const baseDocuments = !docs ? [] : [
+    if (!docs) return [];
+
+    return [
       ...docs.receipts.map((doc) => ({ ...doc, category: "Receipt" })),
       ...docs.certificates.map((doc) => ({ ...doc, category: "Certificate" })),
       ...docs.bankSlips.map((doc) => ({ ...doc, category: "Bank Slip" })),
       ...docs.invoices.map((doc) => ({ ...doc, category: "Invoice" })),
     ];
-
-    // Add static Terms & Conditions row
-    const staticRow = {
-      orderNumber: "TC-001",
-      category: "Terms & Conditions",
-      status: "Active",
-      createdAt: new Date().toISOString(),
-      path: "https://api.gstsa1.org/assets/docs/terms-and-conditions.pdf"
-    };
-
-    return [...baseDocuments, staticRow];
   }, [docsData]);
 
-  const columns = [
-    { name: "ORDER ID", uid: "orderNumber" },
-    { name: "DOCUMENT TYPE", uid: "category" },
-    { name: "STATUS", uid: "status" },
-    { name: "DATE", uid: "createdAt" },
-    { name: "ACTIONS", uid: "actions" },
-  ];
+  const columns = {
+    general: [
+      { name: "NAME", uid: "name" },
+      { name: "DATE", uid: "createdAt" },
+      { name: "ACTIONS", uid: "actions" },
+    ],
+    categorized: [
+      { name: "ORDER ID", uid: "orderNumber" },
+      { name: "DOCUMENT TYPE", uid: "category" },
+      { name: "STATUS", uid: "status" },
+      { name: "DATE", uid: "createdAt" },
+      { name: "ACTIONS", uid: "actions" },
+    ],
+  };
 
-  const renderCell = (doc, columnKey) => {
+  const renderCell = (doc, columnKey, isGeneral = false) => {
+    if (isGeneral) {
+      switch (columnKey) {
+        case "name":
+          return (
+            <div className="flex items-center gap-2">
+              <FaIdCard className="text-primary" />
+              <span>{doc.name}</span>
+            </div>
+          );
+        case "createdAt":
+          return <p>{new Date(doc.createdAt).toLocaleDateString()}</p>;
+        case "actions":
+          return (
+            <div className="flex">
+              <Tooltip content="View Document">
+                <Button
+                  isIconOnly
+                  variant="light"
+                  as="a"
+                  href={doc.doc}
+                  target="_blank"
+                  className="text-primary"
+                >
+                  <FaFileInvoice />
+                </Button>
+              </Tooltip>
+              <Tooltip content="Edit Document">
+                <Button
+                  isIconOnly
+                  variant="light"
+                  onPress={() => {
+                    setSelectedDocument(doc);
+                    setIsEditModalOpen(true);
+                  }}
+                  className="text-default-400"
+                >
+                  <FaEdit />
+                </Button>
+              </Tooltip>
+              <Tooltip content="Delete Document">
+                <Button
+                  isIconOnly
+                  variant="light"
+                  onPress={() => {
+                    setSelectedDocument(doc);
+                    setIsDeleteModalOpen(true);
+                  }}
+                  className="text-danger"
+                >
+                  <FaTrash />
+                </Button>
+              </Tooltip>
+            </div>
+          );
+        default:
+          return null;
+      }
+    }
+
+    // For categorized documents
+    return renderCategorizedCell(doc, columnKey);
+  };
+
+  const renderCategorizedCell = (doc, columnKey) => {
     switch (columnKey) {
       case "orderNumber":
+        return <p>{doc.orderNumber}</p>;
+      case "category":
         return (
-          <Tooltip content={doc.orderNumber}>
-            <p className="text-sm cursor-pointer">{doc.orderNumber}</p>
-          </Tooltip>
+          <Chip color="primary" variant="flat">
+            {doc.category}
+          </Chip>
         );
       case "status":
         return (
           <Chip
-            size="sm"
-            variant="flat"
             color={doc.status === "Activated" ? "success" : "warning"}
+            variant="flat"
           >
             {doc.status}
           </Chip>
         );
       case "createdAt":
-        return (
-          <p className="text-sm">
-            {new Date(doc.createdAt).toLocaleDateString()}
-          </p>
-        );
+        return <p>{new Date(doc.createdAt).toLocaleDateString()}</p>;
       case "actions":
         return (
-          <Tooltip content={doc.category === "Terms & Conditions" ? "View Terms & Conditions" : "View Document"}>
-            <Button
-              isIconOnly
-              variant="light"
-              as="a"
-              href={doc.path}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-lg cursor-pointer text-default-400 hover:text-default-500"
-            >
-              {doc.category === "Terms & Conditions" ? <FaFileContract /> : <FaFileInvoice />}
-            </Button>
-          </Tooltip>
+          <div className="flex gap-2 justify-center">
+            <Tooltip content="View Document">
+              <Button
+                isIconOnly
+                variant="light"
+                as="a"
+                href={doc.path}
+                target="_blank"
+                className="text-primary"
+              >
+                <FaFileInvoice />
+              </Button>
+            </Tooltip>
+          </div>
         );
       default:
-        return <p className="text-sm">{doc[columnKey]}</p>;
+        return null;
     }
   };
 
-  const topContent = useMemo(
-    () => (
-      <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-bold">Documents</h1>
-        <div className="flex justify-between items-center">
-          <Input
-            isClearable
-            value={search}
-            onValueChange={setSearch}
-            className="w-full sm:max-w-[44%]"
-            placeholder="Search by order ID..."
-            startContent={<FaSearch className="text-default-300" />}
-          />
+  return (
+    <div className="w-full max-w-[1400px] mx-auto p-6 space-y-8">
+      <div className="flex items-center">
+        <h1 className="text-2xl font-bold text-[#1B2B65]">Documents</h1>
+      </div>
+
+      <div className="space-y-8">
+        {/* Personal Documents Section */}
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold text-gray-800">
+              Personal Documents
+            </h2>
+            <Button
+              className="bg-[#1B2B65] text-white rounded-full px-6 hover:bg-[#2a3d7c] transition-all"
+              endContent={<FaPlus size={20} />}
+              onPress={() => setIsAddModalOpen(true)}
+            >
+              Add Document
+            </Button>
+          </div>
+          <Card className="border border-gray-100 shadow-sm">
+            <Table
+              aria-label="Personal documents"
+              classNames={{
+                wrapper: "shadow-none",
+                th: "bg-gray-50/50 font-medium text-gray-600",
+                td: "py-4",
+              }}
+            >
+              <TableHeader columns={columns.general}>
+                {(column) => (
+                  <TableColumn key={column.uid}>{column.name}</TableColumn>
+                )}
+              </TableHeader>
+              <TableBody
+                items={generalDocs}
+                isLoading={isLoading}
+                loadingContent={<Spinner />}
+                emptyContent="No personal documents found"
+              >
+                {(item) => (
+                  <TableRow key={item.id}>
+                    {(columnKey) => (
+                      <TableCell>{renderCell(item, columnKey, true)}</TableCell>
+                    )}
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </Card>
+        </div>
+
+        {/* Business Documents Section */}
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">
+            Business Documents
+          </h2>
+          <Card className="border border-gray-100 shadow-sm">
+            <Table
+              aria-label="Business documents"
+              classNames={{
+                wrapper: "shadow-none",
+                th: "bg-gray-50/50 font-medium text-gray-600",
+                td: "py-4",
+              }}
+            >
+              <TableHeader columns={columns.categorized}>
+                {(column) => (
+                  <TableColumn key={column.uid}>{column.name}</TableColumn>
+                )}
+              </TableHeader>
+              <TableBody
+                items={categorizedDocs}
+                isLoading={isLoading}
+                loadingContent={<Spinner />}
+                emptyContent="No business documents found"
+              >
+                {(item) => (
+                  <TableRow key={`${item.orderNumber}-${item.category}`}>
+                    {(columnKey) => (
+                      <TableCell>{renderCell(item, columnKey)}</TableCell>
+                    )}
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </Card>
+        </div>
+
+        {/* Terms & Conditions Section */}
+        <div className="bg-white p-4 rounded-lg shadow">
+          <h2 className="text-lg font-semibold mb-4">Terms & Conditions</h2>
+          <div className="flex items-center space-x-4">
+            <a
+              href="https://api.gstsa1.org/assets/docs/terms-and-conditions.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 text-blue-600 hover:text-blue-800"
+            >
+              <FaFilePdf className="text-red-600 text-xl" />
+              <span>Terms and Conditions Document</span>
+            </a>
+          </div>
         </div>
       </div>
-    ),
-    [search]
-  );
 
-  return (
-    <Table
-      aria-label="Documents table"
-      topContent={topContent}
-      classNames={{
-        wrapper: "shadow-md rounded-lg",
-      }}
-    >
-      <TableHeader columns={columns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            
-            align={column.uid === "actions" ? "center" : "start"}
-            className="bg-gray-50 text-gray-600"
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody
-        items={documents}
-        isLoading={isLoading}
-        emptyContent="No documents found"
-        loadingContent={<Spinner />}
-      >
-        {(item) => (
-          <TableRow key={`${item.orderNumber}-${item.category}`}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+      {/* Modals */}
+       <AddDocument
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+      />
+       <EditDocument
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        document={selectedDocument}
+      />
+      <DeleteDocument
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        document={selectedDocument}
+      />  
+    </div>
   );
 }
 
