@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { apiSlice } from "./apis/apiSlice";
 import currencyReducer from "./slice/currencySlice";
+import adminReducer from "./slice/adminSlice";
 
 // Load state from local storage
 const loadState = () => {
@@ -13,6 +14,7 @@ const loadState = () => {
     const persistedState = JSON.parse(serializedState);
     return {
       currency: persistedState.currency || { symbol: "SAR" },
+      admin: persistedState.admin,
     };
   } catch (err) {
     return undefined;
@@ -24,6 +26,7 @@ const saveState = (state) => {
   try {
     const stateToPersist = {
       currency: state.currency,
+      admin: state.admin,
     };
     const serializedState = JSON.stringify(stateToPersist);
     localStorage.setItem("reduxState", serializedState);
@@ -36,6 +39,7 @@ export const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
     currency: currencyReducer,
+    admin: adminReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

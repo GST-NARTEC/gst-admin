@@ -3,6 +3,9 @@ import { Images } from "../../../assets/Index";
 import { IoMail } from "react-icons/io5";
 import { FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../../../store/apis/endpoints/admin";
+import toast from "react-hot-toast";
+import { Button } from "@nextui-org/react";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,9 +13,17 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const [login, { isLoading }] = useLoginMutation();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login attempted with:", { email, password });
+    try {
+      const response = await login({ email, password }).unwrap();
+      toast.success("Login successful");
+      navigate("/admin/dashboard");
+    } catch (error) {
+      toast.error("Login failed");
+    }
   };
 
   return (
@@ -109,8 +120,8 @@ const LoginPage = () => {
               </div>
 
               {/* Submit Button */}
-              <button
-                onClick={() => navigate("/admin/dashboard")}
+              <Button
+                isLoading={isLoading}
                 type="submit"
                 className="w-full py-3.5 px-4 mt-4 border border-transparent rounded-lg
                          text-sm font-medium text-white bg-blue-600 hover:bg-blue-700
@@ -118,7 +129,7 @@ const LoginPage = () => {
                          transition duration-200 shadow-sm"
               >
                 Sign in
-              </button>
+              </Button>
             </form>
 
             {/* Footer */}

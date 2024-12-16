@@ -1,4 +1,5 @@
 import { Route, Routes, Navigate } from "react-router-dom";
+import ProtectedRoutes from "../components/security/ProtectedRoutes";
 import Login from "../pages/auth/Login/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Settings from "../pages/settings/Settings";
@@ -52,70 +53,84 @@ import ViewTemplate4 from "../components/pageTemplates/pageTemplatesGallery/Temp
 function AdminRoutes() {
   return (
     <Routes>
-      <Route path="/admin/dashboard" element={<Dashboard />} />
+      {/* Public Route */}
       <Route path="/admin/login" element={<Login />} />
-      <Route path="/admin/settings" element={<Settings />}>
-        <Route path="currency" element={<Currency />} />
-        <Route path="tax" element={<Tax />} />
-        {/* Add other settings routes here */}
-      </Route>
-      <Route path="/admin/categories" element={<Categories />} />
 
-      <Route path="/admin/products" element={<Products />} />
-      <Route path="/admin/add-product" element={<AddProduct />} />
-      <Route path="/admin/edit-product/:id" element={<EditProduct />} />
+      {/* Protected Routes - Everything under /admin except login */}
+      <Route element={<ProtectedRoutes />}>
+        {/* Dashboard */}
+        <Route path="/admin/dashboard" element={<Dashboard />} />
 
-      <Route path="/admin/addons" element={<Addons />} />
+        {/* Settings Routes */}
+        <Route path="/admin/settings" element={<Settings />}>
+          <Route path="currency" element={<Currency />} />
+          <Route path="tax" element={<Tax />} />
+        </Route>
 
-      <Route path="/admin/members" element={<Members />} />
-      <Route path="/admin/view-member/:id" element={<ViewMember />} />
+        {/* Products & Categories */}
+        <Route path="/admin/categories" element={<Categories />} />
+        <Route path="/admin/products" element={<Products />} />
+        <Route path="/admin/add-product" element={<AddProduct />} />
+        <Route path="/admin/edit-product/:id" element={<EditProduct />} />
 
-      <Route path="/admin/*" element={<NotFound />} />
+        {/* Members */}
+        <Route path="/admin/members" element={<Members />} />
+        <Route path="/admin/view-member/:id" element={<ViewMember />} />
 
-      {/* Websites Management */}
-      <Route path="/admin/gstsa1/navigation" element={<Navigation />} />
-      <Route path="/admin/gstsa1/media" element={<Media />} />
+        {/* Addons */}
+        <Route path="/admin/addons" element={<Addons />} />
 
-      {/* Pages Management with nested routes */}
-      <Route path="/admin/gstsa1/pages" element={<Pages />}>
-        <Route index element={null} />
-        <Route path="home" element={<HomePage />} />
-      </Route>
+        {/* GSTSA Website Management */}
+        <Route path="/admin/gstsa1/navigation" element={<Navigation />} />
+        <Route path="/admin/gstsa1/media" element={<Media />} />
 
-      {/* Page Templates Management */}
-      <Route path="/admin/gstsa1/page-templates" element={<PageTemplates />}>
-        <Route index element={<Navigate to="page-setup" replace />} />
-        <Route path="page-setup" element={<PageTemplatesSetup />} />
-        <Route path="templates" element={<PageTemplatesGallery />} />
-      </Route>
+        {/* Pages Management */}
+        <Route path="/admin/gstsa1/pages" element={<Pages />}>
+          <Route index element={null} />
+          <Route path="home" element={<HomePage />} />
+        </Route>
 
-      {/* Template Management Routes */}
-      <Route path="/admin/gstsa1/page-templates/templates/template1">
-        <Route index element={<Template1 />} />
-        <Route path="add" element={<AddTemplate1 />} />
-        <Route path="edit/:id" element={<EditTemplate1 />} />
-        <Route path="view/:id" element={<ViewTemplate1 />} />
-      </Route>
+        {/* Page Templates */}
+        <Route path="/admin/gstsa1/page-templates" element={<PageTemplates />}>
+          <Route index element={<Navigate to="page-setup" replace />} />
+          <Route path="page-setup" element={<PageTemplatesSetup />} />
+          <Route path="templates" element={<PageTemplatesGallery />} />
+        </Route>
 
-      <Route path="/admin/gstsa1/page-templates/templates/template2">
-        <Route index element={<Template2 />} />
-        <Route path="add" element={<AddTemplate2 />} />
-        <Route path="view/:id" element={<ViewTemplate2 />} />
-        <Route path="edit/:id" element={<EditTemplate2 />} />
-      </Route>
+        {/* Template 1 */}
+        <Route path="/admin/gstsa1/page-templates/templates/template1">
+          <Route index element={<Template1 />} />
+          <Route path="add" element={<AddTemplate1 />} />
+          <Route path="edit/:id" element={<EditTemplate1 />} />
+          <Route path="view/:id" element={<ViewTemplate1 />} />
+        </Route>
 
-      <Route path="/admin/gstsa1/page-templates/templates/template3">
-        <Route index element={<Template3 />} />
-        <Route path="add" element={<AddTemplate3 />} />
-        <Route path="edit/:id" element={<EditTemplate3 />} />
-        <Route path="view/:id" element={<ViewTemplate3 />} />
-      </Route>
+        {/* Template 2 */}
+        <Route path="/admin/gstsa1/page-templates/templates/template2">
+          <Route index element={<Template2 />} />
+          <Route path="add" element={<AddTemplate2 />} />
+          <Route path="view/:id" element={<ViewTemplate2 />} />
+          <Route path="edit/:id" element={<EditTemplate2 />} />
+        </Route>
 
-      <Route path="/admin/gstsa1/page-templates/templates/template4">
-        <Route index element={<Template4 />} />
-        <Route path="add" element={<AddTemplate4 />} />
-        <Route path="edit/:id" element={<EditTemplate4 />} />
-        <Route path="view/:id" element={<ViewTemplate4 />} />
+        {/* Template 3 */}
+        <Route path="/admin/gstsa1/page-templates/templates/template3">
+          <Route index element={<Template3 />} />
+          <Route path="add" element={<AddTemplate3 />} />
+          <Route path="edit/:id" element={<EditTemplate3 />} />
+          <Route path="view/:id" element={<ViewTemplate3 />} />
+        </Route>
+
+        {/* Template 4 */}
+        <Route path="/admin/gstsa1/page-templates/templates/template4">
+          <Route index element={<Template4 />} />
+          <Route path="add" element={<AddTemplate4 />} />
+          <Route path="edit/:id" element={<EditTemplate4 />} />
+          <Route path="view/:id" element={<ViewTemplate4 />} />
+        </Route>
+
+        {/* Not Found Route - for protected routes */}
+        <Route path="/admin/*" element={<NotFound />} />
       </Route>
     </Routes>
   );
