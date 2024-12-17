@@ -23,11 +23,12 @@ import {
   FaFileInvoice,
   FaEllipsisV,
   FaCheckCircle,
+  FaShoppingCart,
 } from "react-icons/fa";
 import { BsReceiptCutoff } from "react-icons/bs";
 import { useGetUserByIdQuery } from "../../store/apis/endpoints/user";
 import OrderDetailsModal from "./OrderDetailsModal";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectCurrencySymbol } from "../../store/slice/currencySlice";
 import BankSlipModal from "./BankSlipModal";
@@ -41,6 +42,7 @@ function OrdersTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBankSlipModalOpen, setIsBankSlipModalOpen] = useState(false);
   const [isActivateModalOpen, setIsActivateModalOpen] = useState(false);
+  const navigate = useNavigate();
   const currencySymbol = useSelector(selectCurrencySymbol);
   const { data: ordersData, isLoading } = useGetUserByIdQuery(
     {
@@ -135,7 +137,6 @@ function OrdersTable() {
             <DropdownMenu
               aria-label="Order Actions"
               className="text-default-500"
-
             >
               <DropdownItem
                 key="details"
@@ -158,7 +159,10 @@ function OrdersTable() {
                 View Payment Slip
               </DropdownItem>
               <DropdownItem
-              isDisabled={order.status === "Activated" || order.status === "Pending Payment"}
+                isDisabled={
+                  order.status === "Activated" ||
+                  order.status === "Pending Payment"
+                }
                 key="activate"
                 startContent={<FaCheckCircle className="text-success" />}
                 onClick={() => {
@@ -181,7 +185,17 @@ function OrdersTable() {
   const topContent = useMemo(
     () => (
       <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-bold">Orders</h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Orders</h1>
+          <Button 
+            color="primary"
+            startContent={<FaShoppingCart />}
+            onClick={() => navigate(`/admin/buy-barcodes/${id}`)}
+          >
+            Buy Barcodes
+          </Button>
+        </div>
+
         <div className="flex justify-between items-center">
           <Input
             isClearable

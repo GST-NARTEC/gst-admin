@@ -9,7 +9,16 @@ const checkout = apiSlice.injectEndpoints({
         body: checkoutData,
       }),
     }),
+
+    createOrder: builder.mutation({
+      query: (orderData) => ({
+        url: "/user/v1/create-order",
+        method: "POST",
+        body: orderData,
+      }),
+      invalidatesTags: ["userDetails"],
+    }),
   }),
 });
 
-export const { useCheckoutMutation } = checkout;
+export const { useCheckoutMutation, useCreateOrderMutation } = checkout;

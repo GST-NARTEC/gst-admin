@@ -50,6 +50,10 @@ import AddTemplate4 from "../components/pageTemplates/pageTemplatesGallery/Templ
 import EditTemplate4 from "../components/pageTemplates/pageTemplatesGallery/Template4/EditTemplate4";
 import ViewTemplate4 from "../components/pageTemplates/pageTemplatesGallery/Template4/ViewTemplate4";
 
+// Buy Barcodes
+import Barcodes from "../components/members/BuyBarcodes/Barcodes";
+import Payment from "../components/members/BuyBarcodes/Payment";
+
 function AdminRoutes() {
   return (
     <Routes>
@@ -76,6 +80,8 @@ function AdminRoutes() {
         {/* Members */}
         <Route path="/admin/members" element={<Members />} />
         <Route path="/admin/view-member/:id" element={<ViewMember />} />
+        <Route path="/admin/buy-barcodes/:id" element={<Barcodes />} />
+        <Route path="/admin/buy-barcodes/payment/:id" element={<Payment />} />
 
         {/* Addons */}
         <Route path="/admin/addons" element={<Addons />} />
