@@ -16,6 +16,7 @@ import {
   Spinner,
   Select,
   SelectItem,
+  Chip,
 } from "@nextui-org/react";
 import {
   FaSearch,
@@ -31,6 +32,8 @@ import {
   FaUserPlus,
   FaSignInAlt,
   FaBan,
+  FaHourglassHalf,
+  FaUserClock,
 } from "react-icons/fa";
 import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import { useGetUserQuery } from "../../store/apis/endpoints/user";
@@ -49,6 +52,7 @@ const TABLE_COLUMNS = [
   { name: "MOBILE", uid: "mobile" },
   { name: "LICENSE NO", uid: "companyLicenseNo" },
   { name: "COUNTRY", uid: "country" },
+  { name: "ORDERS STATUS", uid: "orders" },
   { name: "STATUS", uid: "isActive" },
   { name: "ACTIONS", uid: "actions" },
 ];
@@ -154,6 +158,73 @@ function Members() {
             }`}
           >
             {member.isActive ? "Active" : "Inactive"}
+          </div>
+        );
+      case "orders":
+        const pendingPayment =
+          member.orders?.filter((order) => order.status === "Pending Payment")
+            .length || 0;
+
+        const pendingActivation =
+          member.orders?.filter(
+            (order) => order.status === "Pending Account Activation"
+          ).length || 0;
+
+        const activated =
+          member.orders?.filter((order) => order.status === "Activated")
+            .length || 0;
+
+        return (
+          <div className="flex flex-wrap items-center gap-1.5">
+            {activated > 0 && (
+              <Chip
+                startContent={
+                  <FaCheckCircle className="text-success text-xs" />
+                }
+                variant="flat"
+                color="success"
+                size="sm"
+                classNames={{
+                  base: "bg-success/10 h-[26px]",
+                  content: "text-success font-medium px-1",
+                }}
+              >
+                {activated} Activated
+              </Chip>
+            )}
+            {pendingPayment > 0 && (
+              <Chip
+                startContent={
+                  <FaHourglassHalf className="text-warning text-xs" />
+                }
+                variant="flat"
+                color="warning"
+                size="sm"
+                classNames={{
+                  base: "bg-warning/10 h-[26px]",
+                  content: "text-warning font-medium px-1",
+                }}
+              >
+                {pendingPayment} Payment Pending
+              </Chip>
+            )}
+            {pendingActivation > 0 && (
+              <Chip
+                startContent={<FaUserClock className="text-primary text-xs" />}
+                variant="flat"
+                color="primary"
+                size="sm"
+                classNames={{
+                  base: "bg-primary/10 h-[26px]",
+                  content: "text-primary font-medium px-1",
+                }}
+              >
+                {pendingActivation} Activation Pending
+              </Chip>
+            )}
+            {!pendingPayment && !pendingActivation && !activated && (
+              <span className="text-default-400 text-xs">No orders</span>
+            )}
           </div>
         );
       case "actions":
@@ -316,13 +387,20 @@ function Members() {
       <div className="p-4">
         <h1 className="text-2xl font-bold pb-4">Members</h1>
         <Table
+          aria-label="Members table"
           topContent={topContent}
           bottomContent={bottomContent}
-          aria-label="Members table"
+          classNames={{
+            wrapper: "min-h-[222px]",
+            td: "border-b border-divider",
+            tr: "hover:bg-default-100",
+          }}
         >
           <TableHeader columns={TABLE_COLUMNS}>
             {(column) => (
-              <TableColumn key={column.uid}>{column.name}</TableColumn>
+              <TableColumn key={column.uid} className="border-b border-divider">
+                {column.name}
+              </TableColumn>
             )}
           </TableHeader>
           <TableBody

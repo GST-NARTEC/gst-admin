@@ -26,6 +26,7 @@ import {
   FaImages,
   FaSearch,
   FaPuzzlePiece,
+  FaQuestionCircle,
 } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import { Images } from "../../assets";
@@ -150,6 +151,12 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
     { path: "/admin/addons", icon: <FaPuzzlePiece />, label: "Addons" },
     { path: "/admin/languages", icon: <FaLanguage />, label: "Languages" },
     { path: "/admin/roles", icon: <FaUserShield />, label: "User Roles" },
+    // help and support
+    {
+      path: "/admin/help-and-support",
+      icon: <FaQuestionCircle />,
+      label: "Help and Support",
+    },
     { path: "/admin/settings", icon: <FaCog />, label: "Settings" },
   ];
 

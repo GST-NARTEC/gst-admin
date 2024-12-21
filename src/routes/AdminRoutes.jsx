@@ -54,6 +54,8 @@ import ViewTemplate4 from "../components/pageTemplates/pageTemplatesGallery/Temp
 import Barcodes from "../components/members/BuyBarcodes/Barcodes";
 import Payment from "../components/members/BuyBarcodes/Payment";
 
+import HelpAndSupport from "../pages/helpAndSupport/HelpAndSupport";
+
 function AdminRoutes() {
   return (
     <Routes>
@@ -64,6 +66,9 @@ function AdminRoutes() {
       <Route element={<ProtectedRoutes />}>
         {/* Dashboard */}
         <Route path="/admin/dashboard" element={<Dashboard />} />
+
+        {/* Help & Support */}
+        <Route path="/admin/help-and-support" element={<HelpAndSupport />} />
 
         {/* Settings Routes */}
         <Route path="/admin/settings" element={<Settings />}>
