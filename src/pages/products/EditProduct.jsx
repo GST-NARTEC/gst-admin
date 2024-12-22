@@ -27,10 +27,13 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { selectCurrencySymbol } from "../../store/slice/currencySlice";
 import { useGetActiveAddonsQuery } from "../../store/apis/endpoints/addons";
+import { useGetBarcodeTypesQuery } from "../../store/apis/endpoints/barcodeTypes";
+
 function EditProduct() {
   const currencySymbol = useSelector(selectCurrencySymbol);
   const { id } = useParams();
   const navigate = useNavigate();
+  const { data: barcodeTypesData } = useGetBarcodeTypesQuery();
 
   const { data: addonsData } = useGetActiveAddonsQuery({
     page: 1,
@@ -53,6 +56,7 @@ function EditProduct() {
     image: null,
     status: "inactive",
     selectedAddons: [],
+    barcodeTypeId: "",
   });
 
   const [searchValue, setSearchValue] = useState("");
@@ -68,6 +72,7 @@ function EditProduct() {
         image: null,
         status: product.status || "inactive",
         selectedAddons: product.addons || [],
+        barcodeTypeId: product.barcodeTypeId || "",
       });
     }
   }, [productData]);
@@ -90,6 +95,7 @@ function EditProduct() {
       productData.append("price", formData.price);
       productData.append("categoryId", formData.categoryId);
       productData.append("status", formData.status);
+      productData.append("barcodeTypeId", formData.barcodeTypeId);
       if (formData.image) {
         productData.append("image", formData.image);
       }
@@ -187,6 +193,27 @@ function EditProduct() {
                   {categoriesData?.data?.categories.map((cat) => (
                     <SelectItem key={cat.id} value={cat.id}>
                       {cat.name}
+                    </SelectItem>
+                  ))}
+                </Select>
+
+                <Select
+                  label="Barcode Type"
+                  placeholder="Select barcode type"
+                  selectedKeys={
+                    formData.barcodeTypeId ? [formData.barcodeTypeId] : []
+                  }
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      barcodeTypeId: e.target.value,
+                    }))
+                  }
+                  className="flex-1"
+                >
+                  {barcodeTypesData?.data?.barcodeTypes.map((type) => (
+                    <SelectItem key={type.id} value={type.id}>
+                      {type.type}
                     </SelectItem>
                   ))}
                 </Select>

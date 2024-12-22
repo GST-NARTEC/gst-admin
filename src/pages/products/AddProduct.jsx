@@ -23,9 +23,11 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { selectCurrencySymbol } from "../../store/slice/currencySlice";
 import { useGetActiveAddonsQuery } from "../../store/apis/endpoints/addons";
+import { useGetBarcodeTypesQuery } from "../../store/apis/endpoints/barcodeTypes";
 
 function AddProduct() {
   const currencySymbol = useSelector(selectCurrencySymbol);
+  const { data: barcodeTypesData } = useGetBarcodeTypesQuery();
   const { data: categoriesData } = useGetCategoriesQuery({
     page: 1,
     limit: 100,
@@ -41,6 +43,7 @@ function AddProduct() {
     image: null,
     status: "active",
     selectedAddons: [],
+    barcodeTypeId: "",
   });
 
   const [searchValue, setSearchValue] = useState("");
@@ -82,6 +85,7 @@ function AddProduct() {
       productData.append("price", formData.price);
       productData.append("categoryId", formData.categoryId);
       productData.append("status", formData.status);
+      productData.append("barcodeTypeId", formData.barcodeTypeId);
       if (formData.image) {
         productData.append("image", formData.image);
       }
@@ -145,6 +149,25 @@ function AddProduct() {
                   {categoriesData?.data?.categories.map((cat) => (
                     <SelectItem key={cat.id} value={cat.id}>
                       {cat.name}
+                    </SelectItem>
+                  ))}
+                </Select>
+
+                <Select
+                  label="Barcode Type"
+                  placeholder="Select barcode type"
+                  value={formData.barcodeTypeId}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      barcodeTypeId: e.target.value,
+                    }))
+                  }
+                  className="flex-1"
+                >
+                  {barcodeTypesData?.data?.barcodeTypes.map((type) => (
+                    <SelectItem key={type.id} value={type.id}>
+                      {type.type}
                     </SelectItem>
                   ))}
                 </Select>
