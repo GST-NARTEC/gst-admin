@@ -390,6 +390,8 @@ function Members() {
           aria-label="Members table"
           topContent={topContent}
           bottomContent={bottomContent}
+          topContentPlacement="outside"
+          bottomContentPlacement="outside"
           classNames={{
             wrapper: "min-h-[222px]",
             td: "border-b border-divider",

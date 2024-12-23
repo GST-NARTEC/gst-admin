@@ -31,6 +31,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { Images } from "../../assets";
 import { MdEmail } from "react-icons/md";
+// barcode icon
 
 function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
   const location = useLocation();
@@ -148,6 +149,8 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
     },
     { path: "/admin/categories", icon: <FaList />, label: "Categories" },
     { path: "/admin/products", icon: <FaBox />, label: "Products" },
+    // barcodeMaster
+    { path: "/admin/barcode-master", icon: <FaBarcode />, label: "Barcode Master" },
     { path: "/admin/addons", icon: <FaPuzzlePiece />, label: "Addons" },
     { path: "/admin/languages", icon: <FaLanguage />, label: "Languages" },
     { path: "/admin/roles", icon: <FaUserShield />, label: "User Roles" },

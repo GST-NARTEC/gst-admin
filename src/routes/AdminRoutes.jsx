@@ -55,6 +55,7 @@ import Barcodes from "../components/members/BuyBarcodes/Barcodes";
 import Payment from "../components/members/BuyBarcodes/Payment";
 
 import HelpAndSupport from "../pages/helpAndSupport/HelpAndSupport";
+import BarcodesMaster from "../pages/barcodeMaster/BarcodesMaster";
 
 function AdminRoutes() {
   return (
@@ -81,6 +82,9 @@ function AdminRoutes() {
         <Route path="/admin/products" element={<Products />} />
         <Route path="/admin/add-product" element={<AddProduct />} />
         <Route path="/admin/edit-product/:id" element={<EditProduct />} />
+
+        {/* Barcodes Master */}
+        <Route path="/admin/barcode-master" element={<BarcodesMaster />} />
 
         {/* Members */}
         <Route path="/admin/members" element={<Members />} />
