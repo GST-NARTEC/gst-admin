@@ -257,30 +257,34 @@ function HelpAndSupport() {
   }, [data?.data?.pagination, filters.page, filters.limit]);
 
   const renderCell = (ticket, columnKey) => {
+    if (!ticket) return null;
+
     switch (columnKey) {
       case "id":
-        return ticket.id.slice(0, 8);
+        return ticket.id?.slice(0, 8) || "N/A";
       case "user":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">
-              {ticket.user.companyNameEn}
+              {ticket.user?.companyNameEn || "N/A"}
             </p>
             <p className="text-bold text-tiny capitalize text-default-400">
-              {ticket.user.email}
+              {ticket.user?.email || "N/A"}
             </p>
           </div>
         );
       case "subject":
-        return ticket.subject;
+        return ticket.subject || "N/A";
       case "status":
-        return (
+        return ticket.status ? (
           <Chip color={statusColorMap[ticket.status]} size="sm" variant="flat">
             {ticket.status}
           </Chip>
+        ) : (
+          "N/A"
         );
       case "priority":
-        return (
+        return ticket.priority ? (
           <Chip
             color={priorityColorMap[ticket.priority]}
             size="sm"
@@ -288,11 +292,15 @@ function HelpAndSupport() {
           >
             {ticket.priority}
           </Chip>
+        ) : (
+          "N/A"
         );
       case "category":
-        return ticket.category;
+        return ticket.category || "N/A";
       case "date":
-        return format(new Date(ticket.createdAt), "MMM dd, yyyy");
+        return ticket.createdAt
+          ? format(new Date(ticket.createdAt), "MMM dd, yyyy")
+          : "N/A";
       case "actions":
         return (
           <div className="flex items-center gap-2">
