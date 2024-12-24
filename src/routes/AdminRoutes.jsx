@@ -57,6 +57,9 @@ import Payment from "../components/members/BuyBarcodes/Payment";
 import HelpAndSupport from "../pages/helpAndSupport/HelpAndSupport";
 import BarcodesMaster from "../pages/barcodeMaster/BarcodesMaster";
 
+// Settings
+import Guideline from "../pages/settings/Guideline";
+
 function AdminRoutes() {
   return (
     <Routes>
@@ -75,6 +78,7 @@ function AdminRoutes() {
         <Route path="/admin/settings" element={<Settings />}>
           <Route path="currency" element={<Currency />} />
           <Route path="tax" element={<Tax />} />
+          <Route path="guidelines" element={<Guideline />} />
         </Route>
 
         {/* Products & Categories */}

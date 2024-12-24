@@ -5,7 +5,7 @@ import {
   FaMoneyBill,
   FaPercent,
   FaEnvelope,
-  FaBarcode,
+  FaBook,
   FaCreditCard,
   FaUniversity,
   FaCog,
@@ -18,10 +18,11 @@ function Settings() {
 
   const settingsCards = [
     {
-      icon: <FaBarcode size={24} className="text-navy-600" />,
-      title: "Barcode",
-      path: "barcode",
-      description: "Manage barcode inventory and sales",
+      // Guidelines
+      icon: <FaBook size={24} className="text-navy-600" />,
+      title: "Guidelines",
+      path: "guidelines",
+      description: "Manage guidelines",
     },
     {
       icon: <FaMoneyBill size={24} className="text-navy-600" />,
