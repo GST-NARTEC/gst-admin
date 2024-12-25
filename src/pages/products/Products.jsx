@@ -14,7 +14,7 @@ import {
   Spinner,
   Chip,
 } from "@nextui-org/react";
-import { FaSearch, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import { FaSearch, FaPlus, FaEdit, FaTrash, FaFileExcel, FaFilePdf } from "react-icons/fa";
 import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import { useNavigate } from "react-router-dom";
 import { useGetProductsQuery } from "../../store/apis/endpoints/products";
@@ -155,22 +155,40 @@ function Products() {
 
   const topContent = useMemo(() => {
     return (
-      <div className="flex justify-between items-center mb-4">
-        <Input
-          isClearable
-          value={search}
-          onValueChange={setSearch}
-          className="w-full sm:max-w-[33%]"
-          placeholder="Search products..."
-          startContent={<FaSearch className="text-default-300" />}
-        />
-        <Button
-          className="bg-navy-700 text-white"
-          startContent={<FaPlus />}
-          onClick={() => navigate("/admin/add-product")}
-        >
-          Add New Product
-        </Button>
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-between items-center">
+          <Input
+            isClearable
+            value={search}
+            onValueChange={setSearch}
+            className="w-full sm:max-w-[33%]"
+            placeholder="Search products..."
+            startContent={<FaSearch className="text-default-300" />}
+          />
+          <div className="flex gap-3 items-center">
+            <Button
+              className="bg-green-600 text-white"
+              startContent={<FaFileExcel />}
+              size="sm"
+            >
+              Import Excel
+            </Button>
+            <Button
+              className="bg-red-600 text-white"
+              startContent={<FaFilePdf />}
+              size="sm"
+            >
+              Import PDF
+            </Button>
+            <Button
+              className="bg-navy-700 text-white"
+              startContent={<FaPlus />}
+              onClick={() => navigate("/admin/add-product")}
+            >
+              Add New Product
+            </Button>
+          </div>
+        </div>
       </div>
     );
   }, [search]);
