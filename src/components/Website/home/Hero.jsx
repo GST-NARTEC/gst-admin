@@ -31,7 +31,7 @@ export default function Hero() {
     if (slide.page) {
       navigate(`/${slide.page.template}/${slide.page.slug}`);
     } else if (slide.externalUrl) {
-      window.open(slide.externalUrl, '_blank', 'noopener,noreferrer');
+      window.open(slide.externalUrl, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -56,7 +56,7 @@ export default function Hero() {
   }
 
   return (
-    <div className="relative w-full h-[600px] xl:h-[450px] overflow-hidden">
+    <div className="relative w-full h-[600px] xl:h-[450px] md:h-[500px] sm:h-[400px] overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide}
@@ -78,14 +78,14 @@ export default function Hero() {
             <div className="absolute inset-0 bg-black/50" />
           </div>
 
-          <div className="cont-auto px-4 h-full relative mx-20">
+          <div className="cont-auto px-4 h-full relative mx-4 sm:mx-8 md:mx-12 lg:mx-20">
             <div className="flex items-center h-full">
               <div className="max-w-2xl">
                 <motion.h1
                   initial={{ x: -50, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="text-6xl font-bold text-white mb-5"
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-5"
                 >
                   {slides[currentSlide].titleEn}
                 </motion.h1>
@@ -93,7 +93,7 @@ export default function Hero() {
                   initial={{ x: -50, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="text-xl text-white/90 mb-8"
+                  className="text-base sm:text-lg md:text-xl text-white/90 mb-4 sm:mb-6 md:mb-8"
                 >
                   {slides[currentSlide].descriptionEn}
                 </motion.p>
@@ -102,10 +102,10 @@ export default function Hero() {
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.4 }}
                   onClick={() => handleButtonClick(slides[currentSlide])}
-                  className="bg-[#1B365D] text-white px-8 py-4 rounded-md inline-flex items-center space-x-2 hover:bg-[#335082] transition-colors group"
+                  className="bg-[#1B365D] text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 rounded-md inline-flex items-center space-x-2 hover:bg-[#335082] transition-colors group text-sm sm:text-base"
                 >
                   <span>{slides[currentSlide].captionEn}</span>
-                  <BsArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <BsArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
               </div>
             </div>
@@ -113,7 +113,7 @@ export default function Hero() {
         </motion.div>
       </AnimatePresence>
 
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3">
+      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 sm:space-x-3">
         {slides.map((_, index) => (
           <button
             key={index}

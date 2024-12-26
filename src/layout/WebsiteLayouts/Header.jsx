@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BsPhone, BsGlobe } from "react-icons/bs";
 import { IoChevronDownOutline } from "react-icons/io5";
 import { MdMail } from "react-icons/md";
+import { HiMenu, HiX } from "react-icons/hi";
 import { Images } from "../../assets/Index";
 import { useGetActiveMenuItemsQuery } from "../../store/apis/endpoints/websiteEndpoints/menuItems";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +12,10 @@ import OverlayLoader from "../../components/common/OverlayLoader";
 export default function Header() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [isLeaving, setIsLeaving] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeMobileSubmenu, setActiveMobileSubmenu] = useState(null);
   const timeoutRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
   const { data: menuData, isLoading, isError } = useGetActiveMenuItemsQuery();
 
@@ -85,6 +89,31 @@ export default function Header() {
     }
   };
 
+  // Close mobile menu when navigating
+  const handleMobileNavigation = (link) => {
+    handleLinkClick(link);
+    setIsMobileMenuOpen(false);
+    setActiveMobileSubmenu(null);
+  };
+
+  // Add click outside handler
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target)
+      ) {
+        setIsMobileMenuOpen(false);
+        setActiveMobileSubmenu(null);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   if (isLoading) {
     return <OverlayLoader />;
   }
@@ -115,7 +144,7 @@ export default function Header() {
 
       {/* Main Header */}
       <div className="bg-white border-b">
-        <div className=" mx-10 px-4 py-3">
+        <div className="mx-4 lg:mx-10 px-2 lg:px-4 py-3">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <motion.div
@@ -124,17 +153,14 @@ export default function Header() {
               transition={{ duration: 0.5 }}
               className="flex items-center space-x-3"
             >
-              {/* <div className="w-10 h-10 bg-gradient-to-br from-[#1B365D] to-[#335082] rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg uppercas">GST</span>
-              </div> */}
               <img
                 src={Images.Logo}
                 alt="Logo"
-                className="w-20 h-auto cursor-pointer hover:opacity-80 transition-all duration-300"
+                className="w-16 md:w-20 h-auto cursor-pointer hover:opacity-80 transition-all duration-300"
                 onClick={() => navigate("/")}
               />
-              <div>
-                <h1 className="text-[#1B365D] font-bold text-lg">
+              <div className="hidden sm:block">
+                <h1 className="text-[#1B365D] font-bold text-base lg:text-lg">
                   Global Standard Technology
                 </h1>
                 <p className="text-xs text-gray-600">
@@ -143,12 +169,29 @@ export default function Header() {
               </div>
             </motion.div>
 
-            {/* Right Side Buttons */}
+            {/* Mobile Menu Button */}
+            <div className="flex items-center lg:hidden space-x-2">
+              <button className="p-2 text-[#1B365D] hover:bg-[#1B365D] hover:text-white rounded transition-all duration-300">
+                <BsGlobe className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-2 text-[#1B365D]"
+              >
+                {isMobileMenuOpen ? (
+                  <HiX className="h-6 w-6" />
+                ) : (
+                  <HiMenu className="h-6 w-6" />
+                )}
+              </button>
+            </div>
+
+            {/* Right Side Buttons - Hidden on Mobile */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="flex items-center space-x-3"
+              className="hidden lg:flex items-center space-x-3"
             >
               <button
                 onClick={() =>
@@ -172,8 +215,8 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Navigation */}
-      <div className="bg-[#1B365D] text-white relative z-20">
+      {/* Desktop Navigation - Hidden on Mobile */}
+      <div className="hidden lg:block bg-[#1B365D] text-white relative z-20">
         <div className="container mx-auto px-4 py-1">
           <nav className="flex justify-center gap-x-5">
             {transformedMenuItems.map((menu) => (
@@ -184,7 +227,7 @@ export default function Header() {
                 className="relative group"
               >
                 <button
-                  className={`px-4 py-2.5 flex items-center space-x-1.5 hover:bg-[#335082] transition-all duration-300  ${
+                  className={`px-4 py-2.5 flex items-center space-x-1.5 hover:bg-[#335082] transition-all duration-300 ${
                     activeMenu === menu.title ? "bg-[#335082]" : ""
                   }`}
                 >
@@ -201,15 +244,111 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Centered Dropdown */}
+      {/* Mobile Menu */}
       <AnimatePresence>
-        {activeMenu && (
+        {isMobileMenuOpen && (
+          <motion.div
+            ref={mobileMenuRef}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="lg:hidden absolute top-[104px] left-0 right-0 bg-white shadow-xl z-50 overflow-y-auto max-h-[calc(100vh-104px)]"
+            style={{ position: "fixed" }}
+          >
+            <div className="p-4">
+              {/* Mobile Menu Buttons */}
+              <div className="flex flex-col space-y-2 mb-4 border-b border-gray-200 pb-4">
+                <button
+                  onClick={() =>
+                    window.open("https://buybarcodeupc.com/", "_blank")
+                  }
+                  className="w-full px-3 py-2 text-sm border-2 border-[#1B365D] text-[#1B365D] rounded hover:bg-[#1B365D] hover:text-white transition-all duration-300"
+                >
+                  Buy Barcode
+                </button>
+                <button
+                  onClick={() => {
+                    navigate("/admin/login");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full px-3 py-2 text-sm bg-[#335082] text-white rounded hover:bg-[#1B365D] transition-all duration-300"
+                >
+                  Login
+                </button>
+              </div>
+
+              {/* Mobile Navigation Items */}
+              <nav className="flex flex-col space-y-2">
+                {transformedMenuItems.map((menu) => (
+                  <div
+                    key={menu.title}
+                    className="border-b border-gray-100 last:border-0"
+                  >
+                    <button
+                      onClick={() =>
+                        setActiveMobileSubmenu(
+                          activeMobileSubmenu === menu.title ? null : menu.title
+                        )
+                      }
+                      className="w-full px-4 py-3 flex justify-between items-center text-[#1B365D]"
+                    >
+                      <span className="font-medium">{menu.title}</span>
+                      <IoChevronDownOutline
+                        className={`h-4 w-4 transition-transform duration-300 ${
+                          activeMobileSubmenu === menu.title ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+
+                    <AnimatePresence>
+                      {activeMobileSubmenu === menu.title && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="bg-gray-50 px-4 py-2"
+                        >
+                          {menu.items.map((section, sectionIndex) => (
+                            <div key={sectionIndex} className="mb-4 last:mb-0">
+                              {section.section && (
+                                <h3 className="text-[#1B365D] font-semibold text-sm mb-2">
+                                  {section.section}
+                                </h3>
+                              )}
+                              <div className="flex flex-col space-y-2">
+                                {section.links.map((link, linkIndex) => (
+                                  <button
+                                    key={linkIndex}
+                                    onClick={() => handleMobileNavigation(link)}
+                                    className="text-left text-sm text-gray-700 hover:text-[#1B365D] py-1"
+                                  >
+                                    {link.name}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ))}
+              </nav>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop Dropdown Menu */}
+      <AnimatePresence>
+        {activeMenu && !isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute left-0 right-0 bg-white shadow-xl z-50"
+            className="absolute left-0 right-0 bg-white shadow-xl z-50 hidden lg:block"
             onMouseEnter={() => handleMouseEnter(activeMenu)}
             onMouseLeave={handleMouseLeave}
           >
