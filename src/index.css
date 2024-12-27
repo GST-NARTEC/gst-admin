@@ -1,20 +1,62 @@
+/* Dubai Font */
+@font-face {
+  font-family: "Dubai";
+  src: url("https://c.s-microsoft.com/static/fonts/segoe-ui/west-european/light/latest.woff2")
+      format("woff2"),
+    url("https://c.s-microsoft.com/static/fonts/segoe-ui/west-european/light/latest.woff")
+      format("woff");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Dubai";
+  src: url("https://c.s-microsoft.com/static/fonts/segoe-ui/west-european/normal/latest.woff2")
+      format("woff2"),
+    url("https://c.s-microsoft.com/static/fonts/segoe-ui/west-european/normal/latest.woff")
+      format("woff");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Dubai";
+  src: url("https://c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.woff2")
+      format("woff2"),
+    url("https://c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.woff")
+      format("woff");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Dubai";
+  src: url("https://c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.woff2")
+      format("woff2"),
+    url("https://c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.woff")
+      format("woff");
+  font-weight: 700;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-    .scrollbar-custom {
-        @apply scrollbar-thin scrollbar-track-gray-700 scrollbar-thumb-gray-500 hover:scrollbar-thumb-gray-300;
-    }
-
-    .scrollbar-hidden {
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
-
-    .scrollbar-hidden::-webkit-scrollbar {
-        display: none;
-    }
+/* Apply Dubai font to Arabic text by default */
+@layer base {
+  html[dir="rtl"] {
+    font-family: "Dubai", sans-serif;
+  }
 }
 
+@layer utilities {
+  .scrollbar-custom {
+    @apply scrollbar-thin scrollbar-track-gray-700 scrollbar-thumb-gray-500 hover:scrollbar-thumb-gray-300;
+  }
 
+  .scrollbar-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+}

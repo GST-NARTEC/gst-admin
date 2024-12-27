@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BsPhone, BsGlobe } from "react-icons/bs";
+import { BsPhone } from "react-icons/bs";
 import { IoChevronDownOutline } from "react-icons/io5";
 import { MdMail } from "react-icons/md";
 import { HiMenu, HiX } from "react-icons/hi";
@@ -8,6 +8,8 @@ import { Images } from "../../assets/Index";
 import { useGetActiveMenuItemsQuery } from "../../store/apis/endpoints/websiteEndpoints/menuItems";
 import { useNavigate } from "react-router-dom";
 import OverlayLoader from "../../components/common/OverlayLoader";
+import LanguageSwitcher from "../../components/common/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 export default function Header() {
   const [activeMenu, setActiveMenu] = useState(null);
@@ -21,25 +23,41 @@ export default function Header() {
 
   const navigate = useNavigate();
 
+  const { t, i18n } = useTranslation();
+
   const transformedMenuItems = React.useMemo(() => {
     if (!menuData?.data?.menus) return [];
 
     return menuData.data.menus.map((menu) => {
+      const isArabic = i18n.language === "ar";
+
       if (menu.subMenus.length === 0) {
         return {
-          title: menu.nameEn,
+          title: isArabic ? menu.nameAr : menu.nameEn,
           items: [{ links: ["No submenu items available"] }],
         };
       }
 
       const groupedSubmenus = menu.subMenus.reduce((acc, item) => {
-        const heading = item.headingEn === "null" ? "" : item.headingEn;
+        const heading = isArabic
+          ? item.headingAr === "null"
+            ? ""
+            : item.headingAr
+          : item.headingEn === "null"
+          ? ""
+          : item.headingEn;
+
         if (!acc[heading]) {
           acc[heading] = [];
         }
         acc[heading].push({
-          name: item.nameEn,
-          page: item.page,
+          name: isArabic ? item.nameAr : item.nameEn,
+          page: item.page
+            ? {
+                ...item.page,
+                name: isArabic ? item.page.nameAr : item.page.nameEn,
+              }
+            : null,
           externalUrl: item.externalUrl,
         });
         return acc;
@@ -51,11 +69,11 @@ export default function Header() {
       }));
 
       return {
-        title: menu.nameEn,
+        title: isArabic ? menu.nameAr : menu.nameEn,
         items,
       };
     });
-  }, [menuData]);
+  }, [menuData, i18n.language]);
 
   const handleMouseEnter = (title) => {
     if (timeoutRef.current) {
@@ -130,14 +148,17 @@ export default function Header() {
         animate={{ y: 0 }}
         className="bg-gradient-to-r from-[#1B365D] to-[#335082] text-white py-1.5"
       >
-        <div className="container mx-auto flex justify-end items-center text-sm px-4 gap-x-6">
+        <div
+          className="container mx-auto flex justify-end items-center text-sm px-4 gap-x-6"
+          dir="ltr"
+        >
           <div className="flex items-center">
-            <MdMail className="h-3 w-3 mr-2" />
-            <span>info@gstsa1.org</span>
+            <MdMail className="h-3 w-3 mr-2 " />
+            <span>{t("info.email")}</span>
           </div>
           <div className="flex items-center">
             <BsPhone className="h-3 w-3 mr-2" />
-            <span>+966 504420607</span>
+            <span>{t("info.phone")}</span>
           </div>
         </div>
       </motion.div>
@@ -161,19 +182,15 @@ export default function Header() {
               />
               <div className="hidden sm:block">
                 <h1 className="text-[#1B365D] font-bold text-base lg:text-lg">
-                  Global Standard Technology
+                  {t("company.name")}
                 </h1>
-                <p className="text-xs text-gray-600">
-                  The Future of Innovation
-                </p>
+                <p className="text-xs text-gray-600">{t("company.slogan")}</p>
               </div>
             </motion.div>
 
             {/* Mobile Menu Button */}
             <div className="flex items-center lg:hidden space-x-2">
-              <button className="p-2 text-[#1B365D] hover:bg-[#1B365D] hover:text-white rounded transition-all duration-300">
-                <BsGlobe className="h-4 w-4" />
-              </button>
+              <LanguageSwitcher isMobile={true} />
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="p-2 text-[#1B365D]"
@@ -191,7 +208,7 @@ export default function Header() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="hidden lg:flex items-center space-x-3"
+              className="hidden lg:flex items-center gap-3"
             >
               <button
                 onClick={() =>
@@ -199,17 +216,15 @@ export default function Header() {
                 }
                 className="px-3 py-1.5 text-sm border-2 border-[#1B365D] text-[#1B365D] rounded hover:bg-[#1B365D] hover:text-white transition-all duration-300"
               >
-                Buy Barcode
+                {t("button.buyBarcode")}
               </button>
               <button
                 onClick={() => navigate("/admin/login")}
                 className="px-3 py-1.5 text-sm bg-[#335082] text-white rounded hover:bg-[#1B365D] transition-all duration-300"
               >
-                Login
+                {t("button.login")}
               </button>
-              <button className="p-1.5 text-[#1B365D] hover:bg-[#1B365D] hover:text-white rounded transition-all duration-300">
-                <BsGlobe className="h-4 w-4" />
-              </button>
+              <LanguageSwitcher />
             </motion.div>
           </div>
         </div>

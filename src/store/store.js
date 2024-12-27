@@ -4,6 +4,7 @@ import { apiSlice } from "./apis/apiSlice";
 import currencyReducer from "./slice/currencySlice";
 import adminReducer from "./slice/adminSlice";
 import cartReducer from "./slice/cartSlice";
+import languageReducer from "./slice/languageSlice";
 
 // Load state from local storage
 const loadState = () => {
@@ -17,6 +18,7 @@ const loadState = () => {
       currency: persistedState.currency || { symbol: "SAR" },
       admin: persistedState.admin,
       cart: persistedState.cart,
+      language: persistedState.language || { language: "en" },
     };
   } catch (err) {
     return undefined;
@@ -30,6 +32,7 @@ const saveState = (state) => {
       currency: state.currency,
       admin: state.admin,
       cart: state.cart,
+      language: state.language,
     };
     const serializedState = JSON.stringify(stateToPersist);
     localStorage.setItem("reduxState", serializedState);
@@ -44,6 +47,7 @@ export const store = configureStore({
     currency: currencyReducer,
     admin: adminReducer,
     cart: cartReducer,
+    language: languageReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

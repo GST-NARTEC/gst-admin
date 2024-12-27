@@ -14,7 +14,14 @@ import {
   Spinner,
   Chip,
 } from "@nextui-org/react";
-import { FaSearch, FaPlus, FaEdit, FaTrash, FaFileExcel, FaFilePdf } from "react-icons/fa";
+import {
+  FaSearch,
+  FaPlus,
+  FaEdit,
+  FaTrash,
+  FaFileExcel,
+  FaFilePdf,
+} from "react-icons/fa";
 import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import { useNavigate } from "react-router-dom";
 import { useGetProductsQuery } from "../../store/apis/endpoints/products";
@@ -85,9 +92,7 @@ function Products() {
         return (
           <Tooltip content={product.description}>
             <div className="max-w-[150px]">
-              <p className="text-small  line-clamp-2">
-                {product.description}
-              </p>
+              <p className="text-small  line-clamp-2">{product.description}</p>
             </div>
           </Tooltip>
         );
@@ -99,11 +104,16 @@ function Products() {
         );
       case "addons":
         return (
-          <Tooltip 
+          <Tooltip
             content={
-              product.addons.length > 0 
-                ? product.addons.map(addon => `${addon.name} (${currencySymbol}${addon.price})`).join(', ')
-                : 'No addons available'
+              product.addons.length > 0
+                ? product.addons
+                    .map(
+                      (addon) =>
+                        `${addon.name} (${currencySymbol}${addon.price})`
+                    )
+                    .join(", ")
+                : "No addons available"
             }
           >
             <Chip
@@ -112,7 +122,8 @@ function Products() {
               size="sm"
               variant="flat"
             >
-              {product.addons.length} Addon{product.addons.length !== 1 ? 's' : ''}
+              {product.addons.length} Addon
+              {product.addons.length !== 1 ? "s" : ""}
             </Chip>
           </Tooltip>
         );
@@ -166,20 +177,6 @@ function Products() {
             startContent={<FaSearch className="text-default-300" />}
           />
           <div className="flex gap-3 items-center">
-            <Button
-              className="bg-green-600 text-white"
-              startContent={<FaFileExcel />}
-              size="sm"
-            >
-              Import Excel
-            </Button>
-            <Button
-              className="bg-red-600 text-white"
-              startContent={<FaFilePdf />}
-              size="sm"
-            >
-              Import PDF
-            </Button>
             <Button
               className="bg-navy-700 text-white"
               startContent={<FaPlus />}

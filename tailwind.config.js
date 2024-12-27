@@ -20,6 +20,9 @@ export default {
           700: "#152A4A",
         },
       },
+      fontFamily: {
+        dubai: ["Dubai", "sans-serif"],
+      },
     },
   },
   darkMode: "class",

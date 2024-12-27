@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BsArrowRight } from "react-icons/bs";
+import { BsArrowRight, BsArrowLeft } from "react-icons/bs";
 import { useGetActiveSlidersQuery } from "../../../store/apis/endpoints/websiteEndpoints/slider";
 import { Skeleton } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -13,6 +14,8 @@ export default function Hero() {
   const slides = sliderData?.data?.sliders || [];
 
   const navigate = useNavigate();
+  const { i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
 
   useEffect(() => {
     if (!isAutoPlaying || !slides.length) return;
@@ -69,10 +72,10 @@ export default function Hero() {
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage: `url(${slides[currentSlide].imageEn?.replace(
-                /\\/g,
-                "/"
-              )})`,
+              backgroundImage: `url(${(isArabic
+                ? slides[currentSlide].imageAr
+                : slides[currentSlide].imageEn
+              )?.replace(/\\/g, "/")})`,
             }}
           >
             <div className="absolute inset-0 bg-black/50" />
@@ -82,30 +85,43 @@ export default function Hero() {
             <div className="flex items-center h-full">
               <div className="max-w-2xl">
                 <motion.h1
-                  initial={{ x: -50, opacity: 0 }}
+                  initial={{ x: isArabic ? 50 : -50, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
                   className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-5"
                 >
-                  {slides[currentSlide].titleEn}
+                  {isArabic
+                    ? slides[currentSlide].titleAr
+                    : slides[currentSlide].titleEn}
                 </motion.h1>
                 <motion.p
-                  initial={{ x: -50, opacity: 0 }}
+                  initial={{ x: isArabic ? 50 : -50, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.3 }}
                   className="text-base sm:text-lg md:text-xl text-white/90 mb-4 sm:mb-6 md:mb-8"
                 >
-                  {slides[currentSlide].descriptionEn}
+                  {isArabic
+                    ? slides[currentSlide].descriptionAr
+                    : slides[currentSlide].descriptionEn}
                 </motion.p>
                 <motion.button
-                  initial={{ x: -50, opacity: 0 }}
+                  initial={{ x: isArabic ? 50 : -50, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.4 }}
                   onClick={() => handleButtonClick(slides[currentSlide])}
                   className="bg-[#1B365D] text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 rounded-md inline-flex items-center space-x-2 hover:bg-[#335082] transition-colors group text-sm sm:text-base"
+                  dir={isArabic ? "rtl" : "ltr"}
                 >
-                  <span>{slides[currentSlide].captionEn}</span>
-                  <BsArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
+                  <span>
+                    {isArabic
+                      ? slides[currentSlide].captionAr
+                      : slides[currentSlide].captionEn}
+                  </span>
+                  {isArabic ? (
+                    <BsArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-1 transition-transform" />
+                  ) : (
+                    <BsArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
+                  )}
                 </motion.button>
               </div>
             </div>
@@ -113,7 +129,7 @@ export default function Hero() {
         </motion.div>
       </AnimatePresence>
 
-      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 sm:space-x-3">
+      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex  gap-2">
         {slides.map((_, index) => (
           <button
             key={index}

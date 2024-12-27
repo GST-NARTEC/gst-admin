@@ -7,6 +7,11 @@ import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import { store } from "./store/store.js";
+import "./i18n/config";
+
+// Initialize language direction
+const initialLanguage = store.getState().language?.language || "en";
+document.documentElement.dir = initialLanguage === "ar" ? "rtl" : "ltr";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

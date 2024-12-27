@@ -1,4 +1,5 @@
-import { FaBell, FaBars, FaGlobe } from "react-icons/fa";
+import { FaBell, FaBars, FaFileInvoiceDollar, FaBarcode } from "react-icons/fa";
+import { TbWorldWww } from "react-icons/tb";
 import {
   Dropdown,
   DropdownTrigger,
@@ -9,6 +10,7 @@ import {
 import { Images } from "../../assets/Index";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCurrentAdmin, logout } from "../../store/slice/adminSlice";
+import LanguageSwitcher from "../../components/common/LanguageSwitcher";
 
 function Topbar({ toggleLargeScreenSidebar, isLargeScreenCollapsed }) {
   const dispatch = useDispatch();
@@ -30,14 +32,14 @@ function Topbar({ toggleLargeScreenSidebar, isLargeScreenCollapsed }) {
         />
       </button>
 
-      <div className="flex items-center gap-4">
+      <div className="flex-1 flex items-center justify-center gap-4">
         <a
           href="https://gstsa1.org"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center p-2 hover:bg-gray-100 rounded-full"
         >
-          <FaGlobe className="text-gray-600" />
+          <TbWorldWww className="text-gray-600 text-xl" />
           <span className="ml-2 text-gray-600">GSTSA1</span>
         </a>
         <a
@@ -46,9 +48,13 @@ function Topbar({ toggleLargeScreenSidebar, isLargeScreenCollapsed }) {
           rel="noopener noreferrer"
           className="flex items-center p-2 hover:bg-gray-100 rounded-full"
         >
-          <FaGlobe className="text-gray-600" />
+          <TbWorldWww className="text-gray-600 text-xl" />
           <span className="ml-2 text-gray-600">BuyBarcodeUPC</span>
         </a>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <LanguageSwitcher />
         <button className="p-2 hover:bg-gray-100 rounded-full">
           <FaBell className="text-gray-600" />
         </button>

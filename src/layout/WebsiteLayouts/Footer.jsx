@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { HiMail, HiPhone, HiLocationMarker } from "react-icons/hi";
 import { Images } from "../../assets/Index";
+import { useTranslation } from "react-i18next";
 
 const socialLinks = [
   { icon: <FaLinkedin />, href: "#", color: "hover:text-quaternary" },
@@ -21,62 +22,72 @@ const socialLinks = [
 ];
 
 function Footer() {
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
+
   return (
-    <footer className="relative bg-gradient-to-b from-secondary via-tertiary to-primary text-white py-16 overflow-hidden">
+    <footer
+      className="relative bg-gradient-to-b from-secondary via-tertiary to-primary text-white py-16 overflow-hidden"
+      dir={isArabic ? "rtl" : "ltr"}
+    >
       {/* Decorative Elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-quaternary rounded-full blur-3xl" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-quaternary rounded-full blur-3xl" />
       </div>
 
-      <div className=" mx-10 px-4 relative">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div className="mx-4 sm:mx-6 md:mx-10 px-4 relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
           {/* Company Info */}
           <div className="space-y-6">
             <div className="bg-white p-3 rounded-xl inline-block shadow-lg shadow-quaternary/20">
               <img src={Images.Logo} alt="GST Solutions" className="w-24" />
             </div>
             <div className="space-y-4">
-              <h3 className="font-bold text-xl bg-gradient-to-r from-white to-quaternary bg-clip-text text-transparent">
-                Global Standard for Technology
+              <h3
+                className={`font-bold text-xl bg-clip-text text-transparent ${
+                  isArabic ? " bg-gradient-to-l from-white to-quaternary" : "bg-gradient-to-r from-white to-quaternary"
+                }`}
+              >
+                {t("footer.company.name")}
               </h3>
-              <p className="text-gray-300">
-                Solution King Abdullah Road, Riyadh Kingdom of Saudi Arabia
-              </p>
+              <p className="text-gray-300">{t("footer.company.address")}</p>
             </div>
             <p className="text-sm text-gray-400 border-l-4 border-quaternary pl-3">
-              Copyright © 2022 GST Solutions All Right Reserved
+              {t("footer.company.copyright")}
             </p>
           </div>
 
           {/* Get in Touch */}
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-white/50 to-quaternary bg-clip-text text-transparent">
-              Get in Touch
+            <h2
+              className={`text-2xl font-bold  bg-clip-text text-transparent ${
+                isArabic ? " bg-gradient-to-l from-white/80 to-quaternary" : "bg-gradient-to-r from-white/80 to-quaternary"
+              }`}
+            >
+              {t("footer.getInTouch.title")}
             </h2>
             <div className="space-y-4">
               <motion.div
-                whileHover={{ x: 5 }}
+                whileHover={{ x: isArabic ? -5 : 5 }}
                 className="flex items-center gap-3 text-gray-300 hover:text-quaternary transition-colors group"
               >
                 <div className="p-2 bg-quaternary/10 rounded-lg group-hover:bg-quaternary/20 transition-colors">
                   <HiLocationMarker className="text-xl text-white" />
                 </div>
-                <p>
-                  Global Standard for Technology Solution King Abdullah Road,
-                  Riyadh Kingdom of Saudi Arabia
-                </p>
+                <p>{t("footer.getInTouch.address")}</p>
               </motion.div>
 
               <motion.a
-                whileHover={{ x: 5 }}
+                whileHover={{ x: isArabic ? -5 : 5 }}
                 href="mailto:info@gstsa1.org"
                 className="flex items-center gap-3 text-gray-300 hover:text-quaternary transition-colors group"
+                dir="rtl"
               >
                 <div className="p-2 bg-quaternary/10 rounded-lg group-hover:bg-quaternary/20 transition-colors">
                   <HiMail className="text-xl text-white" />
                 </div>
-                info@gstsa1.org
+                {t("footer.getInTouch.email")}
               </motion.a>
 
               <motion.a
@@ -87,17 +98,25 @@ function Footer() {
                 <div className="p-2 bg-quaternary/10 rounded-lg group-hover:bg-quaternary/20 transition-colors">
                   <HiPhone className="text-xl text-white" />
                 </div>
-                +966 504420607
+                {/* {t("footer.getInTouch.phone")} */}
+                <div dir="ltr">
+                +966504420607
+                </div>
+
               </motion.a>
             </div>
           </div>
 
           {/* Follow Us */}
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-white/50 to-quaternary bg-clip-text text-transparent">
-              Follow us
+            <h2
+              className={`text-2xl font-bold  bg-clip-text text-transparent ${
+                isArabic ? " bg-gradient-to-l from-white/80 to-quaternary" : "bg-gradient-to-r from-white/80 to-quaternary"
+              }`}
+            >
+              {t("footer.followUs.title")}
             </h2>
-            <div className="flex gap-4 text-2xl max-w- flex-wrap">
+            <div className="flex gap-4 text-2xl flex-wrap">
               {socialLinks.map((social, index) => (
                 <motion.a
                   key={index}
@@ -114,19 +133,24 @@ function Footer() {
 
           {/* Newsletter */}
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-white/50 to-quaternary bg-clip-text text-transparent">
-              Join our Newsletter
+            <h2
+              className={`text-2xl font-bold  bg-clip-text text-transparent ${
+                isArabic ? " bg-gradient-to-l from-white/80 to-quaternary" : "bg-gradient-to-r from-white/80 to-quaternary"
+              }`}
+            >
+              {t("footer.newsletter.title")}
             </h2>
             <form className="space-y-4">
               <div className="space-y-2">
                 <label htmlFor="email" className="block text-sm font-medium">
-                  Email <span className="text-quaternary">*</span>
+                  {t("footer.newsletter.email")}{" "}
+                  <span className="text-quaternary">*</span>
                 </label>
                 <div className="relative">
                   <input
                     type="email"
                     id="email"
-                    placeholder="Enter Your Email"
+                    placeholder={t("footer.newsletter.placeholder")}
                     className="w-full px-4 py-3 rounded-lg bg-white/5 border border-quaternary/20 focus:outline-none focus:border-quaternary focus:bg-white/10 transition-all"
                   />
                   <div className="absolute inset-0 -z-10 blur-xl bg-quaternary/20" />
@@ -138,7 +162,7 @@ function Footer() {
                 type="submit"
                 className="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-quaternary to-tertiary hover:from-tertiary hover:to-quaternary text-white rounded-lg font-semibold transition-all duration-300 shadow-lg shadow-quaternary/25 hover:shadow-quaternary/40"
               >
-                Subscribe
+                {t("footer.newsletter.subscribe")}
               </motion.button>
             </form>
           </div>

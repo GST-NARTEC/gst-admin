@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useGetActiveWhyBarcodesQuery } from "../../../store/apis/endpoints/websiteEndpoints/whyBarcode";
 import { Spinner } from "@nextui-org/react";
+import { useTranslation } from "react-i18next";
 
 const containerVariants = {
   hidden: {},
@@ -27,12 +28,14 @@ export default function WhyChooseUs() {
   const navigate = useNavigate();
   const { data: whyBarcodesData, isLoading } = useGetActiveWhyBarcodesQuery();
   const whyBarcodes = whyBarcodesData?.data?.whyBarcodes || [];
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
 
   const handleCardClick = (feature) => {
     if (feature.page) {
       navigate(`/${feature.page.template}/${feature.page.slug}`);
     } else if (feature.externalUrl) {
-      window.open(feature.externalUrl, '_blank', 'noopener,noreferrer');
+      window.open(feature.externalUrl, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -50,14 +53,17 @@ export default function WhyChooseUs() {
     return (
       <section className="py-20 bg-gradient-to-b from-quaternary/5 to-white">
         <div className="flex justify-center items-center min-h-[400px]">
-          <p className="text-gray-500 text-lg">No data available</p>
+          <p className="text-gray-500 text-lg">{t("whyChooseUs.noData")}</p>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="py-20 bg-gradient-to-b from-quaternary/5 to-white">
+    <section
+      className="py-20 bg-gradient-to-b from-quaternary/5 to-white"
+      dir={isArabic ? "rtl" : "ltr"}
+    >
       <div className="mx-10 px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -67,11 +73,10 @@ export default function WhyChooseUs() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
-            Why use a 2D barcode?
+            {t("whyChooseUs.title")}
           </h2>
           <p className="text-gray-600 max-w-3xl mx-auto text-lg">
-            Compared to the traditional 1D barcode, 2D barcodes streamline the
-            needs of both supply chains and consumers
+            {t("whyChooseUs.subtitle")}
           </p>
         </motion.div>
 
@@ -87,23 +92,25 @@ export default function WhyChooseUs() {
               key={feature.id}
               variants={itemVariants}
               className={`group relative overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-2xl hover:shadow-quaternary/20 transition-all duration-500 ${
-                feature.page || feature.externalUrl ? 'cursor-pointer' : 'cursor-default'
+                feature.page || feature.externalUrl
+                  ? "cursor-pointer"
+                  : "cursor-default"
               }`}
               onClick={() => handleCardClick(feature)}
             >
               <div className="aspect-square overflow-hidden">
                 <img
                   src={feature.image || "https://placehold.co/400x400"}
-                  alt={feature.titleEn}
+                  alt={isArabic ? feature.titleAr : feature.titleEn}
                   className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                 />
               </div>
               <div className="p-6 relative">
                 <h3 className="text-xl font-semibold mb-3 text-primary group-hover:text-quaternary transition-colors duration-300">
-                  {feature.titleEn}
+                  {isArabic ? feature.titleAr : feature.titleEn}
                 </h3>
                 <p className="text-gray-600 text-sm group-hover:text-gray-700 transition-colors duration-300">
-                  {feature.descriptionEn}
+                  {isArabic ? feature.descriptionAr : feature.descriptionEn}
                 </p>
 
                 {/* Visual indicator for linked pages */}
