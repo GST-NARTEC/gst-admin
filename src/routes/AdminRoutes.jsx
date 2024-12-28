@@ -59,6 +59,7 @@ import BarcodesMaster from "../pages/barcodeMaster/BarcodesMaster";
 
 // Settings
 import Guideline from "../pages/settings/Guideline";
+import Localization from "../pages/settings/Localization";
 
 function AdminRoutes() {
   return (
@@ -79,6 +80,7 @@ function AdminRoutes() {
           <Route path="currency" element={<Currency />} />
           <Route path="tax" element={<Tax />} />
           <Route path="guidelines" element={<Guideline />} />
+          <Route path="localization" element={<Localization />} />
         </Route>
 
         {/* Products & Categories */}

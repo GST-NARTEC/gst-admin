@@ -10,7 +10,7 @@ import {
   FaUniversity,
   FaCog,
 } from "react-icons/fa";
-
+import { FaLanguage } from "react-icons/fa6";
 function Settings() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,10 +37,10 @@ function Settings() {
       description: "Configure tax rate, type and implementation",
     },
     {
-      icon: <FaCreditCard size={24} className="text-navy-600" />,
-      title: "Payment Methods",
-      path: "payment-methods",
-      description: "Configure available payment options",
+      icon: <FaLanguage size={28} className="text-navy-600" />,
+      title: "Localization",
+      path: "localization",
+      description: "Configure available languages",
     },
     {
       icon: <FaUniversity size={24} className="text-navy-600" />,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -16,11 +16,18 @@ export default function LanguageSwitcher({ isMobile = false }) {
   const dispatch = useDispatch();
   const currentLanguage = useSelector((state) => state.language.language);
 
+  // Set initial language
+  useEffect(() => {
+    if (currentLanguage) {
+      i18n.changeLanguage(currentLanguage);
+      document.documentElement.dir = currentLanguage === "ar" ? "rtl" : "ltr";
+    }
+  }, []);
+
   const handleLanguageChange = (keys) => {
     const newLang = Array.from(keys)[0];
     dispatch(setLanguage(newLang));
     i18n.changeLanguage(newLang);
-    // Update document direction based on language
     document.documentElement.dir = newLang === "ar" ? "rtl" : "ltr";
   };
 
@@ -47,25 +54,25 @@ export default function LanguageSwitcher({ isMobile = false }) {
       >
         <DropdownItem
           key="en"
-        //   startContent={
-        //     <img
-        //       src={Images.USAFlag}
-        //       alt="English"
-        //       className="w-5 h-5 object-contain "
-        //     />
-        //   }
+          //   startContent={
+          //     <img
+          //       src={Images.USAFlag}
+          //       alt="English"
+          //       className="w-5 h-5 object-contain "
+          //     />
+          //   }
         >
           English
         </DropdownItem>
         <DropdownItem
           key="ar"
-        //   startContent={
-        //     <img
-        //       src={Images.KSAFlag}
-        //       alt="Arabic"
-        //       className="w-5 h-5 object-contain "
-        //     />
-        //   }
+          //   startContent={
+          //     <img
+          //       src={Images.KSAFlag}
+          //       alt="Arabic"
+          //       className="w-5 h-5 object-contain "
+          //     />
+          //   }
         >
           العربية
         </DropdownItem>
