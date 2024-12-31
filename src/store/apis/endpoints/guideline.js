@@ -45,6 +45,16 @@ export const guidelineApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["UserGuides"],
     }),
+
+    // Upload large video for user guide
+    uploadLargeVideo: builder.mutation({
+      query: (data) => ({
+        url: "/v1/user-guides/upload-large",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["UserGuides"],
+    }),
   }),
 });
 
@@ -54,4 +64,5 @@ export const {
   useCreateUserGuideMutation,
   useUpdateUserGuideMutation,
   useDeleteUserGuideMutation,
+  useUploadLargeVideoMutation,
 } = guidelineApiSlice;

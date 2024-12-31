@@ -92,11 +92,11 @@ function UserGuideManual() {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-lg font-semibold line-clamp-2 group-hover:text-primary transition-colors duration-200">
-                      {guide.title}
+                      {guide.titleEn || guide.titleAr || "Untitled"}
                     </h3>
-                    {guide.description && (
+                    {(guide.descriptionEn || guide.descriptionAr) && (
                       <p className="text-gray-600 mt-2 line-clamp-2">
-                        {guide.description}
+                        {guide.descriptionEn || guide.descriptionAr}
                       </p>
                     )}
                   </div>

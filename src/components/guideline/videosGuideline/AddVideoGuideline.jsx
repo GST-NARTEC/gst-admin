@@ -9,16 +9,18 @@ import {
   Input,
 } from "@nextui-org/react";
 import { useDropzone } from "react-dropzone";
-import { useCreateUserGuideMutation } from "../../../store/apis/endpoints/guideline";
+import { useUploadLargeVideoMutation } from "../../../store/apis/endpoints/guideline";
 import toast from "react-hot-toast";
 
 function AddVideoGuideline({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
     titleEn: "",
+    titleAr: "",
+    type: "video",
     video: null,
   });
 
-  const [createUserGuide, { isLoading }] = useCreateUserGuideMutation();
+  const [uploadLargeVideo, { isLoading }] = useUploadLargeVideoMutation();
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
@@ -37,12 +39,14 @@ function AddVideoGuideline({ isOpen, onClose }) {
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("titleEn", formData.titleEn);
+      formDataToSend.append("titleAr", formData.titleAr);
+      formDataToSend.append("type", formData.type);
       formDataToSend.append("video", formData.video);
 
-      await createUserGuide(formDataToSend).unwrap();
+      await uploadLargeVideo(formDataToSend).unwrap();
       toast.success("Video guideline created successfully");
       onClose();
-      setFormData({ titleEn: "", video: null });
+      setFormData({ titleEn: "", titleAr: "", type: "video", video: null });
     } catch (error) {
       console.error("Failed to create guideline:", error);
       toast.error("Failed to create video guideline");
@@ -58,11 +62,19 @@ function AddVideoGuideline({ isOpen, onClose }) {
         <ModalBody>
           <div className="flex flex-col gap-4">
             <Input
-              label="Title"
-              placeholder="Enter title"
+              label="English Title"
+              placeholder="Enter English title"
               value={formData.titleEn}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, titleEn: e.target.value }))
+              }
+            />
+            <Input
+              label="Arabic Title"
+              placeholder="Enter Arabic title"
+              value={formData.titleAr}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, titleAr: e.target.value }))
               }
             />
             <div
@@ -95,7 +107,7 @@ function AddVideoGuideline({ isOpen, onClose }) {
             isLoading={isLoading}
             color="primary"
             onPress={handleSubmit}
-            disabled={!formData.titleEn || !formData.video}
+            disabled={!formData.titleEn || !formData.titleAr || !formData.video}
             className="bg-navy-700"
           >
             Create

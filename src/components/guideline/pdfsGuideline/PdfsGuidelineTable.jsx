@@ -21,7 +21,7 @@ import { useGetUserGuidesQuery } from "../../../store/apis/endpoints/guideline";
 import { useDebounce } from "../../../hooks/useDebounce";
 
 const TABLE_COLUMNS = [
-  { name: "TITLE", uid: "title" },
+  { name: "TITLE (EN/AR)", uid: "title" },
   { name: "PDF", uid: "link" },
   { name: "CREATED AT", uid: "createdAt" },
   { name: "UPDATED AT", uid: "updatedAt" },
@@ -66,7 +66,16 @@ function PdfsGuidelineTable() {
   const renderCell = (item, columnKey) => {
     switch (columnKey) {
       case "title":
-        return <span className="font-medium">{item.title}</span>;
+        return (
+          <div className="flex flex-col gap-1">
+            <span className="font-medium">{item.titleEn}</span>
+            {item.titleAr && (
+              <span className="text-sm text-gray-500 font-medium">
+                {item.titleAr}
+              </span>
+            )}
+          </div>
+        );
       case "link":
         return (
           <div className="flex items-center gap-2">
@@ -156,8 +165,6 @@ function PdfsGuidelineTable() {
       </div>
     );
   }, [data?.data?.pagination, page]);
-
-
 
   return (
     <div className="p-6">
