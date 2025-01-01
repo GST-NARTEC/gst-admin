@@ -15,7 +15,11 @@ import { useTranslation } from "react-i18next";
 const socialLinks = [
   { icon: <FaLinkedin />, href: "#", color: "hover:text-quaternary" },
   { icon: <FaFacebook />, href: "#", color: "hover:text-quaternary" },
-  { icon: <FaTwitter />, href: "#", color: "hover:text-quaternary" },
+  {
+    icon: <FaTwitter />,
+    href: "https://x.com/gstsa1org?t=egnVJId8qKjCkxjaTXXETQ&s=09",
+    color: "hover:text-quaternary",
+  },
   { icon: <FaInstagram />, href: "#", color: "hover:text-quaternary" },
   { icon: <FaYoutube />, href: "#", color: "hover:text-quaternary" },
   { icon: <FaWhatsapp />, href: "#", color: "hover:text-quaternary" },
@@ -46,7 +50,9 @@ function Footer() {
             <div className="space-y-4">
               <h3
                 className={`font-bold text-xl bg-clip-text text-transparent ${
-                  isArabic ? " bg-gradient-to-l from-white to-quaternary" : "bg-gradient-to-r from-white to-quaternary"
+                  isArabic
+                    ? " bg-gradient-to-l from-white to-quaternary"
+                    : "bg-gradient-to-r from-white to-quaternary"
                 }`}
               >
                 {t("footer.company.name")}
@@ -62,7 +68,9 @@ function Footer() {
           <div className="space-y-6">
             <h2
               className={`text-2xl font-bold  bg-clip-text text-transparent ${
-                isArabic ? " bg-gradient-to-l from-white/80 to-quaternary" : "bg-gradient-to-r from-white/80 to-quaternary"
+                isArabic
+                  ? " bg-gradient-to-l from-white/80 to-quaternary"
+                  : "bg-gradient-to-r from-white/80 to-quaternary"
               }`}
             >
               {t("footer.getInTouch.title")}
@@ -99,10 +107,7 @@ function Footer() {
                   <HiPhone className="text-xl text-white" />
                 </div>
                 {/* {t("footer.getInTouch.phone")} */}
-                <div dir="ltr">
-                +966504420607
-                </div>
-
+                <div dir="ltr">+966504420607</div>
               </motion.a>
             </div>
           </div>
@@ -111,7 +116,9 @@ function Footer() {
           <div className="space-y-6">
             <h2
               className={`text-2xl font-bold  bg-clip-text text-transparent ${
-                isArabic ? " bg-gradient-to-l from-white/80 to-quaternary" : "bg-gradient-to-r from-white/80 to-quaternary"
+                isArabic
+                  ? " bg-gradient-to-l from-white/80 to-quaternary"
+                  : "bg-gradient-to-r from-white/80 to-quaternary"
               }`}
             >
               {t("footer.followUs.title")}
@@ -121,6 +128,8 @@ function Footer() {
                 <motion.a
                   key={index}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={`p-2 bg-quaternary/10 rounded-lg text-gray-300 ${social.color} transition-all duration-300 hover:bg-quaternary/20`}
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.9 }}
@@ -135,7 +144,9 @@ function Footer() {
           <div className="space-y-6">
             <h2
               className={`text-2xl font-bold  bg-clip-text text-transparent ${
-                isArabic ? " bg-gradient-to-l from-white/80 to-quaternary" : "bg-gradient-to-r from-white/80 to-quaternary"
+                isArabic
+                  ? " bg-gradient-to-l from-white/80 to-quaternary"
+                  : "bg-gradient-to-r from-white/80 to-quaternary"
               }`}
             >
               {t("footer.newsletter.title")}

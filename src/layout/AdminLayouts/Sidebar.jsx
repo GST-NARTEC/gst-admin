@@ -53,11 +53,11 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
         },
         { path: "/admin/master/roles", icon: <FaUserShield />, label: "Roles" },
         { path: "/admin/master/units", icon: <FaRuler />, label: "Units" },
-        {
-          path: "/admin/master/language",
-          icon: <FaLanguage />,
-          label: "Language",
-        },
+        // {
+        //   path: "/admin/master/language",
+        //   icon: <FaLanguage />,
+        //   label: "Language",
+        // },
         {
           path: "/admin/master/documents",
           icon: <FaFile />,
