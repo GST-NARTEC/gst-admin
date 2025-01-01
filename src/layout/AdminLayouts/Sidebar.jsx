@@ -152,7 +152,7 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
     // barcodeMaster
     { path: "/admin/barcode-master", icon: <FaBarcode />, label: "Barcode Master" },
     { path: "/admin/addons", icon: <FaPuzzlePiece />, label: "Addons" },
-    { path: "/admin/languages", icon: <FaLanguage />, label: "Languages" },
+    // { path: "/admin/languages", icon: <FaLanguage />, label: "Languages" },
     { path: "/admin/roles", icon: <FaUserShield />, label: "User Roles" },
     // help and support
     {

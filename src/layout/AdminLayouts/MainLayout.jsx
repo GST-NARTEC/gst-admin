@@ -11,7 +11,7 @@ function MainLayout({ children }) {
     setIsLargeScreenCollapsed(!isLargeScreenCollapsed);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" dir="ltr">
       <Sidebar
         isOpen={isOpen}
         toggleSidebar={toggleSidebar}
