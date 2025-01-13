@@ -14,7 +14,8 @@ import { Images } from "../../assets/Index";
 export default function LanguageSwitcher({ isMobile = false }) {
   const { i18n } = useTranslation();
   const dispatch = useDispatch();
-  const currentLanguage = useSelector((state) => state.language.language);
+  const currentLanguage =
+    useSelector((state) => state.language.language) || "en";
 
   // Set initial language
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function LanguageSwitcher({ isMobile = false }) {
         >
           <BsGlobe className="h-4 w-4" />
           <span className="text-sm font-medium">
-            {currentLanguage.toUpperCase()}
+            {currentLanguage?.toUpperCase()}
           </span>
         </button>
       </DropdownTrigger>

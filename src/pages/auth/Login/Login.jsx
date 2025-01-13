@@ -32,7 +32,10 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-navy-600 to-navy-700">
       {/* Logo */}
-      <div className="absolute top-8 left-8">
+      <div
+        onClick={() => navigate("/")}
+        className="absolute top-8 left-8 cursor-pointer"
+      >
         <div className="bg-white/90 p-3 rounded-xl shadow-lg">
           <img src={Images.Logo} alt="Company Logo" className="h-auto w-24" />
         </div>

@@ -90,7 +90,6 @@ function Footer() {
                 whileHover={{ x: isArabic ? -5 : 5 }}
                 href="mailto:info@gstsa1.org"
                 className="flex items-center gap-3 text-gray-300 hover:text-quaternary transition-colors group"
-                dir="rtl"
               >
                 <div className="p-2 bg-quaternary/10 rounded-lg group-hover:bg-quaternary/20 transition-colors">
                   <HiMail className="text-xl text-white" />
@@ -99,15 +98,29 @@ function Footer() {
               </motion.a>
 
               <motion.a
-                whileHover={{ x: 5 }}
-                href="tel:+966504420607"
+                whileHover={{ x: isArabic ? -5 : 5 }}
+                href="tel:+966115030591"
                 className="flex items-center gap-3 text-gray-300 hover:text-quaternary transition-colors group"
               >
                 <div className="p-2 bg-quaternary/10 rounded-lg group-hover:bg-quaternary/20 transition-colors">
                   <HiPhone className="text-xl text-white" />
                 </div>
-                {/* {t("footer.getInTouch.phone")} */}
-                <div dir="ltr">+966504420607</div>
+                <div dir="ltr">
+                  {isArabic ? "+966 11 503 0591" : "+966115030591"}
+                </div>
+              </motion.a>
+
+              <motion.a
+                whileHover={{ x: isArabic ? -5 : 5 }}
+                href="tel:+966920051091"
+                className="flex items-center gap-3 text-gray-300 hover:text-quaternary transition-colors group"
+              >
+                <div className="p-2 bg-quaternary/10 rounded-lg group-hover:bg-quaternary/20 transition-colors">
+                  <HiPhone className="text-xl text-white" />
+                </div>
+                <div dir="ltr">
+                  {isArabic ? "+966 92 005 1091" : "+966920051091"}
+                </div>
               </motion.a>
             </div>
           </div>

@@ -122,14 +122,14 @@ function VideosGuidelineTable() {
       case "actions":
         return (
           <div className="flex gap-4 items-center">
-            <Tooltip content="Edit Video">
+            {/* <Tooltip content="Edit Video">
               <span
                 className="text-lg cursor-pointer text-default-400 hover:text-default-500"
                 onClick={() => handleEdit(item)}
               >
                 <FaEdit />
               </span>
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip color="danger" content="Delete Video">
               <span
                 className="text-lg cursor-pointer text-danger hover:text-danger-500"

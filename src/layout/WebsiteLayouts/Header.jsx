@@ -158,7 +158,7 @@ export default function Header() {
           </div>
           <div className="flex items-center">
             <BsPhone className="h-3 w-3 mr-2" />
-            <span>{t("info.phone")}</span>
+            <span>+966 11 503 0591 / +966 92 005 1091</span>
           </div>
         </div>
       </motion.div>
