@@ -24,6 +24,7 @@ import {
   FaEllipsisV,
   FaCheckCircle,
   FaShoppingCart,
+  FaCreditCard,
 } from "react-icons/fa";
 import { BsReceiptCutoff } from "react-icons/bs";
 import { useGetUserByIdQuery } from "../../store/apis/endpoints/user";
@@ -33,6 +34,7 @@ import { useSelector } from "react-redux";
 import { selectCurrencySymbol } from "../../store/slice/currencySlice";
 import BankSlipModal from "./BankSlipModal";
 import ActivateOrderModal from "./ActivateOrderModal";
+import PaymentModal from "./PaymentModal";
 
 function OrdersTable() {
   const { id } = useParams();
@@ -42,6 +44,8 @@ function OrdersTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBankSlipModalOpen, setIsBankSlipModalOpen] = useState(false);
   const [isActivateModalOpen, setIsActivateModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
   const navigate = useNavigate();
   const currencySymbol = useSelector(selectCurrencySymbol);
   const { data: ordersData, isLoading } = useGetUserByIdQuery(
@@ -54,12 +58,15 @@ function OrdersTable() {
     }
   );
 
+  // console.log(ordersData);
+
   const orders =
     ordersData?.data?.user?.invoices?.map((invoice) => ({
       ...invoice.order,
       invoiceNumber: invoice.invoiceNumber,
       invoicePdf: invoice.pdf,
       orderItems: invoice.order.orderItems || [],
+      paymentDetails: invoice.order.payment?.[0] || null,
     })) || [];
 
   const columns = [
@@ -148,16 +155,31 @@ function OrdersTable() {
               >
                 View Order Details
               </DropdownItem>
-              <DropdownItem
-                key="bankSlip"
-                startContent={<BsReceiptCutoff className="text-warning" />}
-                onClick={() => {
-                  setSelectedOrder(order);
-                  setIsBankSlipModalOpen(true);
-                }}
-              >
-                View Payment Slip
-              </DropdownItem>
+
+              {/* payment type is not bank transfer then show payment modal */}
+              {order.paymentType !== "Bank Transfer" ? (
+                <DropdownItem
+                  key="payment"
+                  startContent={<FaCreditCard className="text-primary" />}
+                  onClick={() => {
+                    setSelectedOrder(order.paymentDetails);
+                    setIsPaymentModalOpen(true);
+                  }}
+                >
+                  View Payment Details
+                </DropdownItem>
+              ) : (
+                <DropdownItem
+                  key="bankSlip"
+                  startContent={<BsReceiptCutoff className="text-warning" />}
+                  onClick={() => {
+                    setSelectedOrder(order);
+                    setIsBankSlipModalOpen(true);
+                  }}
+                >
+                  View Payment Slip
+                </DropdownItem>
+              )}
               <DropdownItem
                 isDisabled={
                   order.status === "Activated" ||
@@ -187,7 +209,7 @@ function OrdersTable() {
       <div className="flex flex-col gap-4">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Orders</h1>
-          <Button 
+          <Button
             color="primary"
             startContent={<FaShoppingCart />}
             onClick={() => navigate(`/admin/buy-barcodes/${id}`)}
@@ -283,6 +305,12 @@ function OrdersTable() {
       <ActivateOrderModal
         isOpen={isActivateModalOpen}
         onOpenChange={setIsActivateModalOpen}
+        order={selectedOrder}
+      />
+
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onOpenChange={setIsPaymentModalOpen}
         order={selectedOrder}
       />
     </>
