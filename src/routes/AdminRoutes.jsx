@@ -61,6 +61,9 @@ import BarcodesMaster from "../pages/barcodeMaster/BarcodesMaster";
 import Guideline from "../pages/settings/Guideline";
 import Localization from "../pages/settings/Localization";
 
+// Payment Response
+import PaymentResponse from "../components/members/BuyBarcodes/PaymentResponse";
+
 function AdminRoutes() {
   return (
     <Routes>
@@ -149,6 +152,12 @@ function AdminRoutes() {
           <Route path="edit/:id" element={<EditTemplate4 />} />
           <Route path="view/:id" element={<ViewTemplate4 />} />
         </Route>
+
+        {/* Payment Response */}
+        <Route
+          path="/admin/members/payment/success"
+          element={<PaymentResponse />}
+        />
 
         {/* Not Found Route - for protected routes */}
         <Route path="/admin/*" element={<NotFound />} />

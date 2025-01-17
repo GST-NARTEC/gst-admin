@@ -18,7 +18,7 @@ import {
   selectVatDetails,
   clearCart,
 } from "../../../store/slice/cartSlice";
-
+import PayCraditDebit from "./PayCraditDebit";
 import { useCreateOrderMutation } from "../../../store/apis/endpoints/checkout";
 
 function Payment() {
@@ -141,7 +141,7 @@ function Payment() {
                     }`}
                   >
                     <Radio
-                      isDisabled={true}
+                      // isDisabled={true}
                       value="card"
                       className="flex items-center gap-2"
                     >
@@ -338,14 +338,19 @@ function Payment() {
             >
               Back
             </Button>
-            <Button
-              isLoading={isLoading}
-              onClick={handlePaymentComplete}
-              className="w-full sm:w-auto px-4 md:px-6 py-2 md:py-3 bg-navy-600 text-white rounded-lg hover:bg-navy-700"
-              isDisabled={!acceptTerms}
-            >
-              Submit
-            </Button>
+
+            {paymentMethod === "card" ? (
+              <PayCraditDebit isDisabled={!acceptTerms} />
+            ) : (
+              <Button
+                isLoading={isLoading}
+                onClick={handlePaymentComplete}
+                className="w-full sm:w-auto px-4 md:px-6 py-2 md:py-3 bg-navy-600 text-white rounded-lg hover:bg-navy-700"
+                isDisabled={!acceptTerms}
+              >
+                Submit
+              </Button>
+            )}
           </div>
         </div>
       </MainLayout>
