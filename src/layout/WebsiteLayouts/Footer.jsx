@@ -57,7 +57,9 @@ function Footer() {
               >
                 {t("footer.company.name")}
               </h3>
-              <p className="text-gray-300">{t("footer.company.address")}</p>
+              <p className="text-gray-300 max-w-[235px]">
+                {t("footer.company.address")}
+              </p>
             </div>
             <p className="text-sm text-gray-400 border-l-4 border-quaternary pl-3">
               {t("footer.company.copyright")}

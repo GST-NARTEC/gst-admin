@@ -22,14 +22,10 @@ import {
   FaSearch,
   FaPlus,
   FaEllipsisV,
-  FaFilter,
   FaEye,
-  FaEdit,
   FaTrash,
-  FaUserCog,
   FaCheckCircle,
   FaSync,
-  FaUserPlus,
   FaSignInAlt,
   FaBan,
   FaHourglassHalf,
@@ -84,7 +80,7 @@ function Members() {
   // Debounce search term
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data, isLoading } = useGetUserQuery({
+  const { data, isLoading, refetch, isFetching } = useGetUserQuery({
     page,
     limit: Number(limit),
     ...(debouncedSearch && { search: debouncedSearch }),
@@ -321,6 +317,14 @@ function Members() {
           >
             Filters
           </Button> */}
+          {/* refresh button */}
+          <Button
+            className="bg-navy-700 text-white"
+            startContent={<FaSync />}
+            onClick={() => refetch()}
+          >
+            Refresh
+          </Button>
           <Button
             className="bg-navy-700 text-white"
             startContent={<FaPlus />}
@@ -407,7 +411,7 @@ function Members() {
           </TableHeader>
           <TableBody
             items={members}
-            isLoading={isLoading}
+            isLoading={isLoading || isFetching}
             loadingContent={<Spinner className="text-navy-700" />}
             emptyContent="No members found"
           >
