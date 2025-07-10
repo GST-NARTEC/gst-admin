@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import parse from "html-react-parser";
 import { Button } from "@nextui-org/react";
 import OverlayLoader from "../../../components/common/OverlayLoader";
+import SEO from "../../../components/seo/Seo";    
 
 function Template2Design() {
   const { slug } = useParams();
@@ -19,6 +20,12 @@ function Template2Design() {
 
   return (
     <WebsiteLayout>
+      <SEO
+        title={template?.nameEn}
+        description={template?.description1En}
+        keywords={template?.keywords}
+        image={template?.image1}
+      />
       <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
         {/* Hero Section */}
         <section className="relative h-[80] xl:h-[45vh] overflow-hidden">

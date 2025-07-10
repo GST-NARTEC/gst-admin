@@ -6,6 +6,7 @@ import parse from "html-react-parser";
 import { Button } from "@nextui-org/react";
 import OverlayLoader from "../../../components/common/OverlayLoader";
 import { useTranslation } from "react-i18next";
+import SEO from "../../../components/seo/Seo";  
 
 function Template3Design() {
   const { slug } = useParams();
@@ -22,6 +23,12 @@ function Template3Design() {
 
   return (
     <WebsiteLayout>
+      <SEO
+        title={template?.nameEn}
+        description={template?.description1En}
+        keywords={template?.keywords}
+        image={template?.image1}
+      />
       <div
         className={`min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 ${
           isArabic ? "font-dubai  font-normal text-[19px]" : ""

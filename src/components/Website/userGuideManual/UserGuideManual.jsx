@@ -21,6 +21,7 @@ import {
   FaEye,
 } from "react-icons/fa";
 import { useDebounce } from "../../../hooks/useDebounce";
+import SEO from "../../seo/SEO";
 
 function UserGuideManual() {
   const [selectedTab, setSelectedTab] = useState("pdf");
@@ -74,6 +75,25 @@ function UserGuideManual() {
 
     return (
       <>
+        <SEO
+          title="User Guide Manual"
+          description="Access our comprehensive collection of guides and tutorials, for PDF and video guides. how to use our products and services."
+          keywords={[
+            "User Guide Manual",
+            "User Guide",
+            "User Guide Manual",
+            "User Guide Manual",
+            "PDF Guides",
+            "Video Guides",
+            "How to use our products and services",
+            "GST Global Standard Technology Saudi Arabia",
+            "GST Saudi Arabia",
+            "GST Solutions",
+          ]}
+          image="/Logo.png"
+          url="https://gstsa1.org/user-guide-manual"
+          type="website"
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-5">
           {guideData.data.guides.map((guide) => (
             <Card

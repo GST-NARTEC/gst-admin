@@ -8,17 +8,20 @@ import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import { store } from "./store/store.js";
 import "./i18n/config";
-
+import { HelmetProvider } from "react-helmet-async";
 // Initialize language direction
 const initialLanguage = store.getState().language?.language || "en";
 document.documentElement.dir = initialLanguage === "ar" ? "rtl" : "ltr";
+
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <NextUIProvider>
       <BrowserRouter>
         <Provider store={store}>
-          <App />
+          <HelmetProvider>
+            <App />
+          </HelmetProvider>
           <Toaster />
         </Provider>
       </BrowserRouter>

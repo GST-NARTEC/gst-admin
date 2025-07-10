@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import parse from "html-react-parser";
 import OverlayLoader from "../../../components/common/OverlayLoader";
 import { useTranslation } from "react-i18next";
+import SEO from "../../../components/seo/Seo";
 
 function Template1Design() {
   const { slug } = useParams();
@@ -21,6 +22,12 @@ function Template1Design() {
 
   return (
     <WebsiteLayout>
+      <SEO
+        title={template?.nameEn}
+        description={template?.description1En}
+        keywords={template?.keywords}
+        image={template?.image1}
+      />
       <div
         className={`min-h-screen bg-gradient-to-b from-white to-gray-50 ${
           isArabic ? "font-dubai text-[19px] font-normal" : ""

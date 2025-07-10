@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import parse from "html-react-parser";
 import { Button } from "@nextui-org/react";
 import OverlayLoader from "../../../components/common/OverlayLoader";
+import SEO from "../../../components/seo/Seo";
 
 function Template4Design() {
   const { slug } = useParams();
@@ -18,6 +19,12 @@ function Template4Design() {
 
   return (
     <WebsiteLayout>
+      <SEO
+        title={template?.nameEn}
+        description={template?.description1En}
+        keywords={template?.keywords}
+        image={template?.image1}
+      />
       <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 space-y-16 pb-12">
           {/* Section 1 */}
