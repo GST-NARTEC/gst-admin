@@ -2,13 +2,23 @@ User-agent: *
 Allow: /
 
 # Disallow admin-specific routes
-Disallow: /dashboard
-Disallow: /members
-Disallow: /products
-Disallow: /settings
-Disallow: /categories
-Disallow: /addons
-Disallow: /barcode-master
+Disallow: /dashboard/
+Disallow: /members/
+Disallow: /products/
+Disallow: /settings/
+Disallow: /categories/
+Disallow: /addons/
+Disallow: /barcode-master/
+Disallow: /api/
+Disallow: /login/
+Disallow: /registration/
+Disallow: /my-profile/
+Disallow: /my-products/
+Disallow: /my-barcodes/
+Disallow: /my-brands/
+Disallow: /my-billing/
+Disallow: /my-orders/
+Disallow: /help-and-support/
 
 # Sitemap location
 Sitemap: https://gstsa1.org/sitemap.xml
