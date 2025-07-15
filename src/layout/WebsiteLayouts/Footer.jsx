@@ -3,26 +3,29 @@ import { motion } from "framer-motion";
 import {
   FaLinkedin,
   FaFacebook,
-  FaTwitter,
   FaInstagram,
   FaYoutube,
   FaWhatsapp,
-} from "react-icons/fa";
+  FaTiktok,
+  FaXTwitter
+} from "react-icons/fa6";
+// twaitter ( now X)
 import { HiMail, HiPhone, HiLocationMarker } from "react-icons/hi";
 import { Images } from "../../assets/Index";
 import { useTranslation } from "react-i18next";
 
 const socialLinks = [
-  { icon: <FaLinkedin />, href: "#", color: "hover:text-quaternary" },
-  { icon: <FaFacebook />, href: "#", color: "hover:text-quaternary" },
+  { icon: <FaLinkedin />, href: "https://www.linkedin.com/company/gstsolutionsksa", color: "hover:text-quaternary" },
+  { icon: <FaFacebook />, href: "https://www.facebook.com/GSTSolutionsSaudi", color: "hover:text-quaternary" },
   {
-    icon: <FaTwitter />,
-    href: "https://x.com/gstsa1org?t=egnVJId8qKjCkxjaTXXETQ&s=09",
+    icon: <FaXTwitter />,
+    href: "https://x.com/gstsa1org",
     color: "hover:text-quaternary",
   },
-  { icon: <FaInstagram />, href: "#", color: "hover:text-quaternary" },
-  { icon: <FaYoutube />, href: "#", color: "hover:text-quaternary" },
-  { icon: <FaWhatsapp />, href: "#", color: "hover:text-quaternary" },
+  // { icon: <FaInstagram />, href: "#", color: "hover:text-quaternary" }, // Commented out as requested
+  { icon: <FaYoutube />, href: "https://www.youtube.com/@GSTSolutionsKSA", color: "hover:text-quaternary" },
+  // { icon: <FaWhatsapp />, href: "#", color: "hover:text-quaternary" }, // Commented out as requested
+  { icon: <FaTiktok />, href: "https://www.tiktok.com/@gstsolutionsksa", color: "hover:text-quaternary" },
 ];
 
 function Footer() {
