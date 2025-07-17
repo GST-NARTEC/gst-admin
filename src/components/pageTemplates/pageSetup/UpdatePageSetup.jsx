@@ -19,8 +19,11 @@ const templates = [
   { label: "Template 2", value: "template2" },
   { label: "Template 3", value: "template3" },
   { label: "Template 4", value: "template4" },
-  { label: "Template 5", value: "template5" },
-  { label: "Template 6", value: "template6" },
+  { label: "Verify Halal", value: "verify-halal" },
+  { label: "Case Study", value: "case-study" },
+
+  // { label: "Template 5", value: "template5" },
+  // { label: "Template 6", value: "template6" },
 ];
 
 function UpdatePageSetup({ isOpen, onOpenChange, page }) {

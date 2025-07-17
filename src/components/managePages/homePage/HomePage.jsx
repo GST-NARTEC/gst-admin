@@ -2,6 +2,7 @@ import React from "react";
 import WhyBarcodes from "./whyBarcodes/WhyBarcodes";
 import CoreSolution from "./coreSolution/CoreSolution";
 import ProServices from "./proServices/ProServices";
+import SmartSolution from "./smartSolution/SmartSolution";
 import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
@@ -20,6 +21,7 @@ export default function HomePage() {
           Back
         </Button>
       </div>
+      <SmartSolution />
       <WhyBarcodes />
       <CoreSolution />
       <ProServices />

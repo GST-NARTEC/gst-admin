@@ -19,8 +19,11 @@ const templates = [
   { label: "Template 2", value: "template2" },
   { label: "Template 3", value: "template3" },
   { label: "Template 4", value: "template4" },
-  { label: "Template 5", value: "template5" },
-  { label: "Template 6", value: "template6" },
+  { label: "Verify Halal", value: "verify-halal" },
+  { label: "Case Study", value: "case-study" },
+
+  // { label: "Template 5", value: "template5" },
+  // { label: "Template 6", value: "template6" },
 ];
 
 function AddPageSetup({ isOpen, onOpenChange }) {
@@ -60,8 +63,8 @@ function AddPageSetup({ isOpen, onOpenChange }) {
   };
 
   return (
-    <Modal 
-      isOpen={isOpen} 
+    <Modal
+      isOpen={isOpen}
       onOpenChange={onOpenChange}
       size="2xl"
       classNames={{
@@ -93,7 +96,7 @@ function AddPageSetup({ isOpen, onOpenChange }) {
                     />
                   )}
                 />
-                
+
                 <Controller
                   name="nameAr"
                   control={control}
@@ -108,7 +111,7 @@ function AddPageSetup({ isOpen, onOpenChange }) {
                     />
                   )}
                 />
-                
+
                 <Controller
                   name="slug"
                   control={control}
@@ -123,7 +126,7 @@ function AddPageSetup({ isOpen, onOpenChange }) {
                     />
                   )}
                 />
-                
+
                 <Controller
                   name="template"
                   control={control}
@@ -156,11 +159,7 @@ function AddPageSetup({ isOpen, onOpenChange }) {
               >
                 Cancel
               </Button>
-              <Button
-                color="primary"
-                type="submit"
-                isLoading={isLoading}
-              >
+              <Button color="primary" type="submit" isLoading={isLoading}>
                 Create Page Setup
               </Button>
             </ModalFooter>

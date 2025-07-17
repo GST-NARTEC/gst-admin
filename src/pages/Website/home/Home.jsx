@@ -5,11 +5,13 @@ import WhyChooseUs from "../../../components/Website/home/WhyChooseUs";
 import CoreSolutions from "../../../components/Website/home/CoreSolutions";
 import ProfessionalServices from "../../../components/Website/home/ProfessionalServices";
 import WhyWorkWithUs from "../../../components/Website/home/WhyWorkWithUs";
+import SmartSolucitonCards from "../../../components/Website/home/SmartSolucitonCards";   
 
 function Home() {
   return (
     <Layout>
-      <Hero />
+      {/* <Hero /> */}
+      <SmartSolucitonCards />
       <WhyChooseUs />
       <CoreSolutions />
       <ProfessionalServices />
