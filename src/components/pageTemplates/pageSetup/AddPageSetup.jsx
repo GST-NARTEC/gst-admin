@@ -20,10 +20,10 @@ const templates = [
   { label: "Template 3", value: "template3" },
   { label: "Template 4", value: "template4" },
   { label: "Verify Halal", value: "verify-halal" },
-  { label: "Case Study", value: "case-study" },
-
-  // { label: "Template 5", value: "template5" },
-  // { label: "Template 6", value: "template6" },
+  { label: "Case Study Main", value: "case-study-main" },
+  { label: "Case Study One", value: "case-study-one" },
+  { label: "Case Study Two", value: "case-study-two" },
+  { label: "Sunrise 2027", value: "sunrise-2027" },
 ];
 
 function AddPageSetup({ isOpen, onOpenChange }) {

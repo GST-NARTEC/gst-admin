@@ -64,6 +64,16 @@ import Localization from "../pages/settings/Localization";
 // Payment Response
 import PaymentResponse from "../components/members/BuyBarcodes/PaymentResponse";
 
+// verify halal
+import VerfiyHalal from "../components/pageTemplates/pageTemplatesGallery/VerifyHalal/VerfiyHalal";
+
+// Case Study Main
+import CaseStudyMain from "../components/pageTemplates/pageTemplatesGallery/CaseStudyMain/CaseStudyMain";
+
+import CaseStudyOne from "../components/pageTemplates/pageTemplatesGallery/CaseStudyOne/CaseStudyOne";
+import AddCaseStudyOne from "../components/pageTemplates/pageTemplatesGallery/CaseStudyOne/AddCaseStudyOne";
+import EditCaseStudyOne from "../components/pageTemplates/pageTemplatesGallery/CaseStudyOne/EditCaseStudyOne";
+
 function AdminRoutes() {
   return (
     <Routes>
@@ -151,6 +161,18 @@ function AdminRoutes() {
           <Route path="add" element={<AddTemplate4 />} />
           <Route path="edit/:id" element={<EditTemplate4 />} />
           <Route path="view/:id" element={<ViewTemplate4 />} />
+        </Route>
+
+        {/* Verify Halal Template */}
+        <Route path="/admin/gstsa1/page-templates/templates/verify-halal" element={<VerfiyHalal />} />
+        <Route path="/admin/gstsa1/page-templates/templates/case-study-main" element={<CaseStudyMain />} />
+
+
+        {/* case study one template */}
+        <Route path="/admin/gstsa1/page-templates/templates/case-study-one">
+          <Route index element={<CaseStudyOne />} />
+          <Route path="add" element={<AddCaseStudyOne />} />
+          <Route path="edit/:id" element={<EditCaseStudyOne />} />
         </Route>
 
         {/* Payment Response */}

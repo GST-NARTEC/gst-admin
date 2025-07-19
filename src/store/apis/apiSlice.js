@@ -3,7 +3,7 @@ import { setCredentials, logout } from "../slice/adminSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "https://api.gstsa1.org/api",
-  // baseUrl: "http://localhost:3000/api",
+  // baseUrl: "http://localhost:1000/api",
 
   prepareHeaders: (headers, { getState }) => {
     const token = getState().admin.accessToken;

@@ -19,9 +19,10 @@ function RichTextEditor({
   isRTL = false,
   height = "120px",
   label,
+  cardHeight = "220px",
 }) {
   return (
-    <div className="bg-white/95 rounded-xl p-2 shadow-lg h-[220px]">
+    <div className={`bg-white/95 rounded-xl p-2 shadow-lg h-[${cardHeight}]`}>
       {label && <h3 className="text-lg font-semibold mb-2">{label}</h3>}
       <div style={{ height }}>
         <ReactQuill

@@ -1,6 +1,7 @@
 import React from "react";
 import WebsiteLayout from "../../../layout/WebsiteLayouts/Layout";
 import { Images } from "../../../assets/Index";
+import { Button } from "@nextui-org/react";
 
 function CaseStudyOneDesing() {
   return (
@@ -398,6 +399,16 @@ function CaseStudyOneDesing() {
             </ul>
           </div>
           {/* Content will be added here */}
+          <Button
+            as="a"
+            href="https://www.gs1.org/standards/gs1-sunrise-2027"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4"
+            color="primary"
+          >
+            Learn About GS1 Sunrise 2027
+          </Button>
         </div>
       </section>
     </WebsiteLayout>

@@ -42,26 +42,43 @@ const templates = [
   },
   {
     id: 5,
-    name: "Template 5",
-    value: "template5",
+    name: "Halal Verify",
+    value: "verify-halal",
     icon: RiLayoutBottomLine,
     color: "danger",
   },
   {
     id: 6,
-    name: "Template 6",
-    value: "template6",
+    name: "Case Study Main",
+    value: "case-study-main",
     icon: RiLayoutTopLine,
     color: "primary",
   },
   {
     id: 7,
-    name: "Template 7",
-    value: "template7",
+    name: "Case Study One",
+    value: "case-study-one",
     icon: RiLayoutRightLine,
     color: "secondary",
-    description: "News portal layout"
+    // description: "News portal layout"
   },
+  {
+    id: 8,
+    name: "Case Study Two",
+    value: "case-study-two",
+    icon: RiLayoutRightLine,
+    color: "default",
+    // description: "News portal layout"
+  },
+  {
+    id: 9,
+    name: "Sunrise 2027",
+    value: "sunrise-2027",
+    icon: RiLayoutRightLine,
+    color: "warning",
+    // description: "News portal layout"
+  },
+
 ];
 
 function PageTemplatesGallery() {
@@ -85,7 +102,7 @@ function PageTemplatesGallery() {
               className="hover:scale-105 transition-all duration-300 border border-default-200"
               onClick={() => handleTemplateClick(template)}
             >
-              <CardBody className="flex flex-col items-center justify-center py-8 gap-4">
+              <CardBody className="flex flex-col items-center justify-center py-8 gap-4" >
                 <IconComponent className={`text-${template.color} w-16 h-16`} />
                 <div className="text-center">
                   <div className="text-xl font-bold text-default-700 mb-2">
@@ -100,6 +117,7 @@ function PageTemplatesGallery() {
                 <Button
                   size="md"
                   color={template.color}
+                  // color=""
                   variant="shadow"
                   className="w-full font-semibold"
                   radius="lg"
