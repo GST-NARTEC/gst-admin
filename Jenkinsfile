@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        NODE_OPTIONS = "--openssl-legacy-provider"
         ENV_FILE_PATH = "C:\\ProgramData\\Jenkins\\.jenkins\\jenkinsEnv\\GST\\gst-admin"
         NODE_ENV = 'production'
     }
@@ -28,10 +29,11 @@ pipeline {
             }
         }
 
+
         stage('Install Dependencies') {
             steps {
                 echo "📦 Installing dependencies..."
-                bat 'npm ci'
+                bat 'npm install'
             }
         }
 
@@ -48,9 +50,16 @@ pipeline {
         stage('Create New Build') {
             steps {
                 echo "🔨 Creating new build..."
-                bat 'npx vite build && npx copyfiles -f ./web.config ./dist/'
+                bat 'npx vite build'
             }
-}
+        }
+
+        stage('Copy web.config to dist') {
+            steps {
+                echo "🛠 Copying web.config to dist folder..."
+                bat 'copy "web.config" "dist\\web.config"'
+            }
+        }
     }
 
     post {
