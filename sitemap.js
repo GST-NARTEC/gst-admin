@@ -13,6 +13,18 @@ export default async function sitemap() {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: "https://gstsa1.org/case-study",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: "https://gstsa1.org/verify-halal",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
   ];
 
   // Fetch menu items from API
@@ -29,10 +41,11 @@ export default async function sitemap() {
       const menuData = await menuResponse.json();
       const menus = menuData.data?.menus || [];
 
-      // Process all submenus with pages
+      // Process all menus and their submenus
       menus.forEach((menu) => {
         if (menu.subMenus && menu.subMenus.length > 0) {
           menu.subMenus.forEach((submenu) => {
+            // Add pages with slugs
             if (submenu.page && submenu.page.slug) {
               menuPages.push({
                 url: `https://gstsa1.org/${submenu.page.slug}`,
@@ -40,7 +53,9 @@ export default async function sitemap() {
                 changeFrequency: "monthly",
                 priority: 0.7,
               });
-            } else if (
+            }
+            // Add external URLs that belong to our domain
+            else if (
               submenu.externalUrl &&
               submenu.externalUrl.startsWith("https://gstsa1.org/")
             ) {
@@ -59,48 +74,8 @@ export default async function sitemap() {
     console.error("Error fetching menu data:", error.message);
   }
 
-  // Fetch slider items from API
-  let sliderPages = [];
-  try {
-    const sliderResponse = await fetch(
-      "https://api.gstsa1.org/api/slider/v1/active",
-      {
-        next: { revalidate: 3600 },
-      }
-    );
-
-    if (sliderResponse.ok) {
-      const sliderData = await sliderResponse.json();
-      const sliders = sliderData.data?.sliders || [];
-
-      // Process all sliders with pages
-      sliders.forEach((slider) => {
-        if (slider.page && slider.page.slug) {
-          sliderPages.push({
-            url: `https://gstsa1.org/${slider.page.slug}`,
-            lastModified: new Date(slider.updatedAt || slider.createdAt),
-            changeFrequency: "weekly",
-            priority: 0.8,
-          });
-        } else if (
-          slider.externalUrl &&
-          slider.externalUrl.startsWith("https://gstsa1.org/")
-        ) {
-          sliderPages.push({
-            url: slider.externalUrl,
-            lastModified: new Date(slider.updatedAt || slider.createdAt),
-            changeFrequency: "weekly",
-            priority: 0.8,
-          });
-        }
-      });
-    }
-  } catch (error) {
-    console.error("Error fetching slider data:", error.message);
-  }
-
   // Combine all URLs, removing duplicates
-  const allUrls = [...staticPages, ...menuPages, ...sliderPages];
+  const allUrls = [...staticPages, ...menuPages];
 
   // Remove duplicates by URL
   const uniqueUrls = Array.from(

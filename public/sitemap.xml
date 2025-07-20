@@ -2,61 +2,145 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://gstsa1.org</loc>
-    <lastmod>2025-07-20T07:26:13.956Z</lastmod>
+    <lastmod>2025-07-20T07:53:35.022Z</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <priority>1</priority>
   </url>
   <url>
     <loc>https://gstsa1.org/case-study</loc>
-    <lastmod>2025-07-20T07:26:13.959Z</lastmod>
+    <lastmod>2025-07-20T07:53:35.022Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://gstsa1.org/user-guide-manual</loc>
-    <lastmod>2025-07-20T07:26:13.959Z</lastmod>
+    <loc>https://gstsa1.org/verify-halal</loc>
+    <lastmod>2025-07-20T07:53:35.022Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gstsa1.org/verify-halal</loc>
-    <lastmod>2025-07-20T07:26:13.959Z</lastmod>
+    <loc>https://gstsa1.org/asset-tagging-services</loc>
+    <lastmod>2024-12-01T14:31:49.086Z</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gstsa1.org/barcode-labels-and-ribbons</loc>
+    <lastmod>2024-12-01T15:17:04.824Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gstsa1.org/barcoding-solutions</loc>
+    <lastmod>2024-12-01T14:16:54.103Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gstsa1.org/company-profile</loc>
+    <lastmod>2024-12-01T15:27:57.553Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://gstsa1.org/contact-us</loc>
-    <lastmod>2025-07-20T07:26:13.959Z</lastmod>
+    <lastmod>2024-12-01T17:10:47.003Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://gstsa1.org/e-commerce-solutions</loc>
-    <lastmod>2025-07-20T07:26:13.959Z</lastmod>
+    <lastmod>2024-11-30T11:54:44.531Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://gstsa1.org/fixed-asset-tracking-system</loc>
-    <lastmod>2025-07-20T07:26:13.959Z</lastmod>
+    <lastmod>2024-11-29T17:34:26.971Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://gstsa1.org/label-design-printing-1d2d</loc>
-    <lastmod>2025-07-20T07:26:13.959Z</lastmod>
+    <lastmod>2024-11-30T11:54:08.420Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://gstsa1.org/mobile-application</loc>
-    <lastmod>2025-07-20T07:26:13.959Z</lastmod>
+    <lastmod>2024-11-30T11:53:50.845Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gstsa1.org/our-clients</loc>
+    <lastmod>2024-12-07T09:09:32.030Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gstsa1.org/pos-restaturant-pos-order-system</loc>
+    <lastmod>2024-11-30T11:54:51.424Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gstsa1.org/queing-management-system</loc>
+    <lastmod>2024-11-30T11:54:18.389Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gstsa1.org/rfid-tags</loc>
+    <lastmod>2024-12-01T15:06:21.908Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gstsa1.org/route-planning-delivery-system</loc>
+    <lastmod>2024-11-30T11:54:27.469Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gstsa1.org/service-flyer</loc>
+    <lastmod>2024-12-01T16:55:49.925Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gstsa1.org/traceability-system-solutions</loc>
+    <lastmod>2024-12-01T05:40:42.904Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gstsa1.org/upc-universal-product-catalogue</loc>
+    <lastmod>2024-12-10T17:14:08.351Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gstsa1.org/user-guide-manual</loc>
+    <lastmod>2025-07-12T09:17:50.385Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gstsa1.org/warehouse-bin-labeling</loc>
+    <lastmod>2024-12-01T14:46:59.035Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://gstsa1.org/warehouse-management-system</loc>
-    <lastmod>2025-07-20T07:26:13.959Z</lastmod>
+    <lastmod>2024-11-30T11:51:52.348Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gstsa1.org/why-gst</loc>
+    <lastmod>2024-12-01T17:10:39.760Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
