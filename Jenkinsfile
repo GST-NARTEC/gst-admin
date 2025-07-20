@@ -48,9 +48,9 @@ pipeline {
         stage('Create New Build') {
             steps {
                 echo "🔨 Creating new build..."
-                bat 'npm run build'
+                bat 'npx vite build && npx copyfiles -f ./web.config ./dist/'
             }
-        }
+}
     }
 
     post {
