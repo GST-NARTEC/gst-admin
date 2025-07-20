@@ -38,7 +38,7 @@ pipeline {
         stage('Build React App') {
             steps {
                 echo "🔨 Building React application for production..."
-                bat 'npm run build'
+                bat 'npx vite build'
             }
         }
 
@@ -54,9 +54,9 @@ pipeline {
                         mkdir "${deployPath}"
                     """
                     
-                    // Copy build files
+                    // Copy build files (Vite uses 'dist' folder by default)
                     bat """
-                        xcopy "%WORKSPACE%\\build\\*" "${deployPath}\\" /E /Y
+                        xcopy "%WORKSPACE%\\dist\\*" "${deployPath}\\" /E /Y
                     """
                     
                     echo "✅ Build files copied to ${deployPath}"
@@ -68,7 +68,7 @@ pipeline {
     post {
         always {
             echo "🧹 Cleaning up workspace..."
-            cleanWs()
+            deleteDir()
         }
         
         success {
