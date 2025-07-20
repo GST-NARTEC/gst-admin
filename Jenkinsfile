@@ -2,25 +2,24 @@ pipeline {
     agent any
 
     environment {
-        NODE_OPTIONS = "--openssl-legacy-provider"
         ENV_FILE_PATH = "C:\\ProgramData\\Jenkins\\.jenkins\\jenkinsEnv\\GST\\gst-admin"
-        NODE_ENV = 'production'
+        NODE_ENV = 'development'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                echo "📦 Cloning GST Admin repository..."
                 checkout scmGit(
-                    branches: [[name: '*/main']], 
-                    extensions: [], 
+                    branches: [[name: '*/main']],
+                    extensions: [],
                     userRemoteConfigs: [[
-                        credentialsId: 'Wasim-Jenkins-Credentials', 
+                        credentialsId: 'Wasim-Jenkins-Credentials',
                         url: 'https://github.com/GST-NARTEC/gst-admin.git'
-                    ]]
+                    ]],
                 )
             }
         }
+
 
         stage('Setup Environment') {
             steps {
@@ -29,42 +28,38 @@ pipeline {
             }
         }
 
-
         stage('Install Dependencies') {
             steps {
-                echo "📦 Installing dependencies..."
-                bat 'npm install'
+                echo "Installing dependencies for GST Admin..."
+                bat 'npm ci'
             }
         }
 
-        stage('Delete Old Build') {
+        stage('Generate Build') {
             steps {
-                echo "🗑️ Deleting old build directory..."
-                bat '''
-                    if exist "dist" rmdir /s /q "dist"
-                    if exist "build" rmdir /s /q "build"
-                '''
-            }
-        }
-
-        stage('Ensure Vite Installed') {
-            steps {
-                echo "🔍 Checking if vite is installed..."
-                bat 'npm list vite || npm install --save-dev vite'
-            }
-        }
-
-        stage('Create New Build') {
-            steps {
-                echo "🔨 Creating new build..."
+                echo "Generating build for GST Admin..."
                 bat 'npm run build'
             }
         }
 
-        stage('Copy web.config to dist') {
+        stage('Create web.config') {
             steps {
-                echo "🛠 Copying web.config to dist folder..."
-                bat 'copy "web.config" "dist\\web.config"'
+                script {
+                    def webConfigContent = '''<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <system.webServer>
+    <rewrite>
+      <rules>
+        <rule name="React Router" stopProcessing="true">
+          <match url="^(?!.*\\.\\w{2,4}$)(.*)$" />
+          <action type="Rewrite" url="/index.html" />
+        </rule>
+      </rules>
+    </rewrite>
+  </system.webServer>
+</configuration>'''
+                    writeFile(file: 'dist/web.config', text: webConfigContent)
+                }
             }
         }
     }
