@@ -21,62 +21,45 @@ pipeline {
             }
         }
 
-        stage('Setup Environment File') {
+        stage('Setup Environment') {
             steps {
-                echo "📁 Copying .env file to the React project root..."
+                echo "📁 Setting up environment file..."
                 bat "copy \"${ENV_FILE_PATH}\" \"%WORKSPACE%\\.env\""
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                echo "📦 Installing npm dependencies..."
+                echo "📦 Installing dependencies..."
                 bat 'npm install'
             }
         }
 
-        stage('Build React App') {
+        stage('Delete Old Build') {
             steps {
-                echo "🔨 Building React application for production..."
-                bat 'npx vite build'
+                echo "🗑️ Deleting old build directory..."
+                bat '''
+                    if exist "dist" rmdir /s /q "dist"
+                    if exist "build" rmdir /s /q "build"
+                '''
             }
         }
 
-        stage('Deploy Build Files') {
+        stage('Create New Build') {
             steps {
-                echo "🚀 Deploying React build files..."
-                script {
-                    def deployPath = "C:\\inetpub\\wwwroot\\gst-admin"
-                    
-                    // Clean and recreate deployment directory
-                    bat """
-                        if exist "${deployPath}" rmdir /s /q "${deployPath}"
-                        mkdir "${deployPath}"
-                    """
-                    
-                    // Copy build files (Vite uses 'dist' folder by default)
-                    bat """
-                        xcopy "%WORKSPACE%\\dist\\*" "${deployPath}\\" /E /Y
-                    """
-                    
-                    echo "✅ Build files copied to ${deployPath}"
-                }
+                echo "🔨 Creating new build..."
+                bat 'npm run build'
             }
         }
     }
 
     post {
-        always {
-            echo "🧹 Cleaning up workspace..."
-            deleteDir()
-        }
-        
         success {
-            echo "✅ GST Admin deployment completed successfully!"
+            echo "✅ GST Admin build completed successfully!"
         }
         
         failure {
-            echo "❌ GST Admin deployment failed!"
+            echo "❌ GST Admin build failed!"
         }
     }
 }
