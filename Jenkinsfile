@@ -50,7 +50,7 @@ pipeline {
         stage('Create New Build') {
             steps {
                 echo "🔨 Creating new build..."
-                bat 'npx vite build'
+                bat 'npm run build'
             }
         }
 
