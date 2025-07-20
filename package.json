@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && copyfiles -f ./web.config ./dist/",
+    "build": "npm run generate:sitemap && vite build && copyfiles -f ./web.config ./dist/",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate:sitemap": "node scripts/generate-sitemap.js",
+    "postbuild": "echo Build completed successfully!"
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.8",
