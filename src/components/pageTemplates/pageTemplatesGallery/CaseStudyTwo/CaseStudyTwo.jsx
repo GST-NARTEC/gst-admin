@@ -19,7 +19,7 @@ import { IoArrowBack, IoEyeOutline } from "react-icons/io5";
 import { useGetTemplatesQuery } from "../../../../store/apis/endpoints/templates";
 import DeleteTemplate from "../common/DeleteTemplate";
 
-function CaseStudyOne() {
+function CaseStudyTwo() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(10);
@@ -27,7 +27,7 @@ function CaseStudyOne() {
   const [selectedTemplateId, setSelectedTemplateId] = useState(null);
 
   const { data: templatesData, isLoading } = useGetTemplatesQuery({
-    templateType: "caseStudyTemplate1",
+    templateType: "caseStudyTemplate2",
     page,
     limit: rowsPerPage,
   });
@@ -72,7 +72,7 @@ function CaseStudyOne() {
           >
             <IoArrowBack className="text-xl" />
           </Button>
-          <h1 className="text-2xl font-bold">Case Study Template One Management</h1>
+          <h1 className="text-2xl font-bold">Case Study Template Two Management</h1>
         </div>
         <Button color="primary" onPress={handleAdd}>
           Add New Page
@@ -98,7 +98,7 @@ function CaseStudyOne() {
     <MainLayout>
       <div className="p-6">
         <Table
-          aria-label="Case study template sections table"
+          aria-label="Case study template two sections table"
           topContent={topContent}
           bottomContent={bottomContent}
         >
@@ -158,10 +158,10 @@ function CaseStudyOne() {
         isOpen={deleteModalOpen}
         onClose={handleDeleteModalClose}
         templateId={selectedTemplateId}
-        templateType="caseStudyTemplate1"
+        templateType="caseStudyTemplate2"
       />
     </MainLayout>
   );
 }
 
-export default CaseStudyOne;
+export default CaseStudyTwo;

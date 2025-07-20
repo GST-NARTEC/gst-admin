@@ -74,6 +74,10 @@ import CaseStudyOne from "../components/pageTemplates/pageTemplatesGallery/CaseS
 import AddCaseStudyOne from "../components/pageTemplates/pageTemplatesGallery/CaseStudyOne/AddCaseStudyOne";
 import EditCaseStudyOne from "../components/pageTemplates/pageTemplatesGallery/CaseStudyOne/EditCaseStudyOne";
 
+import CaseStudyTwo from "../components/pageTemplates/pageTemplatesGallery/CaseStudyTwo/CaseStudyTwo";
+import AddCaseStudyTwo from "../components/pageTemplates/pageTemplatesGallery/CaseStudyTwo/AddCaseStudyTwo";
+import EditCaseStudyTwo from "../components/pageTemplates/pageTemplatesGallery/CaseStudyTwo/EditCaseStudyTwo";    
+
 function AdminRoutes() {
   return (
     <Routes>
@@ -173,6 +177,14 @@ function AdminRoutes() {
           <Route index element={<CaseStudyOne />} />
           <Route path="add" element={<AddCaseStudyOne />} />
           <Route path="edit/:id" element={<EditCaseStudyOne />} />
+        </Route>
+
+
+        {/* case study two template */}
+        <Route path="/admin/gstsa1/page-templates/templates/case-study-two">
+          <Route index element={<CaseStudyTwo />} />
+          <Route path="add" element={<AddCaseStudyTwo />} />
+          <Route path="edit/:id" element={<EditCaseStudyTwo />} />
         </Route>
 
         {/* Payment Response */}

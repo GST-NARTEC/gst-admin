@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import MainLayout from "../../../../layout/AdminLayouts/MainLayout";
 import {
   Button,
@@ -15,13 +15,23 @@ import SlugInput from "../common/SlugInput";
 import { toast } from "react-hot-toast";
 
 // api
-import { useCreateTemplateMutation } from "../../../../store/apis/endpoints/templates";
+import {
+  useGetTemplateQuery,
+  useUpdateTemplateMutation,
+} from "../../../../store/apis/endpoints/templates";
 
-function AddCaseStudyOne() {
+function EditCaseStudyTwo() {
   const navigate = useNavigate();
+  const { id } = useParams();
 
-  const [createTemplate, { isLoading, isError, isSuccess, error }] =
-    useCreateTemplateMutation();
+  const { data: templateData, isLoading: isLoadingTemplate } =
+    useGetTemplateQuery({
+      templateType: "caseStudyTemplate2",
+      pageId: id,
+    });
+
+  const [updateTemplate, { isLoading: isUpdating, isError, isSuccess, error }] =
+    useUpdateTemplateMutation();
 
   const [formData, setFormData] = useState({
     nameEn: "",
@@ -31,45 +41,49 @@ function AddCaseStudyOne() {
     seoDescriptionEn: "",
     seoDescriptionAr: "",
 
-    // Hero Section (maps to image1 in DB)
+    // Hero Section
     headingEn: "",
     headingAr: "",
     image1: null,
 
-    // Overview Section
+    // About The Client Section
     description1En: "",
     description1Ar: "",
-    descriptionQuote1En: "",
-    descriptionQuote1Ar: "",
-    descriptionAuthor1En: "",
-    descriptionAuthor1Ar: "",
 
-    // Solution Section (maps to image2 in DB)
+    // The Challenges Section
     description2En: "",
     description2Ar: "",
+
+    // The Solution Section
     description3En: "",
     description3Ar: "",
-    image2: null,
+
+    // Workflow Highlights Section
     description4En: "",
     description4Ar: "",
+
+    // Results & Key Benefits Section
     description5En: "",
     description5Ar: "",
 
-    // Results Section (maps to image3 in DB)
+    // Key Learnings Section
     description6En: "",
     description6Ar: "",
-    image3: null,
+
+    // The Technology Section
     description7En: "",
     description7Ar: "",
-    descriptionQuote2En: "",
-    descriptionQuote2Ar: "",
-    descriptionAuthor2En: "",
-    descriptionAuthor2Ar: "",
 
-    // Final Section (maps to image4 in DB)
-    image4: null,
+    // Partner Highlights Section
     description8En: "",
     description8Ar: "",
+
+    // Images
+    image2: null,
+    image3: null,
+    image4: null,
+    image5: null,
+    image6: null,
   });
 
   const [previewImages, setPreviewImages] = useState({
@@ -77,7 +91,69 @@ function AddCaseStudyOne() {
     image2: null,
     image3: null,
     image4: null,
+    image5: null,
+    image6: null,
   });
+
+  const [initialData, setInitialData] = useState(null);
+
+  useEffect(() => {
+    if (templateData?.data) {
+      const data = templateData.data?.template;
+      setFormData({
+        nameEn: data.nameEn || "",
+        nameAr: data.nameAr || "",
+        pageId: data.pageId || "",
+        isActive: data.isActive ?? true,
+        seoDescriptionEn: data.seoDescriptionEn || "",
+        seoDescriptionAr: data.seoDescriptionAr || "",
+        headingEn: data.headingEn || "",
+        headingAr: data.headingAr || "",
+        description1En: data.description1En || "",
+        description1Ar: data.description1Ar || "",
+        description2En: data.description2En || "",
+        description2Ar: data.description2Ar || "",
+        description3En: data.description3En || "",
+        description3Ar: data.description3Ar || "",
+        description4En: data.description4En || "",
+        description4Ar: data.description4Ar || "",
+        description5En: data.description5En || "",
+        description5Ar: data.description5Ar || "",
+        description6En: data.description6En || "",
+        description6Ar: data.description6Ar || "",
+        description7En: data.description7En || "",
+        description7Ar: data.description7Ar || "",
+        description8En: data.description8En || "",
+        description8Ar: data.description8Ar || "",
+        image1: null,
+        image2: null,
+        image3: null,
+        image4: null,
+        image5: null,
+        image6: null,
+      });
+
+      setPreviewImages({
+        image1: data.image1 || null,
+        image2: data.image2 || null,
+        image3: data.image3 || null,
+        image4: data.image4 || null,
+        image5: data.image5 || null,
+        image6: data.image6 || null,
+      });
+
+      setInitialData(data);
+    }
+  }, [templateData]);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.data?.message || "Something went wrong");
+    } else if (isSuccess) {
+      toast.success("Case Study template updated successfully");
+      navigate(-1);
+    }
+  }, [isError, error, isSuccess, navigate]);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
@@ -97,15 +173,6 @@ function AddCaseStudyOne() {
     }
   };
 
-  useEffect(() => {
-    if (isError) {
-      toast.error(error?.data?.message || "Something went wrong");
-    } else if (isSuccess) {
-      toast.success("Case Study template created successfully");
-      navigate(-1);
-    }
-  }, [isError, error, isSuccess, navigate]);
-
   const handleSubmit = async () => {
     const formDataToSend = new FormData();
 
@@ -122,62 +189,66 @@ function AddCaseStudyOne() {
     formDataToSend.append("headingAr", formData.headingAr);
     if (formData.image1) formDataToSend.append("image1", formData.image1);
 
-    // Overview Section
+    // About The Client Section
     formDataToSend.append("description1En", formData.description1En);
     formDataToSend.append("description1Ar", formData.description1Ar);
-    formDataToSend.append("descriptionQuote1En", formData.descriptionQuote1En);
-    formDataToSend.append("descriptionQuote1Ar", formData.descriptionQuote1Ar);
-    formDataToSend.append(
-      "descriptionAuthor1En",
-      formData.descriptionAuthor1En
-    );
-    formDataToSend.append(
-      "descriptionAuthor1Ar",
-      formData.descriptionAuthor1Ar
-    );
+    if (formData.image2) formDataToSend.append("image2", formData.image2);
 
-    // Solution Section
+    // The Challenges Section
     formDataToSend.append("description2En", formData.description2En);
     formDataToSend.append("description2Ar", formData.description2Ar);
+    if (formData.image3) formDataToSend.append("image3", formData.image3);
+
+    // The Solution Section
     formDataToSend.append("description3En", formData.description3En);
     formDataToSend.append("description3Ar", formData.description3Ar);
-    if (formData.image2) formDataToSend.append("image2", formData.image2);
+    if (formData.image4) formDataToSend.append("image4", formData.image4);
+
+    // Workflow Highlights Section
     formDataToSend.append("description4En", formData.description4En);
     formDataToSend.append("description4Ar", formData.description4Ar);
+    if (formData.image5) formDataToSend.append("image5", formData.image5);
+
+    // Results & Key Benefits Section
     formDataToSend.append("description5En", formData.description5En);
     formDataToSend.append("description5Ar", formData.description5Ar);
 
-    // Results Section
+    // Key Learnings Section
     formDataToSend.append("description6En", formData.description6En);
     formDataToSend.append("description6Ar", formData.description6Ar);
-    if (formData.image3) formDataToSend.append("image3", formData.image3);
+
+    // The Technology Section
     formDataToSend.append("description7En", formData.description7En);
     formDataToSend.append("description7Ar", formData.description7Ar);
-    formDataToSend.append("descriptionQuote2En", formData.descriptionQuote2En);
-    formDataToSend.append("descriptionQuote2Ar", formData.descriptionQuote2Ar);
-    formDataToSend.append(
-      "descriptionAuthor2En",
-      formData.descriptionAuthor2En
-    );
-    formDataToSend.append(
-      "descriptionAuthor2Ar",
-      formData.descriptionAuthor2Ar
-    );
+    if (formData.image6) formDataToSend.append("image6", formData.image6);
 
-    // Final Section
-    if (formData.image4) formDataToSend.append("image4", formData.image4);
+    // Partner Highlights Section
     formDataToSend.append("description8En", formData.description8En);
     formDataToSend.append("description8Ar", formData.description8Ar);
 
     try {
-      await createTemplate({
-        templateType: "caseStudyTemplate1",
+      await updateTemplate({
+        templateType: "caseStudyTemplate2",
+        id: templateData?.data?.template?.id,
         data: formDataToSend,
       }).unwrap();
     } catch (err) {
-      console.error("Failed to create case study template:", err);
+      console.error("Failed to update case study template:", err);
     }
   };
+
+  if (isLoadingTemplate) {
+    return (
+      <MainLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-lg">Loading template data...</p>
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>
@@ -187,7 +258,7 @@ function AddCaseStudyOne() {
           <Button isIconOnly variant="light" onPress={() => navigate(-1)}>
             <IoArrowBack className="text-xl" />
           </Button>
-          <h1 className="text-2xl font-bold">Add New Case Study One</h1>
+          <h1 className="text-2xl font-bold">Edit Case Study Two</h1>
         </div>
 
         <div className="max-w-[1400px] mx-auto space-y-6">
@@ -211,7 +282,7 @@ function AddCaseStudyOne() {
                 <SlugInput
                   value={formData.pageId}
                   onChange={(id) => handleInputChange("pageId", id)}
-                  templateType="case-study-one"
+                  templateType="case-study-two"
                 />
               </div>
 
@@ -326,136 +397,34 @@ function AddCaseStudyOne() {
                   />
                 </div>
               </div>
-            </section>{" "}
-            {/* Overview Section */}
-            <section className="pt-32 pb-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl mb-12">
-              <div className="container mx-auto px-4">
-                <h2 className="text-3xl font-bold text-primary mb-8 text-center">
-                  Overview Section
-                </h2>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-                  {/* Left Column - Overview Content */}
-                  <div className="space-y-6">
-                    <RichTextEditor
-                      label="Overview Content (English)"
-                      value={formData.description1En}
-                      onChange={(value) =>
-                        handleInputChange("description1En", value)
-                      }
-                      placeholder="Enter overview content in English..."
-                      height="200px"
-                      cardHeight="300px"
-                    />
-                    <RichTextEditor
-                      label="Overview Content (Arabic)"
-                      value={formData.description1Ar}
-                      onChange={(value) =>
-                        handleInputChange("description1Ar", value)
-                      }
-                      placeholder="Enter overview content in Arabic..."
-                      height="200px"
-                      cardHeight="300px"
-                      isRTL
-                    />
-                  </div>
-
-                  {/* Right Column - Quote Box */}
-                  <div className="space-y-6">
-                    <RichTextEditor
-                      label="Quote Content (English)"
-                      value={formData.descriptionQuote1En}
-                      onChange={(value) =>
-                        handleInputChange("descriptionQuote1En", value)
-                      }
-                      placeholder="Enter quote content in English..."
-                      height="150px"
-                      cardHeight="250px"
-                    />
-                    <RichTextEditor
-                      label="Quote Content (Arabic)"
-                      value={formData.descriptionQuote1Ar}
-                      onChange={(value) =>
-                        handleInputChange("descriptionQuote1Ar", value)
-                      }
-                      placeholder="Enter quote content in Arabic..."
-                      height="150px"
-                      cardHeight="250px"
-                      isRTL
-                    />
-                    <div className="grid grid-cols-2 gap-4">
-                      <Input
-                        label="Quote Author (English)"
-                        placeholder="Enter author name"
-                        value={formData.descriptionAuthor1En}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "descriptionAuthor1En",
-                            e.target.value
-                          )
-                        }
-                      />
-                      <Input
-                        label="Quote Author (Arabic)"
-                        placeholder="Enter author name in Arabic"
-                        value={formData.descriptionAuthor1Ar}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "descriptionAuthor1Ar",
-                            e.target.value
-                          )
-                        }
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
             </section>
-            {/* Solution Section */}
+
+            {/* About The Client Section */}
             <section className="py-16 bg-white border-2 border-dashed border-gray-300 rounded-xl mb-12">
               <div className="container mx-auto px-4">
                 <h2 className="text-3xl font-bold text-primary mb-8 text-center">
-                  Solution Section
+                  About The Client
                 </h2>
 
-                {/* Solution Title */}
-                <div className="grid grid-cols-2 gap-8 mb-8">
-                  <Input
-                    label="Solution Title (English)"
-                    placeholder="Enter solution title"
-                    value={formData.description2En}
-                    onChange={(e) =>
-                      handleInputChange("description2En", e.target.value)
-                    }
-                  />
-                  <Input
-                    label="Solution Title (Arabic)"
-                    placeholder="Enter solution title in Arabic"
-                    value={formData.description2Ar}
-                    onChange={(e) =>
-                      handleInputChange("description2Ar", e.target.value)
-                    }
-                  />
-                </div>
-
-                {/* Solution Content */}
+                {/* About The Client Content */}
                 <div className="grid grid-cols-2 gap-8 mb-12">
                   <RichTextEditor
-                    label="Solution Content (English)"
-                    value={formData.description3En}
+                    label="About The Client (English)"
+                    value={formData.description1En}
                     onChange={(value) =>
-                      handleInputChange("description3En", value)
+                      handleInputChange("description1En", value)
                     }
-                    placeholder="Enter solution content in English..."
+                    placeholder="Enter about the client in English..."
                     height="200px"
                     cardHeight="300px"
                   />
                   <RichTextEditor
-                    label="Solution Content (Arabic)"
-                    value={formData.description3Ar}
+                    label="About The Client (Arabic)"
+                    value={formData.description1Ar}
                     onChange={(value) =>
-                      handleInputChange("description3Ar", value)
+                      handleInputChange("description1Ar", value)
                     }
-                    placeholder="Enter solution content in Arabic..."
+                    placeholder="Enter about the client in Arabic..."
                     height="200px"
                     cardHeight="300px"
                     isRTL
@@ -469,7 +438,7 @@ function AddCaseStudyOne() {
                       <div className="relative group">
                         <img
                           src={previewImages.image2}
-                          alt="Solution Main"
+                          alt="About Client"
                           className="w-full h-72 object-cover rounded-lg shadow-lg"
                         />
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
@@ -514,7 +483,7 @@ function AddCaseStudyOne() {
                               d="M12 4v16m8-8H4"
                             />
                           </svg>
-                          Upload Main Solution Image
+                          Upload Main About Image
                         </label>
                         <p className="text-gray-500 mt-2">
                           Recommended size: 1200x400px
@@ -523,74 +492,49 @@ function AddCaseStudyOne() {
                     )}
                   </div>
                 </div>
-
-                {/* Solution Description */}
-                <div className="grid grid-cols-2 gap-8 mb-8">
-                  <RichTextEditor
-                    label="Solution Description (English)"
-                    value={formData.description4En}
-                    onChange={(value) =>
-                      handleInputChange("description4En", value)
-                    }
-                    placeholder="Enter solution description in English..."
-                    height="200px"
-                    cardHeight="300px"
-                  />
-                  <RichTextEditor
-                    label="Solution Description (Arabic)"
-                    value={formData.description4Ar}
-                    onChange={(value) =>
-                      handleInputChange("description4Ar", value)
-                    }
-                    placeholder="Enter solution description in Arabic..."
-                    height="200px"
-                    cardHeight="300px"
-                    isRTL
-                  />
-                </div>
-
-                {/* Key Features */}
-                <div className="grid grid-cols-2 gap-8">
-                  <RichTextEditor
-                    label="Key Features (English)"
-                    value={formData.description5En}
-                    onChange={(value) =>
-                      handleInputChange("description5En", value)
-                    }
-                    placeholder="Enter key features in English..."
-                    height="200px"
-                    cardHeight="300px"
-                  />
-                  <RichTextEditor
-                    label="Key Features (Arabic)"
-                    value={formData.description5Ar}
-                    onChange={(value) =>
-                      handleInputChange("description5Ar", value)
-                    }
-                    placeholder="Enter key features in Arabic..."
-                    height="200px"
-                    cardHeight="300px"
-                    isRTL
-                  />
-                </div>
               </div>
             </section>
-            {/* Results Section */}
+
+            {/* The Challenges Section */}
             <section className="py-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl mb-12">
               <div className="container mx-auto px-4">
                 <h2 className="text-3xl font-bold text-primary mb-8 text-center">
-                  Results & Impact Section
+                  The Challenges
                 </h2>
 
-                {/* First Container - Image and Main Results */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
+                  {/* Right Column - Content */}
+                  <div className="space-y-6">
+                    <RichTextEditor
+                      label="Challenges (English)"
+                      value={formData.description2En}
+                      onChange={(value) =>
+                        handleInputChange("description2En", value)
+                      }
+                      placeholder="Enter challenges content in English..."
+                      height="200px"
+                      cardHeight="300px"
+                    />
+                    <RichTextEditor
+                      label="Challenges (Arabic)"
+                      value={formData.description2Ar}
+                      onChange={(value) =>
+                        handleInputChange("description2Ar", value)
+                      }
+                      placeholder="Enter challenges content in Arabic..."
+                      height="200px"
+                      cardHeight="300px"
+                      isRTL
+                    />
+                  </div>
+
                   {/* Left Column - Image */}
                   <div className="bg-white/95 rounded-xl p-2 shadow-lg">
                     {previewImages.image3 ? (
                       <div className="relative group">
                         <img
                           src={previewImages.image3}
-                          alt="Results"
+                          alt="Challenges"
                           className="w-full h-auto rounded-lg shadow-lg"
                         />
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
@@ -635,7 +579,7 @@ function AddCaseStudyOne() {
                               d="M12 4v16m8-8H4"
                             />
                           </svg>
-                          Upload Results Image
+                          Upload Challenges Image
                         </label>
                         <p className="text-gray-500 mt-2">
                           Recommended size: 800x600px
@@ -643,127 +587,26 @@ function AddCaseStudyOne() {
                       </div>
                     )}
                   </div>
-
-                  {/* Right Column - Main Results Content */}
-                  <div className="space-y-6">
-                    <RichTextEditor
-                      label="Results Content (English)"
-                      value={formData.description6En}
-                      onChange={(value) =>
-                        handleInputChange("description6En", value)
-                      }
-                      placeholder="Enter results content in English..."
-                      height="200px"
-                      cardHeight="300px"
-                    />
-                    <RichTextEditor
-                      label="Results Content (Arabic)"
-                      value={formData.description6Ar}
-                      onChange={(value) =>
-                        handleInputChange("description6Ar", value)
-                      }
-                      placeholder="Enter results content in Arabic..."
-                      height="200px"
-                      cardHeight="300px"
-                      isRTL
-                    />
-                  </div>
-                </div>
-
-                {/* Second Container - Results Content and Quote Box */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-                  {/* Left Column - Additional Results Content */}
-                  <div className="space-y-6">
-                    <RichTextEditor
-                      label="Additional Results Content (English)"
-                      value={formData.description7En}
-                      onChange={(value) =>
-                        handleInputChange("description7En", value)
-                      }
-                      placeholder="Enter additional results content in English..."
-                      height="200px"
-                      cardHeight="300px"
-                    />
-                    <RichTextEditor
-                      label="Additional Results Content (Arabic)"
-                      value={formData.description7Ar}
-                      onChange={(value) =>
-                        handleInputChange("description7Ar", value)
-                      }
-                      placeholder="Enter additional results content in Arabic..."
-                      height="200px"
-                      cardHeight="300px"
-                      isRTL
-                    />
-                  </div>
-
-                  {/* Right Column - Quote Box */}
-                  <div className="space-y-6">
-                    <RichTextEditor
-                      label="Results Quote (English)"
-                      value={formData.descriptionQuote2En}
-                      onChange={(value) =>
-                        handleInputChange("descriptionQuote2En", value)
-                      }
-                      placeholder="Enter results quote in English..."
-                      height="150px"
-                      cardHeight="250px"
-                    />
-                    <RichTextEditor
-                      label="Results Quote (Arabic)"
-                      value={formData.descriptionQuote2Ar}
-                      onChange={(value) =>
-                        handleInputChange("descriptionQuote2Ar", value)
-                      }
-                      placeholder="Enter results quote in Arabic..."
-                      height="150px"
-                      cardHeight="250px"
-                      isRTL
-                    />
-                    <div className="grid grid-cols-2 gap-4">
-                      <Input
-                        label="Quote Author (English)"
-                        placeholder="Enter author name"
-                        value={formData.descriptionAuthor2En}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "descriptionAuthor2En",
-                            e.target.value
-                          )
-                        }
-                      />
-                      <Input
-                        label="Quote Author (Arabic)"
-                        placeholder="Enter author name in Arabic"
-                        value={formData.descriptionAuthor2Ar}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "descriptionAuthor2Ar",
-                            e.target.value
-                          )
-                        }
-                      />
-                    </div>
-                  </div>
                 </div>
               </div>
             </section>
-            {/* Final Section */}
-            <section className="py-16 bg-white border-2 border-dashed border-gray-300 rounded-xl">
+
+            {/* The Solution Section */}
+            <section className="py-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl mb-12">
               <div className="container mx-auto px-4">
                 <h2 className="text-3xl font-bold text-primary mb-8 text-center">
-                  Final Section
+                  The Solution
                 </h2>
 
-                {/* Central Image */}
-                <div className="mb-12 flex justify-center">
-                  <div className="w-full max-w-4xl">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
+                  {/* Left Column - Image */}
+                  <div className="bg-white/95 rounded-xl p-2 shadow-lg">
                     {previewImages.image4 ? (
                       <div className="relative group">
                         <img
                           src={previewImages.image4}
-                          alt="Final Section"
-                          className="w-full h-72 object-cover rounded-lg shadow-lg"
+                          alt="Solution"
+                          className="w-full h-auto rounded-lg shadow-lg"
                         />
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
                           <input
@@ -782,7 +625,7 @@ function AddCaseStudyOne() {
                         </div>
                       </div>
                     ) : (
-                      <div className="h-72 bg-gray-100 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300">
+                      <div className="h-80 bg-gray-100 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300">
                         <input
                           type="file"
                           id="image4"
@@ -807,7 +650,128 @@ function AddCaseStudyOne() {
                               d="M12 4v16m8-8H4"
                             />
                           </svg>
-                          Upload Final Section Image
+                          Upload Solution Image
+                        </label>
+                        <p className="text-gray-500 mt-2">
+                          Recommended size: 800x600px
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right Column - Content */}
+                  <div className="space-y-6">
+                    <RichTextEditor
+                      label="Solution (English)"
+                      value={formData.description3En}
+                      onChange={(value) =>
+                        handleInputChange("description3En", value)
+                      }
+                      placeholder="Enter solution content in English..."
+                      height="200px"
+                      cardHeight="300px"
+                    />
+                    <RichTextEditor
+                      label="Solution (Arabic)"
+                      value={formData.description3Ar}
+                      onChange={(value) =>
+                        handleInputChange("description3Ar", value)
+                      }
+                      placeholder="Enter solution content in Arabic..."
+                      height="200px"
+                      cardHeight="300px"
+                      isRTL
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Workflow Highlights Section */}
+            <section className="py-16 bg-white border-2 border-dashed border-gray-300 rounded-xl mb-12">
+              <div className="container mx-auto px-4">
+                <h2 className="text-3xl font-bold text-primary mb-8 text-center">
+                  Workflow Highlights
+                </h2>
+
+                {/* Workflow Content */}
+                <div className="grid grid-cols-2 gap-8 mb-12">
+                  <RichTextEditor
+                    label="Workflow Highlights (English)"
+                    value={formData.description4En}
+                    onChange={(value) =>
+                      handleInputChange("description4En", value)
+                    }
+                    placeholder="Enter workflow highlights in English..."
+                    height="200px"
+                    cardHeight="300px"
+                  />
+                  <RichTextEditor
+                    label="Workflow Highlights (Arabic)"
+                    value={formData.description4Ar}
+                    onChange={(value) =>
+                      handleInputChange("description4Ar", value)
+                    }
+                    placeholder="Enter workflow highlights in Arabic..."
+                    height="200px"
+                    cardHeight="300px"
+                    isRTL
+                  />
+                </div>
+
+                {/* Central Image */}
+                <div className="mb-12 flex justify-center">
+                  <div className="w-full max-w-4xl">
+                    {previewImages.image5 ? (
+                      <div className="relative group">
+                        <img
+                          src={previewImages.image5}
+                          alt="Workflow Highlights"
+                          className="w-full h-72 object-cover rounded-lg shadow-lg"
+                        />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
+                          <input
+                            type="file"
+                            id="image5"
+                            accept="image/*"
+                            onChange={(e) => handleImageUpload("image5", e)}
+                            className="hidden"
+                          />
+                          <label
+                            htmlFor="image5"
+                            className="cursor-pointer bg-white px-4 py-2 rounded-full shadow-lg"
+                          >
+                            Change Image
+                          </label>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="h-72 bg-gray-100 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300">
+                        <input
+                          type="file"
+                          id="image5"
+                          accept="image/*"
+                          onChange={(e) => handleImageUpload("image5", e)}
+                          className="hidden"
+                        />
+                        <label
+                          htmlFor="image5"
+                          className="cursor-pointer bg-primary text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2"
+                        >
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 4v16m8-8H4"
+                            />
+                          </svg>
+                          Upload Workflow Highlights Image
                         </label>
                         <p className="text-gray-500 mt-2">
                           Recommended size: 1200x400px
@@ -816,26 +780,190 @@ function AddCaseStudyOne() {
                     )}
                   </div>
                 </div>
+              </div>
+            </section>
 
-                {/* Final Content */}
-                <div className="grid grid-cols-2 gap-8">
+            {/* Results and Key Learnings */}
+            <section className="py-16 bg-white border-2 border-dashed border-gray-300 rounded-xl mb-12">
+              <div className="container mx-auto px-4">
+                <h2 className="text-3xl font-bold text-primary mb-8 text-center">
+                  Results & Key Benefits Key Learnings
+                </h2>
+
+                {/* Results & Key Benefits */}
+                <div className="grid grid-cols-2 gap-8 mb-12">
                   <RichTextEditor
-                    label="Final Content (English)"
-                    value={formData.description8En}
+                    label="Results & Key Benefits (English)"
+                    value={formData.description5En}
                     onChange={(value) =>
-                      handleInputChange("description8En", value)
+                      handleInputChange("description5En", value)
                     }
-                    placeholder="Enter final section content in English..."
+                    placeholder="Enter results & key benefits in English..."
                     height="200px"
                     cardHeight="300px"
                   />
                   <RichTextEditor
-                    label="Final Content (Arabic)"
+                    label="Results & Key Benefits (Arabic)"
+                    value={formData.description5Ar}
+                    onChange={(value) =>
+                      handleInputChange("description5Ar", value)
+                    }
+                    placeholder="Enter results & key benefits in Arabic..."
+                    height="200px"
+                    cardHeight="300px"
+                    isRTL
+                  />
+                </div>
+
+                {/* Key Learnings */}
+                <div className="grid grid-cols-2 gap-8 mb-12">
+                  <RichTextEditor
+                    label="Key Learnings (English)"
+                    value={formData.description6En}
+                    onChange={(value) =>
+                      handleInputChange("description6En", value)
+                    }
+                    placeholder="Enter key learnings in English..."
+                    height="200px"
+                    cardHeight="300px"
+                  />
+                  <RichTextEditor
+                    label="Key Learnings (Arabic)"
+                    value={formData.description6Ar}
+                    onChange={(value) =>
+                      handleInputChange("description6Ar", value)
+                    }
+                    placeholder="Enter key learnings in Arabic..."
+                    height="200px"
+                    cardHeight="300px"
+                    isRTL
+                  />
+                </div>
+              </div>
+            </section>
+
+            {/* Technology Section */}
+            <section className="py-16 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl mb-12">
+              <div className="container mx-auto px-4">
+                <h2 className="text-3xl font-bold text-primary mb-8 text-center">
+                  The Technology
+                </h2>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
+                  {/* Left Column - Image */}
+                  <div className="bg-white/95 rounded-xl p-2 shadow-lg">
+                    {previewImages.image6 ? (
+                      <div className="relative group">
+                        <img
+                          src={previewImages.image6}
+                          alt="Technology"
+                          className="w-full h-auto rounded-lg shadow-lg"
+                        />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
+                          <input
+                            type="file"
+                            id="image6"
+                            accept="image/*"
+                            onChange={(e) => handleImageUpload("image6", e)}
+                            className="hidden"
+                          />
+                          <label
+                            htmlFor="image6"
+                            className="cursor-pointer bg-white px-4 py-2 rounded-full shadow-lg"
+                          >
+                            Change Image
+                          </label>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="h-80 bg-gray-100 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300">
+                        <input
+                          type="file"
+                          id="image6"
+                          accept="image/*"
+                          onChange={(e) => handleImageUpload("image6", e)}
+                          className="hidden"
+                        />
+                        <label
+                          htmlFor="image6"
+                          className="cursor-pointer bg-primary text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2"
+                        >
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 4v16m8-8H4"
+                            />
+                          </svg>
+                          Upload Technology Image
+                        </label>
+                        <p className="text-gray-500 mt-2">
+                          Recommended size: 800x600px
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right Column - Content */}
+                  <div className="space-y-6">
+                    <RichTextEditor
+                      label="Technology (English)"
+                      value={formData.description7En}
+                      onChange={(value) =>
+                        handleInputChange("description7En", value)
+                      }
+                      placeholder="Enter technology content in English..."
+                      height="200px"
+                      cardHeight="300px"
+                    />
+                    <RichTextEditor
+                      label="Technology (Arabic)"
+                      value={formData.description7Ar}
+                      onChange={(value) =>
+                        handleInputChange("description7Ar", value)
+                      }
+                      placeholder="Enter technology content in Arabic..."
+                      height="200px"
+                      cardHeight="300px"
+                      isRTL
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Partner Highlight Section */}
+            <section className="py-16 bg-white border-2 border-dashed border-gray-300 rounded-xl mb-12">
+              <div className="container mx-auto px-4">
+                <h2 className="text-3xl font-bold text-primary mb-8 text-center">
+                  Partner Highlights
+                </h2>
+
+                {/* Partner Highlight Content */}
+                <div className="grid grid-cols-2 gap-8 mb-12">
+                  <RichTextEditor
+                    label="Partner Highlight (English)"
+                    value={formData.description8En}
+                    onChange={(value) =>
+                      handleInputChange("description8En", value)
+                    }
+                    placeholder="Enter partner highlight in English..."
+                    height="200px"
+                    cardHeight="300px"
+                  />
+                  <RichTextEditor
+                    label="Partner Highlight (Arabic)"
                     value={formData.description8Ar}
                     onChange={(value) =>
                       handleInputChange("description8Ar", value)
                     }
-                    placeholder="Enter final section content in Arabic..."
+                    placeholder="Enter partner highlight in Arabic..."
                     height="200px"
                     cardHeight="300px"
                     isRTL
@@ -853,9 +981,9 @@ function AddCaseStudyOne() {
             <Button
               color="primary"
               onPress={handleSubmit}
-              isLoading={isLoading}
+              isLoading={isUpdating}
             >
-              {isLoading ? "Creating..." : "Create Case Study"}
+              {isUpdating ? "Updating..." : "Update Case Study"}
             </Button>
           </div>
         </div>
@@ -864,4 +992,4 @@ function AddCaseStudyOne() {
   );
 }
 
-export default AddCaseStudyOne;
+export default EditCaseStudyTwo;
