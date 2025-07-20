@@ -47,6 +47,13 @@ pipeline {
             }
         }
 
+        stage('Ensure Vite Installed') {
+            steps {
+                echo "🔍 Checking if vite is installed..."
+                bat 'npm list vite || npm install --save-dev vite'
+            }
+        }
+
         stage('Create New Build') {
             steps {
                 echo "🔨 Creating new build..."
