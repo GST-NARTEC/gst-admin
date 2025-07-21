@@ -322,7 +322,7 @@ function AddCaseStudyTwo() {
                   />
                 </div>
               </div>
-            </section>{" "}
+            </section>
             {/* client Section */}
             <section className="py-16 bg-white border-2 border-dashed border-gray-300 rounded-xl mb-12">
               <div className="container mx-auto px-4">

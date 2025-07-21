@@ -76,7 +76,12 @@ import EditCaseStudyOne from "../components/pageTemplates/pageTemplatesGallery/C
 
 import CaseStudyTwo from "../components/pageTemplates/pageTemplatesGallery/CaseStudyTwo/CaseStudyTwo";
 import AddCaseStudyTwo from "../components/pageTemplates/pageTemplatesGallery/CaseStudyTwo/AddCaseStudyTwo";
-import EditCaseStudyTwo from "../components/pageTemplates/pageTemplatesGallery/CaseStudyTwo/EditCaseStudyTwo";    
+import EditCaseStudyTwo from "../components/pageTemplates/pageTemplatesGallery/CaseStudyTwo/EditCaseStudyTwo"; 
+
+// Sunrise 2027 Template
+import Sunrise from "../components/pageTemplates/pageTemplatesGallery/Sunrise2027/Sunrise";
+import AddSunrise from "../components/pageTemplates/pageTemplatesGallery/Sunrise2027/AddSunrise";
+import EditSunrise from "../components/pageTemplates/pageTemplatesGallery/Sunrise2027/EditSunrise";
 
 function AdminRoutes() {
   return (
@@ -171,6 +176,12 @@ function AdminRoutes() {
         <Route path="/admin/gstsa1/page-templates/templates/verify-halal" element={<VerfiyHalal />} />
         <Route path="/admin/gstsa1/page-templates/templates/case-study-main" element={<CaseStudyMain />} />
 
+        {/* Sunrise 2027 Template */}
+        <Route path="/admin/gstsa1/page-templates/templates/sunrise-2027">
+          <Route index element={<Sunrise />} />
+          <Route path="add" element={<AddSunrise />} />
+          <Route path="edit/:id" element={<EditSunrise />} />
+        </Route>
 
         {/* case study one template */}
         <Route path="/admin/gstsa1/page-templates/templates/case-study-one">
