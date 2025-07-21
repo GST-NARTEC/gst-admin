@@ -1,19 +1,65 @@
 import React from "react";
 import WebsiteLayout from "../../../layout/WebsiteLayouts/Layout";
 import { Images } from "../../../assets/Index";
-import { Button } from "@nextui-org/react";
+import { Button, Spinner } from "@nextui-org/react";
+import { useGetTemplateBySlugQuery } from "../../../store/apis/endpoints/templates";
+import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.bubble.css";
 
 function CaseStudyOneDesing() {
+  const { slug } = useParams();
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
+
+  const { data, isLoading } = useGetTemplateBySlugQuery({
+    templateType: "caseStudyTemplate1",
+    slug,
+  });
+
+  if (isLoading) {
+    return (
+      <WebsiteLayout>
+        <div className="py-16 px-4">
+          <div className="flex justify-center items-center min-h-[400px]">
+            <Spinner size="lg" color="primary" />
+          </div>
+        </div>
+      </WebsiteLayout>
+    );
+  }
+
+  const template = data?.data?.template;
+
+  if (!template) {
+    return (
+      <WebsiteLayout>
+        <div className="py-16 px-4">
+          <div className="flex justify-center items-center min-h-[400px]">
+            <p className="text-gray-500 text-lg">{t("common.noData")}</p>
+          </div>
+        </div>
+      </WebsiteLayout>
+    );
+  }
+
+  // Fix image URL if it contains backslashes
+  const fixImageUrl = (url) => {
+    return url ? url.replace(/\\/g, "/") : null;
+  };
+
   return (
     <WebsiteLayout>
       {/* Header Section */}
-      <section className="relative h-screen bg-cover bg-center bg-no-repeat">
+      <section className="relative h-screen bg-cover bg-center bg-no-repeat" dir={isArabic ? "rtl" : "ltr"}>
         {/* Background Image */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat "
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80')",
+            backgroundImage: template.image1 
+              ? `url('${fixImageUrl(template.image1)}')`
+              : "url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80')",
           }}
         ></div>
 
@@ -30,53 +76,32 @@ function CaseStudyOneDesing() {
         <div className="absolute bottom-0 left-0 right-0 z-50 transform translate-y-1/3">
           <div className="bg-primary mx-8 rounded-lg shadow-2xl">
             <div className="px-8 py-8">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2">
-                LuLu Hypermarket Streamlines Product Labeling
-              </h1>
-              <p className="text-lg md:text-xl text-gray-200">
-                with Smart Barcode & QR Code Solutions
-              </p>
+              <div className="text-white font-dubai quill-content">
+                <ReactQuill
+                  value={isArabic ? template.headingAr : template.headingEn}
+                  readOnly={true}
+                  theme="bubble"
+                  modules={{ toolbar: false }}
+                />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Additional sections will be added here */}
       {/* Section 2 - Overview */}
-      <section className="pt-32 pb-16 bg-gray-50">
+      <section className="pt-32 pb-16 bg-gray-50" dir={isArabic ? "rtl" : "ltr"}>
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {/* Left Column - Overview Content */}
             <div>
-              <h2 className="text-4xl font-bold text-primary mb-8">Overview</h2>
-
-              <div className="space-y-6 text-gray-700 leading-relaxed">
-                <p>
-                  LuLu Hypermarket is one of the leading retail chains in the
-                  GCC, operating large-scale stores with thousands of
-                  fast-moving consumer goods (FMCG). With high inventory
-                  turnover and multi-branch operations, LuLu needed a more
-                  efficient and scalable product labeling solution that could
-                  keep pace with their expanding footprint.
-                </p>
-
-                <p>
-                  LuLu Hypermarket is one of the leading retail chains in the
-                  GCC, operating large-scale stores with thousands of
-                  fast-moving consumer goods (FMCG). With high inventory
-                  turnover and multi-branch operations, LuLu needed a more
-                  efficient and scalable product labeling solution that could
-                  keep pace with their expanding footprint.
-                </p>
-
-                <p>
-                  LuLu Hypermarket is one of the leading retail chains in the
-                  GCC, operating large-scale stores with thousands of
-                  fast-moving consumer goods (FMCG). With high inventory
-                  turnover and multi-branch operations, LuLu needed a more
-                  efficient and scalable product labeling solution that could
-                  keep pace with their expanding footprint.
-                </p>
+              <div className="space-y-6 text-gray-700 leading-relaxed font-dubai quill-content">
+                <ReactQuill
+                  value={isArabic ? template.description1Ar : template.description1En}
+                  readOnly={true}
+                  theme="bubble"
+                  modules={{ toolbar: false }}
+                />
               </div>
             </div>
 
@@ -84,15 +109,17 @@ function CaseStudyOneDesing() {
             <div className="lg:mt-16">
               <div className="bg-secondary p-8 rounded-lg shadow-lg">
                 <blockquote className="text-white">
-                  <p className="text-lg leading-relaxed mb-6">
-                    "Smart labeling and traceability are essential for retail
-                    operations today. GST's barcode and QR systems help us
-                    optimize product tracking, reduce errors, and enhance
-                    inventory control at scale."
-                  </p>
+                  <div className="text-lg leading-relaxed mb-6 font-dubai quill-content">
+                    <ReactQuill
+                      value={isArabic ? template.descriptionQuote1Ar : template.descriptionQuote1En}
+                      readOnly={true}
+                      theme="bubble"
+                      modules={{ toolbar: false }}
+                    />
+                  </div>
                   <footer className="border-t border-white/20 pt-4">
                     <cite className="font-semibold not-italic">
-                      — Regional IT Lead, LuLu Hypermarket
+                      {isArabic ? template.descriptionAuthor1Ar : template.descriptionAuthor1En}
                     </cite>
                   </footer>
                 </blockquote>
@@ -103,160 +130,82 @@ function CaseStudyOneDesing() {
       </section>
 
       {/* Section 3 - Solution */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white" dir={isArabic ? "rtl" : "ltr"}>
         <div className="container mx-auto px-4">
           {/* Title */}
           <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-6 text-start">
-            The Solution by GST Standard Technology
+            {isArabic ? template.description2Ar : template.description2En}
           </h2>
 
           {/* First Content Block */}
           <div className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed text-start">
-              GST deployed a customized Barcode & QR Code Labeling System, fully
-              integrated with LuLu's ERP and POS infrastructure, across multiple
-              branches in Saudi Arabia. Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Quasi aspernatur modi veniam nam nemo ex, enim
-              deserunt fuga ratione velit iure cumque saepe amet placeat
-              dolorem, corrupti pariatur commodi laborum!
-            </p>
+            <div className="text-lg text-gray-700 leading-relaxed text-start font-dubai quill-content">
+              <ReactQuill
+                value={isArabic ? template.description3Ar : template.description3En}
+                readOnly={true}
+                theme="bubble"
+                modules={{ toolbar: false }}
+              />
+            </div>
           </div>
 
           {/* Central Image */}
           <div className="mb-12 flex justify-center">
             <div className="w-full max-w-4xl">
               <img
-                src="https://images.pond5.com/barcode-scanner-background-bar-code-footage-234071997_iconl.jpeg"
+                src={fixImageUrl(template.image2) || "https://images.pond5.com/barcode-scanner-background-bar-code-footage-234071997_iconl.jpeg"}
                 alt="Barcode and QR Code Labeling System"
                 className="w-full h-72 object-cover rounded-lg shadow-lg"
               />
             </div>
           </div>
 
-          <h2 className="text-3xl  font-bold text-secondary mb-6 text-start">
-            The Solution by GST Standard Technology
-          </h2>
-          <div>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis
-            recusandae obcaecati veniam sunt iure! Possimus aliquam accusantium
-            error dicta, illum rerum! Ipsum animi perferendis, voluptatibus in
-            quas asperiores minus quidem!
+          <div className="mb-8">
+            <div className="text-lg text-gray-700 leading-relaxed font-dubai quill-content">
+              <ReactQuill
+                value={isArabic ? template.description4Ar : template.description4En}
+                readOnly={true}
+                theme="bubble"
+                modules={{ toolbar: false }}
+              />
+            </div>
           </div>
 
-          {/* Key Features Title */}
-          <h3 className="text-2xl font-bold text-primary my-8 ">
-            Key features included:
-          </h3>
-
-          {/* Features List */}
-          <div className="w-full">
-            <ul className="space-y-4 text-lg text-gray-700">
-              <li className="flex items-start">
-                <span className="inline-block w-2 h-2 bg-secondary rounded-full mt-3 mr-4 flex-shrink-0"></span>
-                <span>Centralized GS1-compliant barcode management</span>
-              </li>
-              <li className="flex items-start">
-                <span className="inline-block w-2 h-2 bg-secondary rounded-full mt-3 mr-4 flex-shrink-0"></span>
-                <span>Custom label designs by product category</span>
-              </li>
-              <li className="flex items-start">
-                <span className="inline-block w-2 h-2 bg-secondary rounded-full mt-3 mr-4 flex-shrink-0"></span>
-                <span>
-                  QR code support for digital promotions and product information
-                </span>
-              </li>
-              <li className="flex items-start">
-                <span className="inline-block w-2 h-2 bg-secondary rounded-full mt-3 mr-4 flex-shrink-0"></span>
-                <span>High-speed bulk label printing with verification</span>
-              </li>
-              <li className="flex items-start">
-                <span className="inline-block w-2 h-2 bg-secondary rounded-full mt-3 mr-4 flex-shrink-0"></span>
-                <span>Multilingual templates (Arabic & English)</span>
-              </li>
-              <li className="flex items-start">
-                <span className="inline-block w-2 h-2 bg-secondary rounded-full mt-3 mr-4 flex-shrink-0"></span>
-                <span>Onboarding & training for store-level teams</span>
-              </li>
-            </ul>
+          {/* Key Features */}
+          <div className="w-full font-dubai quill-content">
+            <ReactQuill
+              value={isArabic ? template.description5Ar : template.description5En}
+              readOnly={true}
+              theme="bubble"
+              modules={{ toolbar: false }}
+            />
           </div>
         </div>
       </section>
 
       {/* Section 4 - Results */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50" dir={isArabic ? "rtl" : "ltr"}>
         <div className="container mx-auto px-4">
           {/* First Container - Image and Main Results */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
             {/* Left Column - Image */}
             <div>
               <img
-                src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                alt="LuLu Hypermarket Mobile App"
+                src={fixImageUrl(template.image3) || "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"}
+                alt="Results Image"
                 className="w-full h-auto rounded-lg shadow-lg"
               />
             </div>
 
             {/* Right Column - Main Results Content */}
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-primary mb-8">
-                Results & Impact
-              </h2>
-
-              <div className="space-y-4">
-                <div className="flex items-start">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-green-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                    ✓
-                  </span>
-                  <span className="text-lg text-gray-700">
-                    70% reduction in label printing and design time
-                  </span>
-                </div>
-
-                <div className="flex items-start">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-green-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                    ✓
-                  </span>
-                  <span className="text-lg text-gray-700">
-                    Consistent barcode quality across all stores
-                  </span>
-                </div>
-
-                <div className="flex items-start">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-red-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                    ↗
-                  </span>
-                  <span className="text-lg text-gray-700">
-                    Improved checkout speed and POS accuracy
-                  </span>
-                </div>
-
-                <div className="flex items-start">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                    📱
-                  </span>
-                  <span className="text-lg text-gray-700">
-                    Enabled product-specific QR code promotions
-                  </span>
-                </div>
-
-                <div className="flex items-start">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-yellow-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                    📊
-                  </span>
-                  <span className="text-lg text-gray-700">
-                    Enhanced inventory visibility and stock accuracy
-                  </span>
-                </div>
-
-                <div className="flex items-start">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-purple-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                    🎯
-                  </span>
-                  <span className="text-lg text-gray-700">
-                    Fully aligned with retail compliance standards (GS1, Vision
-                    2030)
-                  </span>
-                </div>
+              <div className="space-y-4 font-dubai quill-content">
+                <ReactQuill
+                  value={isArabic ? template.description6Ar : template.description6En}
+                  readOnly={true}
+                  theme="bubble"
+                  modules={{ toolbar: false }}
+                />
               </div>
             </div>
           </div>
@@ -265,65 +214,13 @@ function CaseStudyOneDesing() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {/* Left Column - Results Content */}
             <div>
-              <h3 className="text-2xl font-bold text-orange-500 mb-6">
-                Results & Impact
-              </h3>
-
-              <div className="space-y-4">
-                <div className="flex items-start">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-green-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                    ✓
-                  </span>
-                  <span className="text-lg text-gray-700">
-                    70% reduction in label printing and design time
-                  </span>
-                </div>
-
-                <div className="flex items-start">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-green-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                    ✓
-                  </span>
-                  <span className="text-lg text-gray-700">
-                    Consistent barcode quality across all stores
-                  </span>
-                </div>
-
-                <div className="flex items-start">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-red-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                    ↗
-                  </span>
-                  <span className="text-lg text-gray-700">
-                    Improved checkout speed and POS accuracy
-                  </span>
-                </div>
-
-                <div className="flex items-start">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                    📱
-                  </span>
-                  <span className="text-lg text-gray-700">
-                    Enabled product-specific QR code promotions
-                  </span>
-                </div>
-
-                <div className="flex items-start">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-yellow-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                    📊
-                  </span>
-                  <span className="text-lg text-gray-700">
-                    Enhanced inventory visibility and stock accuracy
-                  </span>
-                </div>
-
-                <div className="flex items-start">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-purple-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                    🎯
-                  </span>
-                  <span className="text-lg text-gray-700">
-                    Fully aligned with retail compliance standards (GS1, Vision
-                    2030)
-                  </span>
-                </div>
+              <div className="space-y-4 font-dubai quill-content">
+                <ReactQuill
+                  value={isArabic ? template.description7Ar : template.description7En}
+                  readOnly={true}
+                  theme="bubble"
+                  modules={{ toolbar: false }}
+                />
               </div>
             </div>
 
@@ -331,14 +228,17 @@ function CaseStudyOneDesing() {
             <div className="flex items-start">
               <div className="bg-teal-500 p-6 rounded-lg shadow-lg w-full">
                 <blockquote className="text-white">
-                  <p className="text-lg leading-relaxed mb-4">
-                    "GST's solution helped us gain speed and precision in
-                    barcode labeling, while opening the door for QR-driven
-                    retail experiences."
-                  </p>
+                  <div className="text-lg leading-relaxed mb-4 font-dubai quill-content">
+                    <ReactQuill
+                      value={isArabic ? template.descriptionQuote2Ar : template.descriptionQuote2En}
+                      readOnly={true}
+                      theme="bubble"
+                      modules={{ toolbar: false }}
+                    />
+                  </div>
                   <footer>
                     <cite className="font-semibold not-italic">
-                      Regional IT Manager, LuLu Saudi Arabia
+                      {isArabic ? template.descriptionAuthor2Ar : template.descriptionAuthor2En}
                     </cite>
                   </footer>
                 </blockquote>
@@ -348,57 +248,30 @@ function CaseStudyOneDesing() {
         </div>
       </section>
 
-      {/* Section 5 - Testimonial */}
-      <section className="py-16 text-white">
+      {/* Section 5 - Final Section */}
+      <section className="py-16" dir={isArabic ? "rtl" : "ltr"}>
         <div className="container mx-auto px-4">
            {/* Central Image */}
           <div className="mb-12 flex justify-center">
             <div className="w-full max-w-4xl">
               <img
-                src="https://images.pond5.com/barcode-scanner-background-bar-code-footage-234071997_iconl.jpeg"
-                alt="Barcode and QR Code Labeling System"
+                src={fixImageUrl(template.image4) || "https://images.pond5.com/barcode-scanner-background-bar-code-footage-234071997_iconl.jpeg"}
+                alt="Final Section Image"
                 className="w-full h-72 object-cover rounded-lg shadow-lg"
               />
             </div>
           </div>
 
-            {/* Key Features Title */}
-          <h3 className="text-2xl font-bold text-primary my-8 ">
-            Key features included:
-          </h3>
-
-          {/* Features List */}
-          <div className="w-full">
-            <ul className="space-y-4 text-lg text-gray-700">
-              <li className="flex items-start">
-                <span className="inline-block w-2 h-2 bg-secondary rounded-full mt-3 mr-4 flex-shrink-0"></span>
-                <span>Centralized GS1-compliant barcode management</span>
-              </li>
-              <li className="flex items-start">
-                <span className="inline-block w-2 h-2 bg-secondary rounded-full mt-3 mr-4 flex-shrink-0"></span>
-                <span>Custom label designs by product category</span>
-              </li>
-              <li className="flex items-start">
-                <span className="inline-block w-2 h-2 bg-secondary rounded-full mt-3 mr-4 flex-shrink-0"></span>
-                <span>
-                  QR code support for digital promotions and product information
-                </span>
-              </li>
-              <li className="flex items-start">
-                <span className="inline-block w-2 h-2 bg-secondary rounded-full mt-3 mr-4 flex-shrink-0"></span>
-                <span>High-speed bulk label printing with verification</span>
-              </li>
-              <li className="flex items-start">
-                <span className="inline-block w-2 h-2 bg-secondary rounded-full mt-3 mr-4 flex-shrink-0"></span>
-                <span>Multilingual templates (Arabic & English)</span>
-              </li>
-              <li className="flex items-start">
-                <span className="inline-block w-2 h-2 bg-secondary rounded-full mt-3 mr-4 flex-shrink-0"></span>
-                <span>Onboarding & training for store-level teams</span>
-              </li>
-            </ul>
+          {/* Final Content */}
+          <div className="text-gray-700 font-dubai quill-content">
+            <ReactQuill
+              value={isArabic ? template.description8Ar : template.description8En}
+              readOnly={true}
+              theme="bubble"
+              modules={{ toolbar: false }}
+            />
           </div>
-          {/* Content will be added here */}
+          
           <Button
             as="a"
             href="https://www.gs1.org/standards/gs1-sunrise-2027"
@@ -407,7 +280,7 @@ function CaseStudyOneDesing() {
             className="mt-4"
             color="primary"
           >
-            Learn About GS1 Sunrise 2027
+            {t("common.learnMore")}
           </Button>
         </div>
       </section>

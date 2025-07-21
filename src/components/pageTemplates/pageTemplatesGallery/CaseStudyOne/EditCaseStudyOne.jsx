@@ -86,6 +86,7 @@ function EditCaseStudyOne() {
     console.log("Template Data:", templateData); // Debug log
     if (templateData?.data?.template) {
       const template = templateData?.data?.template;
+      console.log("Image1 URL:", template.image1); // Debug log for image1
       const populatedData = {
         nameEn: template.nameEn || "",
         nameAr: template.nameAr || "",
@@ -95,7 +96,7 @@ function EditCaseStudyOne() {
         seoDescriptionAr: template.seoDescriptionAr || "",
         headingEn: template.headingEn || "",
         headingAr: template.headingAr || "",
-        image1: null, // Will be handled separately for file uploads
+        image1: template.image1 || null, // Will be handled separately for file uploads
         description1En: template.description1En || "",
         description1Ar: template.description1Ar || "",
         descriptionQuote1En: template.descriptionQuote1En || "",
@@ -106,21 +107,21 @@ function EditCaseStudyOne() {
         description2Ar: template.description2Ar || "",
         description3En: template.description3En || "",
         description3Ar: template.description3Ar || "",
-        image2: null, // Will be handled separately for file uploads
+        image2: template.image2 || null, // Will be handled separately for file uploads
         description4En: template.description4En || "",
         description4Ar: template.description4Ar || "",
         description5En: template.description5En || "",
         description5Ar: template.description5Ar || "",
         description6En: template.description6En || "",
         description6Ar: template.description6Ar || "",
-        image3: null, // Will be handled separately for file uploads
+        image3: template.image3 || null, // Will be handled separately for file uploads
         description7En: template.description7En || "",
         description7Ar: template.description7Ar || "",
         descriptionQuote2En: template.descriptionQuote2En || "",
         descriptionQuote2Ar: template.descriptionQuote2Ar || "",
         descriptionAuthor2En: template.descriptionAuthor2En || "",
         descriptionAuthor2Ar: template.descriptionAuthor2Ar || "",
-        image4: null, // Will be handled separately for file uploads
+        image4: template.image4 || null, // Will be handled separately for file uploads
         description8En: template.description8En || "",
         description8Ar: template.description8Ar || "",
       };
@@ -319,7 +320,10 @@ function EditCaseStudyOne() {
                 <div
                   className="absolute inset-0 bg-cover bg-center"
                   style={{
-                    backgroundImage: `url(${previewImages.image1})`,
+                    backgroundImage: `url("${previewImages.image1.replace(
+                      /\\/g,
+                      "/"
+                    )}")`,
                   }}
                 />
               ) : (
@@ -494,7 +498,7 @@ function EditCaseStudyOne() {
                     {previewImages.image2 ? (
                       <div className="relative group">
                         <img
-                          src={previewImages.image2}
+                          src={previewImages.image2.replace(/\\/g, "/")}
                           alt="Solution Main"
                           className="w-full h-72 object-cover rounded-lg shadow-lg"
                         />
@@ -616,7 +620,7 @@ function EditCaseStudyOne() {
                     {previewImages.image3 ? (
                       <div className="relative group">
                         <img
-                          src={previewImages.image3}
+                          src={previewImages.image3.replace(/\\/g, "/")}
                           alt="Results"
                           className="w-full h-auto rounded-lg shadow-lg"
                         />
@@ -789,7 +793,7 @@ function EditCaseStudyOne() {
                     {previewImages.image4 ? (
                       <div className="relative group">
                         <img
-                          src={previewImages.image4}
+                          src={previewImages.image4.replace(/\\/g, "/")}
                           alt="Final Section"
                           className="w-full h-72 object-cover rounded-lg shadow-lg"
                         />

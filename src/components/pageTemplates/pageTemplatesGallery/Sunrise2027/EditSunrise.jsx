@@ -414,7 +414,10 @@ function EditSunrise() {
                 <div
                   className="absolute inset-0 bg-cover bg-center"
                   style={{
-                    backgroundImage: `url(${previewImages.image1})`,
+                    backgroundImage: `url(${previewImages.image1.replace(
+                      /\\/g,
+                      "/"
+                    )})`,
                   }}
                 />
               ) : (
@@ -470,7 +473,7 @@ function EditSunrise() {
                     />
                     <RichTextEditor
                       label="What is GST Sunrise 2027? (Arabic)"
-                      value={formData.description1Ar}
+                      value={formData.description1Ar} 
                       onChange={(value) =>
                         handleInputChange("description1Ar", value)
                       }
@@ -486,7 +489,10 @@ function EditSunrise() {
                     {previewImages.image2 ? (
                       <div className="relative group">
                         <img
-                          src={previewImages.image2}
+                          src={previewImages.image2.replace(
+                            /\\/g,
+                            "/"
+                          )}
                           alt="GST Sunrise 2027"
                           className="w-full h-auto rounded-lg shadow-lg"
                         />
@@ -674,7 +680,10 @@ function EditSunrise() {
                         {previewImages.image3 ? (
                           <div className="relative group h-48 mb-3">
                             <img
-                              src={previewImages.image3}
+                              src={previewImages.image3.replace(
+                                /\\/g,
+                                "/"
+                              )}
                               alt="Retail"
                               className="w-full h-full object-cover rounded-lg"
                             />
@@ -766,7 +775,10 @@ function EditSunrise() {
                         {previewImages.image4 ? (
                           <div className="relative group h-48 mb-3">
                             <img
-                              src={previewImages.image4}
+                              src={previewImages.image4.replace(
+                                /\\/g,
+                                "/"
+                              )}
                               alt="Logistics"
                               className="w-full h-full object-cover rounded-lg"
                             />
@@ -856,7 +868,10 @@ function EditSunrise() {
                         {previewImages.image5 ? (
                           <div className="relative group h-48 mb-3">
                             <img
-                              src={previewImages.image5}
+                              src={previewImages.image5.replace(
+                                /\\/g,
+                                "/"
+                              )}
                               alt="Manufacturing"
                               className="w-full h-full object-cover rounded-lg"
                             />
@@ -948,7 +963,10 @@ function EditSunrise() {
                         {previewImages.image6 ? (
                           <div className="relative group h-48 mb-3">
                             <img
-                              src={previewImages.image6}
+                                src={previewImages.image6.replace(
+                                /\\/g,
+                                "/"
+                              )}
                               alt="Healthcare"
                               className="w-full h-full object-cover rounded-lg"
                             />
@@ -1044,7 +1062,10 @@ function EditSunrise() {
                     {previewImages.image7 ? (
                       <div className="relative group">
                         <img
-                          src={previewImages.image7}
+                          src={previewImages.image7.replace(
+                            /\\/g,
+                            "/"
+                          )}
                           alt="GS1 Digital Link"
                           className="w-full h-auto rounded-lg shadow-lg"
                         />

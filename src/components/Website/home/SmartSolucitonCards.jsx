@@ -75,6 +75,9 @@ function SmartSolutionCards() {
         case "case-study-main":
           navigate("/case-studies");
           break;
+        case "sunrise-2027":
+          navigate(`/sunrise/${solution.page.slug}`);
+          break;
         default:
           // Default case for standard templates
           navigate(`/${solution.page.template}/${solution.page.slug}`);

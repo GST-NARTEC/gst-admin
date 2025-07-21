@@ -7,6 +7,7 @@ import SmartSolutionDetail from "../pages/Website/smart-solution/SmartSolutionDe
 import CaseStudy from "../pages/Website/case-studies/CaseStudy";
 import CaseStudyOneDesing from "../pages/Website/Templates/CaseStudyOneDesing";
 import CaseStudyTwoDesign from "../pages/Website/Templates/CaseStudyTwoDesign";
+import SunriseDesign from "../pages/Website/Templates/SunriseDesign";
 
 function WebsiteRoutes() {
   return (
@@ -15,11 +16,9 @@ function WebsiteRoutes() {
       <Route path="/user-guide-manual" element={<UserGuideManual />} />
       <Route path="/verify-halal" element={<SmartSolutionDetail />} />
       <Route path="/case-studies" element={<CaseStudy />} />
-      <Route
-        path="/case-study-one/:slug"
-        element={<CaseStudyOneDesing />}
-      />
+      <Route path="/case-study-one/:slug" element={<CaseStudyOneDesing />} />
       <Route path="/case-study-two/:slug" element={<CaseStudyTwoDesign />} />
+      <Route path="/sunrise/:slug" element={<SunriseDesign />} />
 
       <Route path="/*" element={<TemplateRoutes />} />
     </Routes>

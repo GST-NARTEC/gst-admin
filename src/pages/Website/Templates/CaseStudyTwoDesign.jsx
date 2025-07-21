@@ -1,20 +1,69 @@
 import React from "react";
 import WebsiteLayout from "../../../layout/WebsiteLayouts/Layout";
 import { Images } from "../../../assets/Index";
-import { Button } from "@nextui-org/react";
+import { Button, Spinner } from "@nextui-org/react";
+import { useGetTemplateBySlugQuery } from "../../../store/apis/endpoints/templates";
+import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.bubble.css";
 
 function CaseStudyTwoDesign() {
+  const { slug } = useParams();
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
+
+  const { data, isLoading } = useGetTemplateBySlugQuery({
+    templateType: "caseStudyTemplate2",
+    slug,
+  });
+
+  if (isLoading) {
+    return (
+      <WebsiteLayout>
+        <div className="py-16 px-4">
+          <div className="flex justify-center items-center min-h-[400px]">
+            <Spinner size="lg" color="primary" />
+          </div>
+        </div>
+      </WebsiteLayout>
+    );
+  }
+
+  const template = data?.data?.template;
+
+  if (!template) {
+    return (
+      <WebsiteLayout>
+        <div className="py-16 px-4">
+          <div className="flex justify-center items-center min-h-[400px]">
+            <p className="text-gray-500 text-lg">{t("common.noData")}</p>
+          </div>
+        </div>
+      </WebsiteLayout>
+    );
+  }
+
+  // Fix image URL if it contains backslashes
+  const fixImageUrl = (url) => {
+    return url ? url.replace(/\\/g, "/") : null;
+  };
+
   return (
     <WebsiteLayout>
       <div>
-        {/* section one */}
-        <section className="relative h-screen bg-cover bg-center bg-no-repeat">
+        {/* section one - Hero Section */}
+        <section
+          className="relative h-screen bg-cover bg-center bg-no-repeat"
+          dir={isArabic ? "rtl" : "ltr"}
+        >
           {/* Background Image */}
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat "
             style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80')",
+              backgroundImage: template.image1
+                ? `url('${fixImageUrl(template.image1)}')`
+                : "url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80')",
             }}
           ></div>
 
@@ -28,53 +77,62 @@ function CaseStudyTwoDesign() {
           </div>
 
           {/* Blue Card - Bottom, overlapping the image */}
-          <div className="absolute bottom-0 right-0 z-50 transform translate-y-1/2 max-w-5xl  w-full">
+          <div className="absolute bottom-0 right-0 z-50 transform translate-y-1/2 max-w-5xl w-full">
             <div className="bg-primary mr-8 rounded-lg shadow-2xl">
               <div className="px-8 py-8">
-                <p className="text-lg md:text-xl text-gray-200 font-semibold">
-                  Case Study: Traceability in Fresh Foods
-                </p>
-                <p className="text-lg md:text-xl text-gray-200">
-                  Client: Arrivé Group (France)
-                </p>
-                <p className="text-lg md:text-xl text-gray-200">
-                  Sector: Poultry Production & Processing
-                </p>
-                <p className="text-lg md:text-xl text-gray-200">
-                  Focus: End-to-End Food Traceability using GS1 Standards
-                </p>
-                <p className="text-lg md:text-xl text-gray-200">
-                  with Smart Barcode {"&"} QR Code Solutions
-                </p>
+                <div className="text-white font-dubai quill-content">
+                  <ReactQuill
+                    value={isArabic ? template.headingAr : template.headingEn}
+                    readOnly={true}
+                    theme="bubble"
+                    modules={{ toolbar: false }}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* section two */}
-        <section className="py-16 bg-white mt-24">
+        
+        <section
+          className="py-16 bg-white mt-24"
+          dir={isArabic ? "rtl" : "ltr"}
+        >
           <div className="container mx-auto px-4">
-            {/* Title */}
-            <h2 className="text-2xl  font-bold text-secondary mb-6 text-start">
-              The Solution by GST Standard Technology
-            </h2>
+            {/* Title - Using ReactQuill instead of plain text */}
+            <div className="text-2xl font-bold text-secondary mb-6 text-start font-dubai quill-content">
+              <ReactQuill
+                value={
+                  isArabic ? template.description2Ar : template.description2En
+                }
+                readOnly={true}
+                theme="bubble"
+                modules={{ toolbar: false }}
+              />
+            </div>
 
             {/* First Content Block */}
             <div className="mb-12">
-              <p className="text-lg text-gray-700 leading-relaxed text-start">
-                GST deployed a customized Barcode & QR Code Labeling System,
-                fully integrated with Arrivé's supply chain infrastructure,
-                providing complete traceability from farm to fork. The system
-                enables rapid response to food safety incidents and ensures
-                compliance with European regulations.
-              </p>
+              <div className="text-lg text-gray-700 leading-relaxed text-start font-dubai quill-content">
+                <ReactQuill
+                  value={
+                    isArabic ? template.description3Ar : template.description3En
+                  }
+                  readOnly={true}
+                  theme="bubble"
+                  modules={{ toolbar: false }}
+                />
+              </div>
             </div>
 
             {/* Central Image */}
             <div className="mb-12 flex justify-center">
               <div className="w-full max-w-4xl">
                 <img
-                  src="https://images.pond5.com/barcode-scanner-background-bar-code-footage-234071997_iconl.jpeg"
+                  src={
+                    fixImageUrl(template.image2) ||
+                    "https://images.pond5.com/barcode-scanner-background-bar-code-footage-234071997_iconl.jpeg"
+                  }
                   alt="Barcode and QR Code Labeling System"
                   className="w-full h-72 object-cover rounded-lg shadow-lg"
                 />
@@ -83,73 +141,33 @@ function CaseStudyTwoDesign() {
           </div>
         </section>
 
-        {/* section three */}
-        <section className="py-16 bg-gray-50">
+        
+        <section className="py-16 bg-gray-50" dir={isArabic ? "rtl" : "ltr"}>
           <div className="container mx-auto px-4">
             {/* First Container - Image and Challenges */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
               {/* left Column - Challenges Content */}
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-primary mb-8">
-                  The Challenges
-                </h2>
-                <p className="text-lg text-gray-700 mb-6">Arrivé needed to:</p>
-
-                <div className="space-y-4">
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Ensure full traceability across a long and complex poultry
-                      supply chain
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Respond rapidly to food safety crises (e.g., dioxin, avian
-                      flu)
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Replace slow and error-prone paper-based systems
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Comply with new European food safety regulations (EC
-                      178-2002)
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Maintain operational efficiency without overhauling legacy
-                      systems
-                    </span>
-                  </div>
+                <div className="space-y-4 font-dubai quill-content">
+                  <ReactQuill
+                    value={
+                      isArabic
+                        ? template.description1Ar
+                        : template.description1En
+                    }
+                    readOnly={true}
+                    theme="bubble"
+                    modules={{ toolbar: false }}
+                  />
                 </div>
               </div>
               {/* right Column - Image */}
               <div>
                 <img
-                  src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                  src={
+                    fixImageUrl(template.image3) ||
+                    "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                  }
                   alt="Poultry Supply Chain"
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
@@ -158,120 +176,82 @@ function CaseStudyTwoDesign() {
           </div>
         </section>
 
-        {/* section four */}
-        <section className="py-16 bg-gray-50">
+ 
+        <section className="py-16 bg-gray-50" dir={isArabic ? "rtl" : "ltr"}>
           <div className="container mx-auto px-4">
-            {/* First Container - Image and Challenges */}
+            {/* First Container - Image and Workflow */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
               {/* left Column - Image */}
-
               <div>
                 <img
-                  src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                  alt="Poultry Supply Chain"
+                  src={
+                    fixImageUrl(template.image4) ||
+                    "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                  }
+                  alt="Workflow Image"
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
               </div>
 
-              {/* right Column - Challenges Content */}
+              {/* right Column - Workflow Content */}
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-primary mb-8">
-                  The Challenges
-                </h2>
-                <p className="text-lg text-gray-700 mb-6">Arrivé needed to:</p>
-
-                <div className="space-y-4">
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Ensure full traceability across a long and complex poultry
-                      supply chain
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Respond rapidly to food safety crises (e.g., dioxin, avian
-                      flu)
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Replace slow and error-prone paper-based systems
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Comply with new European food safety regulations (EC
-                      178-2002)
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Maintain operational efficiency without overhauling legacy
-                      systems
-                    </span>
-                  </div>
-
-                  {/* button */}
-                  <Button
-                    as="a"
-                    href="https://www.gs1.org/standards/gs1-sunrise-2027"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4"
-                    color="primary"
-                  >
-                    Learn About GS1 Sunrise 2027
-                  </Button>
+                <div className="space-y-4 font-dubai quill-content">
+                  <ReactQuill
+                    value={
+                      isArabic
+                        ? template.description4Ar
+                        : template.description4En
+                    }
+                    readOnly={true}
+                    theme="bubble"
+                    modules={{ toolbar: false }}
+                  />
                 </div>
+                {/* button */}
+             
               </div>
             </div>
           </div>
         </section>
 
-        {/* section five */}
-        <section className="py-16 bg-white mt-24">
+      
+        <section className="py-16 bg-white" dir={isArabic ? "rtl" : "ltr"}>
           <div className="container mx-auto px-4">
-            {/* Title */}
-            <h2 className="text-2xl  font-bold text-secondary mb-6 text-start">
-              The Solution by GST Standard Technology
-            </h2>
+            {/* Title - Using ReactQuill instead of plain text */}
+            <div className="text-2xl font-bold text-secondary mb-6 text-start font-dubai quill-content">
+              <ReactQuill
+                value={
+                  isArabic ? template.description5Ar : template.description5En
+                }
+                readOnly={true}
+                theme="bubble"
+                modules={{ toolbar: false }}
+              />
+            </div>
 
             {/* First Content Block */}
             <div className="mb-12">
-              <p className="text-lg text-gray-700 leading-relaxed text-start">
-                GST deployed a customized Barcode & QR Code Labeling System,
-                fully integrated with Arrivé's supply chain infrastructure,
-                providing complete traceability from farm to fork. The system
-                enables rapid response to food safety incidents and ensures
-                compliance with European regulations.
-              </p>
+              <div className="text-lg text-gray-700 leading-relaxed text-start font-dubai quill-content">
+                <ReactQuill
+                  value={
+                    isArabic ? template.description6Ar : template.description6En
+                  }
+                  readOnly={true}
+                  theme="bubble"
+                  modules={{ toolbar: false }}
+                />
+              </div>
             </div>
 
             {/* Central Image */}
             <div className="mb-12 flex justify-center">
               <div className="w-full max-w-4xl">
                 <img
-                  src="https://images.pond5.com/barcode-scanner-background-bar-code-footage-234071997_iconl.jpeg"
-                  alt="Barcode and QR Code Labeling System"
+                  src={
+                    fixImageUrl(template.image5) ||
+                    "https://images.pond5.com/barcode-scanner-background-bar-code-footage-234071997_iconl.jpeg"
+                  }
+                  alt="Solution Image"
                   className="w-full h-72 object-cover rounded-lg shadow-lg"
                 />
               </div>
@@ -279,237 +259,109 @@ function CaseStudyTwoDesign() {
           </div>
         </section>
 
-        {/* section six */}
-        <section className="py-16 bg-gray-50">
+       
+        <section className="py-16 bg-gray-50" dir={isArabic ? "rtl" : "ltr"}>
           <div className="container mx-auto px-4">
-            {/* First Container - conent and Challenges */}
+            {/* Container with two columns */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
-              {/* left Column - content */}
+              {/* left Column - Key Learnings */}
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-primary mb-8">
-                  The Challenges
-                </h2>
-                <p className="text-lg text-gray-700 mb-6">Arrivé needed to:</p>
-
-                <div className="space-y-4">
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Ensure full traceability across a long and complex poultry
-                      supply chain
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Respond rapidly to food safety crises (e.g., dioxin, avian
-                      flu)
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Replace slow and error-prone paper-based systems
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Comply with new European food safety regulations (EC
-                      178-2002)
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Maintain operational efficiency without overhauling legacy
-                      systems
-                    </span>
-                  </div>
+                <div className="space-y-4 font-dubai quill-content">
+                  <ReactQuill
+                    value={
+                      isArabic
+                        ? template.description7Ar
+                        : template.description7En
+                    }
+                    readOnly={true}
+                    theme="bubble"
+                    modules={{ toolbar: false }}
+                  />
                 </div>
               </div>
 
-              {/* right Column - Challenges Content */}
+              {/* right Column - Technologies Used */}
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-primary mb-8">
-                  The Challenges
-                </h2>
-                <p className="text-lg text-gray-700 mb-6">Arrivé needed to:</p>
-
-                <div className="space-y-4">
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Ensure full traceability across a long and complex poultry
-                      supply chain
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Respond rapidly to food safety crises (e.g., dioxin, avian
-                      flu)
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Replace slow and error-prone paper-based systems
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Comply with new European food safety regulations (EC
-                      178-2002)
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Maintain operational efficiency without overhauling legacy
-                      systems
-                    </span>
-                  </div>
+                <div className="space-y-4 font-dubai quill-content">
+                  <ReactQuill
+                    value={
+                      isArabic
+                        ? template.description6Ar
+                        : template.description6En
+                    }
+                    readOnly={true}
+                    theme="bubble"
+                    modules={{ toolbar: false }}
+                  />
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* section seven */}
-        <section className="py-16 bg-gray-50 mb-10">
+     
+        <section
+          className="py-16 bg-gray-50 mb-10"
+          dir={isArabic ? "rtl" : "ltr"}
+        >
           <div className="container mx-auto px-4">
-            {/* First Container - Image and Challenges */}
+            {/* Container - Image and Results */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
               {/* left Column - Image */}
-
               <div>
                 <img
-                  src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                  alt="Poultry Supply Chain"
+                  src={
+                    fixImageUrl(template.image6) ||
+                    "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                  }
+                  alt="Results Image"
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
               </div>
 
-              {/* right Column - Challenges Content */}
+              {/* right Column - Results Content */}
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-primary mb-8">
-                  The Challenges
-                </h2>
-                <p className="text-lg text-gray-700 mb-6">Arrivé needed to:</p>
-
-                <div className="space-y-4">
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Ensure full traceability across a long and complex poultry
-                      supply chain
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Respond rapidly to food safety crises (e.g., dioxin, avian
-                      flu)
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Replace slow and error-prone paper-based systems
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Comply with new European food safety regulations (EC
-                      178-2002)
-                    </span>
-                  </div>
-
-                  <div className="flex items-start">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-orange-500 text-white text-sm font-bold rounded-full mr-4 mt-1 flex-shrink-0">
-                      •
-                    </span>
-                    <span className="text-lg text-gray-700">
-                      Maintain operational efficiency without overhauling legacy
-                      systems
-                    </span>
-                  </div>
+                <div className="space-y-4 font-dubai quill-content">
+                  <ReactQuill
+                    value={
+                      isArabic
+                        ? template.description5Ar
+                        : template.description5En
+                    }
+                    readOnly={true}
+                    theme="bubble"
+                    modules={{ toolbar: false }}
+                  />
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* section egiht */}
-        <section className=" bg-white   mb-10">
+      
+        <section
+          className="py-16 bg-white mb-10"
+          dir={isArabic ? "rtl" : "ltr"}
+        >
           <div className="container mx-auto px-4">
             {/* Title */}
-            <h2 className="text-2xl  font-bold text-secondary mb-6 text-start">
-              Partner Highlight
-            </h2>
+         
 
-            {/* First Content Block */}
+            {/* Content Block */}
             <div className="mb-12">
-              <p className="text-lg text-gray-700 leading-relaxed text-start">
-                SOFRICA Logistics – Key transport and storage partner
-                responsible for frozen poultry traceability from Arrivé
-                facilities to customers.
-              </p>
+              <div className="text-lg text-gray-700 leading-relaxed text-start font-dubai quill-content">
+                <ReactQuill
+                  value={
+                    isArabic ? template.description8Ar : template.description8En
+                  }
+                  readOnly={true}
+                  theme="bubble"
+                  modules={{ toolbar: false }}
+                />
+              </div>
             </div>
 
-            {/* button of Learn About GS1 Sunrise 2027 */}
-            <Button
-              as="a"
-              href="https://www.gs1.org/standards/gs1-sunrise-2027"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4"
-              color="primary"
-            >
-              Learn About GS1 Sunrise 2027
-            </Button>
+          
           </div>
         </section>
       </div>

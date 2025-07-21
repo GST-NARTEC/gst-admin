@@ -366,7 +366,10 @@ function EditCaseStudyTwo() {
                 <div
                   className="absolute inset-0 bg-cover bg-center"
                   style={{
-                    backgroundImage: `url(${previewImages.image1})`,
+                    backgroundImage: `url("${previewImages.image1.replace(
+                      /\\/g,
+                      "/"
+                    )}")`,
                   }}
                 />
               ) : (
