@@ -1,140 +1,150 @@
 import React from "react";
-import { Card, CardBody, Button } from "@nextui-org/react";
+import { Card, CardBody, Spinner, Button } from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.bubble.css";
 import WebsiteLayout from "../../../layout/WebsiteLayouts/Layout";
+import { useGetTemplateBySlugQuery } from "../../../store/apis/endpoints/templates";
+import { useGetCompaniesQuery } from "../../../store/apis/endpoints/compnies";
 
 function CaseStudy() {
-  const caseStudies = [
-    {
-      id: 1,
-      title: "Aramco",
-      description:
-        "Saudi Arabian Oil Company is a Saudi Arabian public petroleum and natural gas company based in Dhahran.",
-      logo: "https://via.placeholder.com/120x80/1B365D/FFFFFF?text=Aramco",
-    },
-    {
-      id: 2,
-      title: "Zakat, Tax and Customs Authority",
-      description:
-        "Streamlining tax collection and customs operations with smart tracking, automation, and digital control.",
-      logo: "https://via.placeholder.com/120x80/1B365D/FFFFFF?text=ZATCA",
-    },
-    {
-      id: 3,
-      title: "Digital Government Authority",
-      description:
-        "Enabling digital transformation across government sectors with comprehensive tracking solutions.",
-      logo: "https://via.placeholder.com/120x80/1B365D/FFFFFF?text=DGA",
-    },
-    {
-      id: 4,
-      title: "Lulu",
-      description:
-        "Retail chain management and inventory tracking solutions for enhanced operational efficiency.",
-      logo: "https://via.placeholder.com/120x80/1B365D/FFFFFF?text=Lulu",
-    },
-    {
-      id: 5,
-      title: "Saudi Food and Drug Authority",
-      description:
-        "Food and pharmaceutical tracking solutions ensuring safety and compliance standards.",
-      logo: "https://via.placeholder.com/120x80/1B365D/FFFFFF?text=SFDA",
-    },
-    {
-      id: 6,
-      title: "Saudi Standards Organization",
-      description:
-        "Quality control and standards compliance through digital tracking and monitoring systems.",
-      logo: "https://via.placeholder.com/120x80/1B365D/FFFFFF?text=SSO",
-    },
-    {
-      id: 7,
-      title: "Carrefour",
-      description:
-        "Retail tracking and inventory management solutions for improved supply chain visibility.",
-      logo: "https://via.placeholder.com/120x80/1B365D/FFFFFF?text=Carrefour",
-    },
-    {
-      id: 8,
-      title: "SABIC",
-      description:
-        "Industrial tracking solutions for petrochemical and manufacturing operations.",
-      logo: "https://via.placeholder.com/120x80/1B365D/FFFFFF?text=SABIC",
-    },
-  ];
+  const { i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
+  const navigate = useNavigate();
+
+  const { data: templateData, isLoading: templateLoading } =
+    useGetTemplateBySlugQuery({
+      templateType: "caseStudyMainTemplate",
+      slug: "case-study-main",
+    });
+
+  const { data: companiesData, isLoading: companiesLoading } =
+    useGetCompaniesQuery();
+  const companies = companiesData?.data?.companies || [];
+
+  const handleCardClick = (company) => {
+    if (company.websiteLink) {
+      window.open(company.websiteLink, "_blank", "noopener,noreferrer");
+    } else if (company.page) {
+      const { template, slug } = company.page;
+      if (template === "case-study-one") {
+        navigate(`/case-study-one/${slug}`);
+      } else if (template === "case-study-two") {
+        navigate(`/case-study-two/${slug}`);
+      }
+    }
+  };
+
+  if (templateLoading || companiesLoading) {
+    return (
+      <WebsiteLayout>
+        <div className="flex justify-center items-center min-h-[60vh]">
+          <Spinner size="lg" color="primary" />
+        </div>
+      </WebsiteLayout>
+    );
+  }
+
+  const template = templateData?.data?.template;
 
   return (
     <WebsiteLayout>
-      <div className="min-h-screen">
+      <div className="min-h-screen" dir={isArabic ? "rtl" : "ltr"}>
         {/* Header Section - Light Primary Background */}
         <div className="bg-primary/20 text-center py-16 px-6">
-          <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6 font-dubai">
-            Case Studies Across Industries
-          </h1>
-          <p className="text-xl text-primary/80 max-w-4xl mx-auto leading-relaxed">
-            See how GST Solutions transformed operations with smart tracking,
-            automation, and digital control.
-          </p>
+          {template && (
+            <div className="font-dubai quill-content">
+              <ReactQuill
+                value={
+                  isArabic ? template.headerAr || "" : template.headerEn || ""
+                }
+                readOnly={true}
+                theme="bubble"
+                modules={{ toolbar: false }}
+              />
+            </div>
+          )}
         </div>
 
         {/* Case Studies Grid - White Background */}
         <div className="bg-white py-16">
           <div className="container mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-              {caseStudies.map((study) => (
-                <Card
-                  key={study.id}
-                  className="bg-white border border-gray-200 hover:shadow-xl transition-all duration-300 hover:scale-105"
-                  isPressable
-                >
-                  <CardBody className="p-6 text-center">
-                    <div className="flex justify-center mb-4">
-                      <img
-                        src={study.logo}
-                        alt={study.title}
-                        className="w-24 h-16 object-contain"
-                      />
-                    </div>
-                    <h3 className="text-lg font-bold text-primary mb-3 font-dubai">
-                      {study.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {study.description}
-                    </p>
-                  </CardBody>
-                </Card>
-              ))}
-            </div>
+            {companies && companies.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+                {companies.map((company) => (
+                  <Card
+                    key={company.id}
+                    className="bg-white border border-gray-200 hover:shadow-xl transition-all duration-300"
+                    isPressable={false}
+                  >
+                    <CardBody className="p-6 text-center flex flex-col">
+                      <div className="flex justify-center mb-4">
+                        <img
+                          src={company.icon || "https://placehold.co/120x80"}
+                          alt={isArabic ? company.titleAr : company.titleEn}
+                          className="w-36 h-24 object-contain"
+                        />
+                      </div>
+                      <h3 className="text-sm font-medium text-primary mb-2 font-dubai">
+                        {isArabic ? company.titleAr : company.titleEn}
+                      </h3>
+                      <p className="text-gray-600 text-xs leading-relaxed mb-4">
+                        {isArabic
+                          ? company.descriptionAr
+                          : company.descriptionEn}
+                      </p>
+
+                      {/* Read More button */}
+                      {(company.websiteLink || company.page) && (
+                        <div className="mt-auto">
+                          <Button
+                            color="primary"
+                            variant="flat"
+                            size="sm"
+                            className="w-full"
+                            onClick={() => handleCardClick(company)}
+                          >
+                            {isArabic ? "اقرأ المزيد" : "Read More"}
+                          </Button>
+                        </div>
+                      )}
+
+                      {/* Visual indicator for linked pages */}
+                      {company.page && (
+                        <div className="absolute top-2 right-2">
+                          <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                        </div>
+                      )}
+                    </CardBody>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-10">
+                <p className="text-gray-500 text-lg">
+                  {isArabic ? "لا توجد بيانات متاحة" : "No data available"}
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Call to Action Section - Light Primary Background */}
         <div className="bg-primary/20 py-12">
           <div className="container mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold text-primary mb-4 font-dubai">
-              Want to become our next success story?
-            </h2>
-            <p className="text-primary/80 mb-8 text-lg">
-              Contact us today to learn how GST Solutions can transform your
-              operations.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <div className="flex items-center gap-2 text-primary">
-                <span className="text-lg">📞</span>
-                <span className="font-medium">+920000848</span>
+            {template && (
+              <div className="font-dubai quill-content">
+                <ReactQuill
+                  value={
+                    isArabic ? template.footerAr || "" : template.footerEn || ""
+                  }
+                  readOnly={true}
+                  theme="bubble"
+                  modules={{ toolbar: false }}
+                />
               </div>
-              <div className="flex items-center gap-2 text-primary">
-                <span className="text-lg">🌐</span>
-                <Button
-                  as="a"
-                  href="https://www.gst1.org"
-                  target="_blank"
-                  variant="light"
-                  className="text-primary hover:text-primary/80 p-0 h-auto min-w-0"
-                >
-                  www.gst1.org
-                </Button>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

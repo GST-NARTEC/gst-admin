@@ -14,12 +14,12 @@ function WebsiteRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/user-guide-manual" element={<UserGuideManual />} />
       <Route path="/verify-halal" element={<SmartSolutionDetail />} />
-      <Route path="/case-study" element={<CaseStudy />} />
+      <Route path="/case-studies" element={<CaseStudy />} />
       <Route
-        path="/case-study/showcase/:slug"
+        path="/case-study-one/:slug"
         element={<CaseStudyOneDesing />}
       />
-      <Route path="/case-study/detail/:slug" element={<CaseStudyTwoDesign />} />
+      <Route path="/case-study-two/:slug" element={<CaseStudyTwoDesign />} />
 
       <Route path="/*" element={<TemplateRoutes />} />
     </Routes>

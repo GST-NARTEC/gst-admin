@@ -8,6 +8,7 @@ import {
   ModalFooter,
   Button,
 } from "@nextui-org/react";
+import { useTranslation } from "react-i18next";
 
 function ProductsCards() {
   const [products, setProducts] = useState([]);
@@ -19,6 +20,8 @@ function ProductsCards() {
   const pageSize = 12;
 
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
 
   // Fetch products from API
   useEffect(() => {
@@ -46,7 +49,10 @@ function ProductsCards() {
           // Transform the API data to match our component structure
           const transformedProducts = data.products.map((product) => ({
             id: product.id,
-            name: product.productnameenglish,
+            name:
+              isArabic && product.productnamearabic
+                ? product.productnamearabic
+                : product.productnameenglish,
             image: product.front_image
               ? `https://gs1ksa.org${product.front_image.replace(/\\/g, "/")}`
               : "https://via.placeholder.com/300x300?text=No+Image",
@@ -68,7 +74,7 @@ function ProductsCards() {
     };
 
     fetchProducts();
-  }, [currentPage]);
+  }, [currentPage, isArabic]);
 
   const handleNextPage = (e) => {
     e.preventDefault();
@@ -98,16 +104,16 @@ function ProductsCards() {
   };
 
   return (
-    <div className="py-16 px-4 bg-white">
+    <div className="py-16 px-4 bg-white" dir={isArabic ? "rtl" : "ltr"}>
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="flex justify-between items-center mb-8">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-primary font-dubai">
-              Recently Added Products
+              {t("products.recentlyAdded")}
             </h2>
             <p className="text-gray-600 mt-2">
-              Total Products:{" "}
+              {t("products.totalProducts")}:{" "}
               <span className="font-semibold text-primary">
                 {totalProducts.toLocaleString()}
               </span>
@@ -118,8 +124,8 @@ function ProductsCards() {
         {/* Page Info */}
         <div className="flex justify-between items-center mb-6">
           <p className="text-sm text-gray-600">
-            Showing page {currentPage} of {totalPages} ({products.length}{" "}
-            products)
+            {t("products.showingPage")} {currentPage} {t("products.of")}{" "}
+            {totalPages} ({products.length} {t("products.productsCount")})
           </p>
         </div>
 
@@ -176,7 +182,7 @@ function ProductsCards() {
                       onClick={() => handleProductClick(product)}
                       className="bg-primary hover:bg-navy-600 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 transform group-hover:scale-105 shadow-md text-sm"
                     >
-                      See details
+                      {t("products.seeDetails")}
                     </button>
                   </div>
                 </div>
@@ -194,15 +200,17 @@ function ProductsCards() {
                 : "bg-primary hover:bg-navy-600 text-white transform hover:scale-105 shadow-lg"
             }`}
           >
-            ← Previous
+            {isArabic ? "→" : "←"} {t("products.previous")}
           </button>
 
           <div className="flex items-center space-x-2">
-            <span className="text-gray-600">Page</span>
+            <span className="text-gray-600">{t("products.page")}</span>
             <span className="bg-primary text-white px-4 py-2 rounded-full font-semibold">
               {currentPage}
             </span>
-            <span className="text-gray-600">of {totalPages}</span>
+            <span className="text-gray-600">
+              {t("products.of")} {totalPages}
+            </span>
           </div>
 
           <button
@@ -214,7 +222,7 @@ function ProductsCards() {
                 : "bg-primary hover:bg-navy-600 text-white transform hover:scale-105 shadow-lg"
             }`}
           >
-            Next →
+            {t("products.next")} {isArabic ? "←" : "→"}
           </button>
         </div>
 
@@ -229,7 +237,7 @@ function ProductsCards() {
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1">
-                  Product Details
+                  {t("products.productDetails")}
                 </ModalHeader>
                 <ModalBody>
                   {selectedProduct && (
@@ -252,7 +260,7 @@ function ProductsCards() {
                         <div className="space-y-3">
                           <div>
                             <h3 className="font-semibold text-gray-700">
-                              Product Name
+                              {t("products.productName")}
                             </h3>
                             <p className="text-gray-600">
                               {selectedProduct.name}
@@ -261,19 +269,21 @@ function ProductsCards() {
 
                           <div>
                             <h3 className="font-semibold text-gray-700">
-                              Brand
+                              {t("products.brand")}
                             </h3>
                             <p className="text-gray-600">
-                              {selectedProduct.brand || "N/A"}
+                              {selectedProduct.brand ||
+                                t("products.notAvailable")}
                             </p>
                           </div>
 
                           <div>
                             <h3 className="font-semibold text-gray-700">
-                              Origin
+                              {t("products.origin")}
                             </h3>
                             <p className="text-gray-600">
-                              {selectedProduct.origin || "N/A"}
+                              {selectedProduct.origin ||
+                                t("products.notAvailable")}
                             </p>
                           </div>
                         </div>
@@ -281,25 +291,27 @@ function ProductsCards() {
                         <div className="space-y-3">
                           <div>
                             <h3 className="font-semibold text-gray-700">
-                              Product Type
+                              {t("products.productType")}
                             </h3>
                             <p className="text-gray-600">
-                              {selectedProduct.productType || "N/A"}
+                              {selectedProduct.productType ||
+                                t("products.notAvailable")}
                             </p>
                           </div>
 
                           <div>
                             <h3 className="font-semibold text-gray-700">
-                              Barcode
+                              {t("products.barcode")}
                             </h3>
                             <p className="text-gray-600 font-mono">
-                              {selectedProduct.barcode || "N/A"}
+                              {selectedProduct.barcode ||
+                                t("products.notAvailable")}
                             </p>
                           </div>
 
                           <div>
                             <h3 className="font-semibold text-gray-700">
-                              Product ID
+                              {t("products.productId")}
                             </h3>
                             <p className="text-gray-600 text-xs break-all">
                               {selectedProduct.id}
@@ -312,7 +324,7 @@ function ProductsCards() {
                 </ModalBody>
                 <ModalFooter>
                   <Button color="primary" variant="light" onPress={onClose}>
-                    Close
+                    {t("common.close")}
                   </Button>
                 </ModalFooter>
               </>
