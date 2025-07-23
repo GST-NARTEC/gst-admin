@@ -2,14 +2,14 @@ import React from "react";
 import { Card, CardBody, Spinner, Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.bubble.css";
+import parse from "html-react-parser";
 import WebsiteLayout from "../../../layout/WebsiteLayouts/Layout";
 import { useGetTemplateBySlugQuery } from "../../../store/apis/endpoints/templates";
 import { useGetCompaniesQuery } from "../../../store/apis/endpoints/compnies";
+import SEO from "../../../components/seo/Seo";
 
 function CaseStudy() {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const isArabic = i18n.language === "ar";
   const navigate = useNavigate();
 
@@ -50,25 +50,38 @@ function CaseStudy() {
 
   return (
     <WebsiteLayout>
-      <div className="min-h-screen" dir={isArabic ? "rtl" : "ltr"}>
-        {/* Header Section - Light Primary Background */}
-        <div className="bg-primary/20 text-center py-16 px-6">
+      <SEO
+        title={isArabic ? template?.titleAr : template?.titleEn}
+        description={isArabic ? template?.headerAr : template?.headerEn}
+        keywords={template?.keywords}
+      />
+      <div
+        className={`min-h-screen ${
+          isArabic ? "font-dubai text-[19px] font-normal" : ""
+        }`}
+        dir={isArabic ? "rtl" : "ltr"}
+      >
+        {/* Header Section - Primary Background with Gradient */}
+        <div className="bg-gradient-to-r from-primary/30 to-quaternary/30 py-16 px-6">
           {template && (
-            <div className="font-dubai quill-content">
-              <ReactQuill
-                value={
-                  isArabic ? template.headerAr || "" : template.headerEn || ""
-                }
-                readOnly={true}
-                theme="bubble"
-                modules={{ toolbar: false }}
-              />
+            <div className="container mx-auto">
+              <div
+                className={`prose max-w-none ${
+                  isArabic
+                    ? "leading-[1.6] tracking-normal text-right"
+                    : "text-center"
+                }`}
+              >
+                {isArabic
+                  ? template?.headerAr && parse(template.headerAr || "")
+                  : template?.headerEn && parse(template.headerEn || "")}
+              </div>
             </div>
           )}
         </div>
 
         {/* Case Studies Grid - White Background */}
-        <div className="bg-white py-16">
+        <div className="bg-white py-8">
           <div className="container mx-auto px-6">
             {companies && companies.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
@@ -130,19 +143,20 @@ function CaseStudy() {
           </div>
         </div>
 
-        {/* Call to Action Section - Light Primary Background */}
-        <div className="bg-primary/20 py-12">
-          <div className="container mx-auto px-6 text-center">
+        {/* Call to Action Section - Tertiary Background */}
+        <div className="bg-tertiary/80 py-8 my-16">
+          <div className="container mx-auto px-6">
             {template && (
-              <div className="font-dubai quill-content">
-                <ReactQuill
-                  value={
-                    isArabic ? template.footerAr || "" : template.footerEn || ""
-                  }
-                  readOnly={true}
-                  theme="bubble"
-                  modules={{ toolbar: false }}
-                />
+              <div
+                className={`prose max-w-none text-white ${
+                  isArabic
+                    ? "leading-[1.6] tracking-normal text-right"
+                    : "text-center"
+                }`}
+              >
+                {isArabic
+                  ? template?.footerAr && parse(template.footerAr || "")
+                  : template?.footerEn && parse(template.footerEn || "")}
               </div>
             )}
           </div>

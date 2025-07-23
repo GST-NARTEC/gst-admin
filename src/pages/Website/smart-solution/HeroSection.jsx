@@ -7,7 +7,7 @@ function HeroSection() {
 
   return (
     <div
-      className="relative bg-gradient-to-br from-primary via-navy-600 to-navy-700 min-h-[70vh] flex items-center justify-center px-4 overflow-hidden"
+      className="relative bg-gradient-to-br from-primary via-navy-600 to-navy-700 min-h-[70vh] flex items-center justify-center px-4 overflow-hidden p-14"
       dir={isArabic ? "rtl" : "ltr"}
     >
       {/* Awesome SVG Background */}

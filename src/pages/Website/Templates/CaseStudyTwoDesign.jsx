@@ -5,8 +5,8 @@ import { Button, Spinner } from "@nextui-org/react";
 import { useGetTemplateBySlugQuery } from "../../../store/apis/endpoints/templates";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.bubble.css";
+import parse from "html-react-parser";
+import SEO from "../../../components/seo/Seo";
 
 function CaseStudyTwoDesign() {
   const { slug } = useParams();
@@ -51,15 +51,23 @@ function CaseStudyTwoDesign() {
 
   return (
     <WebsiteLayout>
-      <div>
+      <SEO
+        title={isArabic ? template?.nameAr : template?.nameEn}
+        description={
+          isArabic ? template?.description1Ar : template?.description1En
+        }
+        keywords={template?.keywords}
+        image={template?.image1}
+      />
+      <div
+        className={`${isArabic ? "font-dubai text-[19px] font-normal" : ""}`}
+        dir={isArabic ? "rtl" : "ltr"}
+      >
         {/* section one - Hero Section */}
-        <section
-          className="relative h-screen bg-cover bg-center bg-no-repeat"
-          dir={isArabic ? "rtl" : "ltr"}
-        >
+        <section className="relative h-[80vh] xl:h-[50vh] bg-cover bg-center bg-no-repeat">
           {/* Background Image */}
           <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat "
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: template.image1
                 ? `url('${fixImageUrl(template.image1)}')`
@@ -67,8 +75,10 @@ function CaseStudyTwoDesign() {
             }}
           ></div>
 
-          {/* Logo - Top Left */}
-          <div className="absolute top-8 left-8 z-20">
+          {/* Logo - Top Left/Right based on language */}
+          <div
+            className={`absolute top-8 ${isArabic ? "right-8" : "left-8"} z-20`}
+          >
             <img
               src={Images.Logo}
               alt="GST Logo"
@@ -77,51 +87,58 @@ function CaseStudyTwoDesign() {
           </div>
 
           {/* Blue Card - Bottom, overlapping the image */}
-          <div className="absolute bottom-0 right-0 z-50 transform translate-y-1/2 max-w-5xl w-full">
-            <div className="bg-primary mr-8 rounded-lg shadow-2xl">
+          <div
+            className={`absolute bottom-0 ${
+              isArabic ? "left-0" : "right-0"
+            } z-50 transform translate-y-1/2 max-w-5xl w-full`}
+          >
+            <div
+              className={`bg-primary ${
+                isArabic ? "ml-8" : "mr-8"
+              } rounded-lg shadow-2xl`}
+            >
               <div className="px-8 py-8">
-                <div className="text-white font-dubai quill-content">
-                  <ReactQuill
-                    value={isArabic ? template.headingAr : template.headingEn}
-                    readOnly={true}
-                    theme="bubble"
-                    modules={{ toolbar: false }}
-                  />
+                <div
+                  className={`text-white font-dubai prose max-w-none ${
+                    isArabic ? "leading-[1.6] tracking-normal" : ""
+                  }`}
+                >
+                  {isArabic
+                    ? template?.headingAr && parse(template.headingAr)
+                    : template?.headingEn && parse(template.headingEn)}
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        
-        <section
-          className="py-16 bg-white mt-24"
-          dir={isArabic ? "rtl" : "ltr"}
-        >
+        <section className="mt-24 py-8 bg-white">
           <div className="container mx-auto px-4">
-            {/* Title - Using ReactQuill instead of plain text */}
-            <div className="text-2xl font-bold text-secondary mb-6 text-start font-dubai quill-content">
-              <ReactQuill
-                value={
-                  isArabic ? template.description2Ar : template.description2En
-                }
-                readOnly={true}
-                theme="bubble"
-                modules={{ toolbar: false }}
-              />
+            {/* Title */}
+            <div
+              className={`text-2xl font-bold text-secondary mb-6 ${
+                isArabic ? "text-right" : "text-left"
+              } font-dubai prose max-w-none ${
+                isArabic ? "leading-[1.6] tracking-normal" : ""
+              }`}
+            >
+              {isArabic
+                ? template?.description2Ar && parse(template.description2Ar)
+                : template?.description2En && parse(template.description2En)}
             </div>
 
             {/* First Content Block */}
             <div className="mb-12">
-              <div className="text-lg text-gray-700 leading-relaxed text-start font-dubai quill-content">
-                <ReactQuill
-                  value={
-                    isArabic ? template.description3Ar : template.description3En
-                  }
-                  readOnly={true}
-                  theme="bubble"
-                  modules={{ toolbar: false }}
-                />
+              <div
+                className={`text-lg text-gray-700 leading-relaxed font-dubai prose max-w-none ${
+                  isArabic
+                    ? "leading-[1.6] tracking-normal text-right"
+                    : "text-left"
+                }`}
+              >
+                {isArabic
+                  ? template?.description3Ar && parse(template.description3Ar)
+                  : template?.description3En && parse(template.description3En)}
               </div>
             </div>
 
@@ -141,28 +158,25 @@ function CaseStudyTwoDesign() {
           </div>
         </section>
 
-        
-        <section className="py-16 bg-gray-50" dir={isArabic ? "rtl" : "ltr"}>
+        <section className="py-8 bg-gray-50">
           <div className="container mx-auto px-4">
             {/* First Container - Image and Challenges */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
-              {/* left Column - Challenges Content */}
-              <div>
-                <div className="space-y-4 font-dubai quill-content">
-                  <ReactQuill
-                    value={
-                      isArabic
-                        ? template.description1Ar
-                        : template.description1En
-                    }
-                    readOnly={true}
-                    theme="bubble"
-                    modules={{ toolbar: false }}
-                  />
+              {/* Challenges Content - Swap order based on language */}
+              <div className={`${isArabic ? "order-last" : "order-first"}`}>
+                <div
+                  className={`space-y-4 font-dubai prose max-w-none ${
+                    isArabic ? "leading-[1.6] tracking-normal" : ""
+                  }`}
+                >
+                  {isArabic
+                    ? template?.description1Ar && parse(template.description1Ar)
+                    : template?.description1En &&
+                      parse(template.description1En)}
                 </div>
               </div>
-              {/* right Column - Image */}
-              <div>
+              {/* Image - Swap order based on language */}
+              <div className={`${isArabic ? "order-first" : "order-last"}`}>
                 <img
                   src={
                     fixImageUrl(template.image3) ||
@@ -176,13 +190,12 @@ function CaseStudyTwoDesign() {
           </div>
         </section>
 
- 
-        <section className="py-16 bg-gray-50" dir={isArabic ? "rtl" : "ltr"}>
+        <section className="py-8 bg-gray-50">
           <div className="container mx-auto px-4">
             {/* First Container - Image and Workflow */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
-              {/* left Column - Image */}
-              <div>
+              {/* Image Column - Swap order based on language */}
+              <div className={`${isArabic ? "order-last" : "order-first"}`}>
                 <img
                   src={
                     fixImageUrl(template.image4) ||
@@ -193,53 +206,50 @@ function CaseStudyTwoDesign() {
                 />
               </div>
 
-              {/* right Column - Workflow Content */}
-              <div>
-                <div className="space-y-4 font-dubai quill-content">
-                  <ReactQuill
-                    value={
-                      isArabic
-                        ? template.description4Ar
-                        : template.description4En
-                    }
-                    readOnly={true}
-                    theme="bubble"
-                    modules={{ toolbar: false }}
-                  />
+              {/* Workflow Content - Swap order based on language */}
+              <div className={`${isArabic ? "order-first" : "order-last"}`}>
+                <div
+                  className={`space-y-4 font-dubai prose max-w-none ${
+                    isArabic ? "leading-[1.6] tracking-normal" : ""
+                  }`}
+                >
+                  {isArabic
+                    ? template?.description4Ar && parse(template.description4Ar)
+                    : template?.description4En &&
+                      parse(template.description4En)}
                 </div>
-                {/* button */}
-             
               </div>
             </div>
           </div>
         </section>
 
-      
-        <section className="py-16 bg-white" dir={isArabic ? "rtl" : "ltr"}>
+        <section className="py-8 bg-white">
           <div className="container mx-auto px-4">
-            {/* Title - Using ReactQuill instead of plain text */}
-            <div className="text-2xl font-bold text-secondary mb-6 text-start font-dubai quill-content">
-              <ReactQuill
-                value={
-                  isArabic ? template.description5Ar : template.description5En
-                }
-                readOnly={true}
-                theme="bubble"
-                modules={{ toolbar: false }}
-              />
+            {/* Title */}
+            <div
+              className={`text-2xl font-bold text-secondary mb-6 ${
+                isArabic ? "text-right" : "text-left"
+              } font-dubai prose max-w-none ${
+                isArabic ? "leading-[1.6] tracking-normal" : ""
+              }`}
+            >
+              {isArabic
+                ? template?.description5Ar && parse(template.description5Ar)
+                : template?.description5En && parse(template.description5En)}
             </div>
 
-            {/* First Content Block */}
+            {/* Content Block */}
             <div className="mb-12">
-              <div className="text-lg text-gray-700 leading-relaxed text-start font-dubai quill-content">
-                <ReactQuill
-                  value={
-                    isArabic ? template.description6Ar : template.description6En
-                  }
-                  readOnly={true}
-                  theme="bubble"
-                  modules={{ toolbar: false }}
-                />
+              <div
+                className={`text-lg text-gray-700 leading-relaxed font-dubai prose max-w-none ${
+                  isArabic
+                    ? "leading-[1.6] tracking-normal text-right"
+                    : "text-left"
+                }`}
+              >
+                {isArabic
+                  ? template?.description6Ar && parse(template.description6Ar)
+                  : template?.description6En && parse(template.description6En)}
               </div>
             </div>
 
@@ -259,56 +269,47 @@ function CaseStudyTwoDesign() {
           </div>
         </section>
 
-       
-        <section className="py-16 bg-gray-50" dir={isArabic ? "rtl" : "ltr"}>
+        <section className="py-8 bg-gray-50">
           <div className="container mx-auto px-4">
             {/* Container with two columns */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
-              {/* left Column - Key Learnings */}
+              {/* Key Learnings Column */}
               <div>
-                <div className="space-y-4 font-dubai quill-content">
-                  <ReactQuill
-                    value={
-                      isArabic
-                        ? template.description7Ar
-                        : template.description7En
-                    }
-                    readOnly={true}
-                    theme="bubble"
-                    modules={{ toolbar: false }}
-                  />
+                <div
+                  className={`space-y-4 font-dubai prose max-w-none ${
+                    isArabic ? "leading-[1.6] tracking-normal" : ""
+                  }`}
+                >
+                  {isArabic
+                    ? template?.description7Ar && parse(template.description7Ar)
+                    : template?.description7En &&
+                      parse(template.description7En)}
                 </div>
               </div>
 
-              {/* right Column - Technologies Used */}
+              {/* Technologies Used Column */}
               <div>
-                <div className="space-y-4 font-dubai quill-content">
-                  <ReactQuill
-                    value={
-                      isArabic
-                        ? template.description6Ar
-                        : template.description6En
-                    }
-                    readOnly={true}
-                    theme="bubble"
-                    modules={{ toolbar: false }}
-                  />
+                <div
+                  className={`space-y-4 font-dubai prose max-w-none ${
+                    isArabic ? "leading-[1.6] tracking-normal" : ""
+                  }`}
+                >
+                  {isArabic
+                    ? template?.description6Ar && parse(template.description6Ar)
+                    : template?.description6En &&
+                      parse(template.description6En)}
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-     
-        <section
-          className="py-16 bg-gray-50 mb-10"
-          dir={isArabic ? "rtl" : "ltr"}
-        >
+        <section className="py-8 bg-gray-50 mb-10">
           <div className="container mx-auto px-4">
             {/* Container - Image and Results */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
-              {/* left Column - Image */}
-              <div>
+              {/* Image Column - Swap order based on language */}
+              <div className={`${isArabic ? "order-last" : "order-first"}`}>
                 <img
                   src={
                     fixImageUrl(template.image6) ||
@@ -319,49 +320,39 @@ function CaseStudyTwoDesign() {
                 />
               </div>
 
-              {/* right Column - Results Content */}
-              <div>
-                <div className="space-y-4 font-dubai quill-content">
-                  <ReactQuill
-                    value={
-                      isArabic
-                        ? template.description5Ar
-                        : template.description5En
-                    }
-                    readOnly={true}
-                    theme="bubble"
-                    modules={{ toolbar: false }}
-                  />
+              {/* Results Content - Swap order based on language */}
+              <div className={`${isArabic ? "order-first" : "order-last"}`}>
+                <div
+                  className={`space-y-4 font-dubai prose max-w-none ${
+                    isArabic ? "leading-[1.6] tracking-normal" : ""
+                  }`}
+                >
+                  {isArabic
+                    ? template?.description5Ar && parse(template.description5Ar)
+                    : template?.description5En &&
+                      parse(template.description5En)}
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-      
-        <section
-          className="py-16 bg-white mb-10"
-          dir={isArabic ? "rtl" : "ltr"}
-        >
+        <section className="py-8 bg-tertiary/80 my-16">
           <div className="container mx-auto px-4">
-            {/* Title */}
-         
-
             {/* Content Block */}
             <div className="mb-12">
-              <div className="text-lg text-gray-700 leading-relaxed text-start font-dubai quill-content">
-                <ReactQuill
-                  value={
-                    isArabic ? template.description8Ar : template.description8En
-                  }
-                  readOnly={true}
-                  theme="bubble"
-                  modules={{ toolbar: false }}
-                />
+              <div
+                className={`text-lg text-white leading-relaxed font-dubai prose max-w-none ${
+                  isArabic
+                    ? "leading-[1.6] tracking-normal text-right"
+                    : "text-left"
+                }`}
+              >
+                {isArabic
+                  ? template?.description8Ar && parse(template.description8Ar)
+                  : template?.description8En && parse(template.description8En)}
               </div>
             </div>
-
-          
           </div>
         </section>
       </div>
