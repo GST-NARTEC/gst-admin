@@ -6,7 +6,7 @@ import { useGetTemplateBySlugQuery } from "../../../store/apis/endpoints/templat
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import SEO from "../../../components/seo/Seo";
-import parse from "html-react-parser";
+import RichTextReadOnly from "./common/RichTextReadOnly";
 
 function SunriseDesign() {
   const { slug } = useParams();
@@ -53,7 +53,9 @@ function SunriseDesign() {
     <WebsiteLayout>
       <SEO
         title={isArabic ? template?.nameAr : template?.nameEn}
-        description={isArabic ? template?.description1Ar : template?.description1En}
+        description={
+          isArabic ? template?.description1Ar : template?.description1En
+        }
         keywords={template?.keywords}
         image={template?.image1}
       />
@@ -74,7 +76,9 @@ function SunriseDesign() {
           ></div>
 
           {/* Logo - Top Left/Right based on language */}
-          <div className={`absolute top-8 ${isArabic ? 'right-8' : 'left-8'} z-20`}>
+          <div
+            className={`absolute top-8 ${isArabic ? "right-8" : "left-8"} z-20`}
+          >
             <img
               src={Images.Logo}
               alt="GST Logo"
@@ -85,12 +89,14 @@ function SunriseDesign() {
           {/* Blue Card - Bottom, overlapping the image */}
           <div className="absolute bottom-0 left-0 right-0 z-50 transform translate-y-1/3">
             <div className="bg-primary mx-8 rounded-lg shadow-2xl">
-              <div className="px-8 py-8">
-                <div className={`text-white font-dubai prose max-w-none ${isArabic ? "leading-[1.6] tracking-normal" : ""}`}>
-                  {isArabic
-                    ? template?.headingAr && parse(template.headingAr)
-                    : template?.headingEn && parse(template.headingEn)}
-                </div>
+              <div className="p-5">
+                <RichTextReadOnly
+                  value={isArabic ? template?.headingAr : template?.headingEn}
+                  isArabic={isArabic}
+                  isWhiteText={true}
+                  fontSize="text-base"
+                  className="leading-relaxed"
+                />
               </div>
             </div>
           </div>
@@ -103,11 +109,15 @@ function SunriseDesign() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
               {/* Content Column */}
               <div>
-                <div className={`space-y-4 font-dubai prose max-w-none ${isArabic ? "leading-[1.6] tracking-normal" : ""}`}>
-                  {isArabic
-                    ? template?.description1Ar && parse(template.description1Ar)
-                    : template?.description1En && parse(template.description1En)}
-                </div>
+                <RichTextReadOnly
+                  value={
+                    isArabic
+                      ? template?.description1Ar
+                      : template?.description1En
+                  }
+                  isArabic={isArabic}
+                  className="space-y-4"
+                />
 
                 {/* button */}
                 <Button
@@ -142,11 +152,12 @@ function SunriseDesign() {
         {/* section three - Why Transition to 2D Barcodes? */}
         <section className="bg-white">
           <div className="container mx-auto px-4">
-            <div className={`font-dubai prose max-w-none ${isArabic ? "leading-[1.6] tracking-normal" : ""}`}>
-              {isArabic
-                ? template?.description2Ar && parse(template.description2Ar)
-                : template?.description2En && parse(template.description2En)}
-            </div>
+            <RichTextReadOnly
+              value={
+                isArabic ? template?.description2Ar : template?.description2En
+              }
+              isArabic={isArabic}
+            />
           </div>
         </section>
 
@@ -174,7 +185,11 @@ function SunriseDesign() {
               {/* Card 1 - Retail */}
               <div className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
                 <div className="flex flex-col md:flex-row">
-                  <div className={`w-full md:w-1/4 p-4 ${isArabic ? "order-last" : "order-first"}`}>
+                  <div
+                    className={`w-full md:w-1/4 p-4 ${
+                      isArabic ? "order-last" : "order-first"
+                    }`}
+                  >
                     <img
                       src={
                         fixImageUrl(template.image3) ||
@@ -184,12 +199,19 @@ function SunriseDesign() {
                       className="w-full h-32 object-cover rounded-lg"
                     />
                   </div>
-                  <div className={`w-full md:w-3/4 p-4 ${isArabic ? "order-first" : "order-last"}`}>
-                    <div className={`font-dubai prose max-w-none ${isArabic ? "leading-[1.6] tracking-normal" : ""}`}>
-                      {isArabic
-                        ? template?.retailContentAr && parse(template.retailContentAr)
-                        : template?.retailContentEn && parse(template.retailContentEn)}
-                    </div>
+                  <div
+                    className={`w-full md:w-3/4 p-4 ${
+                      isArabic ? "order-first" : "order-last"
+                    }`}
+                  >
+                    <RichTextReadOnly
+                      value={
+                        isArabic
+                          ? template?.retailContentAr
+                          : template?.retailContentEn
+                      }
+                      isArabic={isArabic}
+                    />
                   </div>
                 </div>
               </div>
@@ -197,7 +219,11 @@ function SunriseDesign() {
               {/* Card 2 - Logistics & Warehousing */}
               <div className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
                 <div className="flex flex-col md:flex-row">
-                  <div className={`w-full md:w-1/4 p-4 ${isArabic ? "order-last" : "order-first"}`}>
+                  <div
+                    className={`w-full md:w-1/4 p-4 ${
+                      isArabic ? "order-last" : "order-first"
+                    }`}
+                  >
                     <img
                       src={
                         fixImageUrl(template.image4) ||
@@ -207,12 +233,19 @@ function SunriseDesign() {
                       className="w-full h-32 object-cover rounded-lg"
                     />
                   </div>
-                  <div className={`w-full md:w-3/4 p-4 ${isArabic ? "order-first" : "order-last"}`}>
-                    <div className={`font-dubai prose max-w-none ${isArabic ? "leading-[1.6] tracking-normal" : ""}`}>
-                      {isArabic
-                        ? template?.logisticsContentAr && parse(template.logisticsContentAr)
-                        : template?.logisticsContentEn && parse(template.logisticsContentEn)}
-                    </div>
+                  <div
+                    className={`w-full md:w-3/4 p-4 ${
+                      isArabic ? "order-first" : "order-last"
+                    }`}
+                  >
+                    <RichTextReadOnly
+                      value={
+                        isArabic
+                          ? template?.logisticsContentAr
+                          : template?.logisticsContentEn
+                      }
+                      isArabic={isArabic}
+                    />
                   </div>
                 </div>
               </div>
@@ -220,7 +253,11 @@ function SunriseDesign() {
               {/* Card 3 - Manufacturing */}
               <div className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
                 <div className="flex flex-col md:flex-row">
-                  <div className={`w-full md:w-1/4 p-4 ${isArabic ? "order-last" : "order-first"}`}>
+                  <div
+                    className={`w-full md:w-1/4 p-4 ${
+                      isArabic ? "order-last" : "order-first"
+                    }`}
+                  >
                     <img
                       src={
                         fixImageUrl(template.image5) ||
@@ -230,12 +267,19 @@ function SunriseDesign() {
                       className="w-full h-32 object-cover rounded-lg"
                     />
                   </div>
-                  <div className={`w-full md:w-3/4 p-4 ${isArabic ? "order-first" : "order-last"}`}>
-                    <div className={`font-dubai prose max-w-none ${isArabic ? "leading-[1.6] tracking-normal" : ""}`}>
-                      {isArabic
-                        ? template?.manufacturingContentAr && parse(template.manufacturingContentAr)
-                        : template?.manufacturingContentEn && parse(template.manufacturingContentEn)}
-                    </div>
+                  <div
+                    className={`w-full md:w-3/4 p-4 ${
+                      isArabic ? "order-first" : "order-last"
+                    }`}
+                  >
+                    <RichTextReadOnly
+                      value={
+                        isArabic
+                          ? template?.manufacturingContentAr
+                          : template?.manufacturingContentEn
+                      }
+                      isArabic={isArabic}
+                    />
                   </div>
                 </div>
               </div>
@@ -243,7 +287,11 @@ function SunriseDesign() {
               {/* Card 4 - Healthcare & Pharmaceuticals */}
               <div className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
                 <div className="flex flex-col md:flex-row">
-                  <div className={`w-full md:w-1/4 p-4 ${isArabic ? "order-last" : "order-first"}`}>
+                  <div
+                    className={`w-full md:w-1/4 p-4 ${
+                      isArabic ? "order-last" : "order-first"
+                    }`}
+                  >
                     <img
                       src={
                         fixImageUrl(template.image6) ||
@@ -253,12 +301,19 @@ function SunriseDesign() {
                       className="w-full h-32 object-cover rounded-lg"
                     />
                   </div>
-                  <div className={`w-full md:w-3/4 p-4 ${isArabic ? "order-first" : "order-last"}`}>
-                    <div className={`font-dubai prose max-w-none ${isArabic ? "leading-[1.6] tracking-normal" : ""}`}>
-                      {isArabic
-                        ? template?.healthcareContentAr && parse(template.healthcareContentAr)
-                        : template?.healthcareContentEn && parse(template.healthcareContentEn)}
-                    </div>
+                  <div
+                    className={`w-full md:w-3/4 p-4 ${
+                      isArabic ? "order-first" : "order-last"
+                    }`}
+                  >
+                    <RichTextReadOnly
+                      value={
+                        isArabic
+                          ? template?.healthcareContentAr
+                          : template?.healthcareContentEn
+                      }
+                      isArabic={isArabic}
+                    />
                   </div>
                 </div>
               </div>
@@ -284,11 +339,15 @@ function SunriseDesign() {
               </div>
               {/* Content Column - Swap order based on language */}
               <div className={`${isArabic ? "order-first" : "order-last"}`}>
-                <div className={`space-y-4 font-dubai prose max-w-none ${isArabic ? "leading-[1.6] tracking-normal" : ""}`}>
-                  {isArabic
-                    ? template?.description3Ar && parse(template.description3Ar)
-                    : template?.description3En && parse(template.description3En)}
-                </div>
+                <RichTextReadOnly
+                  value={
+                    isArabic
+                      ? template?.description3Ar
+                      : template?.description3En
+                  }
+                  isArabic={isArabic}
+                  className="space-y-4"
+                />
               </div>
             </div>
           </div>
@@ -297,22 +356,26 @@ function SunriseDesign() {
         {/* section six - Supported 2D Barcodes */}
         <section className="py-8 bg-white">
           <div className="container mx-auto px-4">
-            <div className={`font-dubai prose max-w-none ${isArabic ? "leading-[1.6] tracking-normal" : ""}`}>
-              {isArabic
-                ? template?.description4Ar && parse(template.description4Ar)
-                : template?.description4En && parse(template.description4En)}
-            </div>
+            <RichTextReadOnly
+              value={
+                isArabic ? template?.description4Ar : template?.description4En
+              }
+              isArabic={isArabic}
+            />
           </div>
         </section>
 
         {/* section seven - Let's Get Started */}
         <section className="py-8 bg-tertiary/80 my-16">
           <div className="container mx-auto px-4">
-            <div className={`font-dubai prose max-w-none text-white ${isArabic ? "leading-[1.6] tracking-normal" : ""}`}>
-              {isArabic
-                ? template?.description5Ar && parse(template.description5Ar)
-                : template?.description5En && parse(template.description5En)}
-            </div>
+            <RichTextReadOnly
+              value={
+                isArabic ? template?.description5Ar : template?.description5En
+              }
+              isArabic={isArabic}
+              isWhiteText={true}
+              className="leading-relaxed"
+            />
           </div>
         </section>
       </div>

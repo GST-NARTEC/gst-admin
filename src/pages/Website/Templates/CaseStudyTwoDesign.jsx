@@ -5,8 +5,8 @@ import { Button, Spinner } from "@nextui-org/react";
 import { useGetTemplateBySlugQuery } from "../../../store/apis/endpoints/templates";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import parse from "html-react-parser";
 import SEO from "../../../components/seo/Seo";
+import RichTextReadOnly from "./common/RichTextReadOnly";
 
 function CaseStudyTwoDesign() {
   const { slug } = useParams();
@@ -60,7 +60,7 @@ function CaseStudyTwoDesign() {
         image={template?.image1}
       />
       <div
-        className={`${isArabic ? "font-dubai text-[19px] font-normal" : ""}`}
+        className={`${isArabic ? "font-dubai font-normal" : ""}`}
         dir={isArabic ? "rtl" : "ltr"}
       >
         {/* section one - Hero Section */}
@@ -97,16 +97,14 @@ function CaseStudyTwoDesign() {
                 isArabic ? "ml-8" : "mr-8"
               } rounded-lg shadow-2xl`}
             >
-              <div className="px-8 py-8">
-                <div
-                  className={`text-white font-dubai prose max-w-none ${
-                    isArabic ? "leading-[1.6] tracking-normal" : ""
-                  }`}
-                >
-                  {isArabic
-                    ? template?.headingAr && parse(template.headingAr)
-                    : template?.headingEn && parse(template.headingEn)}
-                </div>
+              <div className="p-5">
+                <RichTextReadOnly
+                  value={isArabic ? template?.headingAr : template?.headingEn}
+                  isArabic={isArabic}
+                  isWhiteText={true}
+                  fontSize="text-base"
+                  className="leading-relaxed"
+                />
               </div>
             </div>
           </div>
@@ -114,32 +112,15 @@ function CaseStudyTwoDesign() {
 
         <section className="mt-24 py-8 bg-white">
           <div className="container mx-auto px-4">
-            {/* Title */}
-            <div
-              className={`text-2xl font-bold text-secondary mb-6 ${
-                isArabic ? "text-right" : "text-left"
-              } font-dubai prose max-w-none ${
-                isArabic ? "leading-[1.6] tracking-normal" : ""
-              }`}
-            >
-              {isArabic
-                ? template?.description2Ar && parse(template.description2Ar)
-                : template?.description2En && parse(template.description2En)}
-            </div>
-
-            {/* First Content Block */}
+            {/* First Content Block - Description1 */}
             <div className="mb-12">
-              <div
-                className={`text-lg text-gray-700 leading-relaxed font-dubai prose max-w-none ${
-                  isArabic
-                    ? "leading-[1.6] tracking-normal text-right"
-                    : "text-left"
-                }`}
-              >
-                {isArabic
-                  ? template?.description3Ar && parse(template.description3Ar)
-                  : template?.description3En && parse(template.description3En)}
-              </div>
+              <RichTextReadOnly
+                value={
+                  isArabic ? template?.description1Ar : template?.description1En
+                }
+                isArabic={isArabic}
+                
+              />
             </div>
 
             {/* Central Image */}
@@ -160,20 +141,18 @@ function CaseStudyTwoDesign() {
 
         <section className="py-8 bg-gray-50">
           <div className="container mx-auto px-4">
-            {/* First Container - Image and Challenges */}
+            {/* Second Container - Description2 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
-              {/* Challenges Content - Swap order based on language */}
+              {/* Description2 Content - Swap order based on language */}
               <div className={`${isArabic ? "order-last" : "order-first"}`}>
-                <div
-                  className={`space-y-4 font-dubai prose max-w-none ${
-                    isArabic ? "leading-[1.6] tracking-normal" : ""
-                  }`}
-                >
-                  {isArabic
-                    ? template?.description1Ar && parse(template.description1Ar)
-                    : template?.description1En &&
-                      parse(template.description1En)}
-                </div>
+                <RichTextReadOnly
+                  value={
+                    isArabic
+                      ? template?.description2Ar
+                      : template?.description2En
+                  }
+                  isArabic={isArabic}
+                />
               </div>
               {/* Image - Swap order based on language */}
               <div className={`${isArabic ? "order-first" : "order-last"}`}>
@@ -182,7 +161,7 @@ function CaseStudyTwoDesign() {
                     fixImageUrl(template.image3) ||
                     "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
                   }
-                  alt="Poultry Supply Chain"
+                  alt="Production Process"
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
               </div>
@@ -192,7 +171,7 @@ function CaseStudyTwoDesign() {
 
         <section className="py-8 bg-gray-50">
           <div className="container mx-auto px-4">
-            {/* First Container - Image and Workflow */}
+            {/* Third Container - Description3 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
               {/* Image Column - Swap order based on language */}
               <div className={`${isArabic ? "order-last" : "order-first"}`}>
@@ -201,23 +180,21 @@ function CaseStudyTwoDesign() {
                     fixImageUrl(template.image4) ||
                     "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
                   }
-                  alt="Workflow Image"
+                  alt="Global Recognition"
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
               </div>
 
-              {/* Workflow Content - Swap order based on language */}
+              {/* Description3 Content - Swap order based on language */}
               <div className={`${isArabic ? "order-first" : "order-last"}`}>
-                <div
-                  className={`space-y-4 font-dubai prose max-w-none ${
-                    isArabic ? "leading-[1.6] tracking-normal" : ""
-                  }`}
-                >
-                  {isArabic
-                    ? template?.description4Ar && parse(template.description4Ar)
-                    : template?.description4En &&
-                      parse(template.description4En)}
-                </div>
+                <RichTextReadOnly
+                  value={
+                    isArabic
+                      ? template?.description3Ar
+                      : template?.description3En
+                  }
+                  isArabic={isArabic}
+                />
               </div>
             </div>
           </div>
@@ -225,32 +202,16 @@ function CaseStudyTwoDesign() {
 
         <section className="py-8 bg-white">
           <div className="container mx-auto px-4">
-            {/* Title */}
-            <div
-              className={`text-2xl font-bold text-secondary mb-6 ${
-                isArabic ? "text-right" : "text-left"
-              } font-dubai prose max-w-none ${
-                isArabic ? "leading-[1.6] tracking-normal" : ""
-              }`}
-            >
-              {isArabic
-                ? template?.description5Ar && parse(template.description5Ar)
-                : template?.description5En && parse(template.description5En)}
-            </div>
-
-            {/* Content Block */}
+            {/* Description4 Content Block */}
             <div className="mb-12">
-              <div
-                className={`text-lg text-gray-700 leading-relaxed font-dubai prose max-w-none ${
-                  isArabic
-                    ? "leading-[1.6] tracking-normal text-right"
-                    : "text-left"
-                }`}
-              >
-                {isArabic
-                  ? template?.description6Ar && parse(template.description6Ar)
-                  : template?.description6En && parse(template.description6En)}
-              </div>
+              <RichTextReadOnly
+                value={
+                  isArabic ? template?.description4Ar : template?.description4En
+                }
+                isArabic={isArabic}
+                textColor="text-gray-700"
+                className="leading-relaxed"
+              />
             </div>
 
             {/* Central Image */}
@@ -261,7 +222,7 @@ function CaseStudyTwoDesign() {
                     fixImageUrl(template.image5) ||
                     "https://images.pond5.com/barcode-scanner-background-bar-code-footage-234071997_iconl.jpeg"
                   }
-                  alt="Solution Image"
+                  alt="Benefits Image"
                   className="w-full h-72 object-cover rounded-lg shadow-lg"
                 />
               </div>
@@ -271,34 +232,32 @@ function CaseStudyTwoDesign() {
 
         <section className="py-8 bg-gray-50">
           <div className="container mx-auto px-4">
-            {/* Container with two columns */}
+            {/* Container with two columns - Description5 and Description6 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
-              {/* Key Learnings Column */}
+              {/* Description5 Column */}
               <div>
-                <div
-                  className={`space-y-4 font-dubai prose max-w-none ${
-                    isArabic ? "leading-[1.6] tracking-normal" : ""
-                  }`}
-                >
-                  {isArabic
-                    ? template?.description7Ar && parse(template.description7Ar)
-                    : template?.description7En &&
-                      parse(template.description7En)}
-                </div>
+                <RichTextReadOnly
+                  value={
+                    isArabic
+                      ? template?.description5Ar
+                      : template?.description5En
+                  }
+                  isArabic={isArabic}
+                  className="space-y-4"
+                />
               </div>
 
-              {/* Technologies Used Column */}
+              {/* Description6 Column */}
               <div>
-                <div
-                  className={`space-y-4 font-dubai prose max-w-none ${
-                    isArabic ? "leading-[1.6] tracking-normal" : ""
-                  }`}
-                >
-                  {isArabic
-                    ? template?.description6Ar && parse(template.description6Ar)
-                    : template?.description6En &&
-                      parse(template.description6En)}
-                </div>
+                <RichTextReadOnly
+                  value={
+                    isArabic
+                      ? template?.description6Ar
+                      : template?.description6En
+                  }
+                  isArabic={isArabic}
+                  className="space-y-4"
+                />
               </div>
             </div>
           </div>
@@ -306,7 +265,7 @@ function CaseStudyTwoDesign() {
 
         <section className="py-8 bg-gray-50 mb-10">
           <div className="container mx-auto px-4">
-            {/* Container - Image and Results */}
+            {/* Container - Description7 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
               {/* Image Column - Swap order based on language */}
               <div className={`${isArabic ? "order-last" : "order-first"}`}>
@@ -315,23 +274,22 @@ function CaseStudyTwoDesign() {
                     fixImageUrl(template.image6) ||
                     "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
                   }
-                  alt="Results Image"
+                  alt="Final Section Image"
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
               </div>
 
-              {/* Results Content - Swap order based on language */}
+              {/* Description7 Content - Swap order based on language */}
               <div className={`${isArabic ? "order-first" : "order-last"}`}>
-                <div
-                  className={`space-y-4 font-dubai prose max-w-none ${
-                    isArabic ? "leading-[1.6] tracking-normal" : ""
-                  }`}
-                >
-                  {isArabic
-                    ? template?.description5Ar && parse(template.description5Ar)
-                    : template?.description5En &&
-                      parse(template.description5En)}
-                </div>
+                <RichTextReadOnly
+                  value={
+                    isArabic
+                      ? template?.description7Ar
+                      : template?.description7En
+                  }
+                  isArabic={isArabic}
+                  className="space-y-4"
+                />
               </div>
             </div>
           </div>
@@ -341,17 +299,14 @@ function CaseStudyTwoDesign() {
           <div className="container mx-auto px-4">
             {/* Content Block */}
             <div className="mb-12">
-              <div
-                className={`text-lg text-white leading-relaxed font-dubai prose max-w-none ${
-                  isArabic
-                    ? "leading-[1.6] tracking-normal text-right"
-                    : "text-left"
-                }`}
-              >
-                {isArabic
-                  ? template?.description8Ar && parse(template.description8Ar)
-                  : template?.description8En && parse(template.description8En)}
-              </div>
+              <RichTextReadOnly
+                value={
+                  isArabic ? template?.description8Ar : template?.description8En
+                }
+                isArabic={isArabic}
+                isWhiteText={true}
+                className="leading-relaxed"
+              />
             </div>
           </div>
         </section>

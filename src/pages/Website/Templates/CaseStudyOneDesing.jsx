@@ -5,8 +5,8 @@ import { Button, Spinner } from "@nextui-org/react";
 import { useGetTemplateBySlugQuery } from "../../../store/apis/endpoints/templates";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import parse from "html-react-parser";
 import SEO from "../../../components/seo/Seo";
+import RichTextReadOnly from "./common/RichTextReadOnly";
 
 function CaseStudyOneDesing() {
   const { slug } = useParams();
@@ -90,15 +90,13 @@ function CaseStudyOneDesing() {
           <div className="absolute bottom-0 left-0 right-0 z-50 transform translate-y-1/3">
             <div className="bg-primary mx-8 rounded-lg shadow-2xl">
               <div className="px-8 py-8">
-                <div
-                  className={`text-white font-dubai prose max-w-none ${
-                    isArabic ? "leading-[1.6] tracking-normal" : ""
-                  }`}
-                >
-                  {isArabic
-                    ? template?.headingAr && parse(template.headingAr)
-                    : template?.headingEn && parse(template.headingEn)}
-                </div>
+                <RichTextReadOnly
+                  value={isArabic ? template?.headingAr : template?.headingEn}
+                  isArabic={isArabic}
+                  isWhiteText={true}
+                  fontSize="text-base"
+                  className="leading-relaxed"
+                />
               </div>
             </div>
           </div>
@@ -110,33 +108,32 @@ function CaseStudyOneDesing() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
               {/* Overview Content */}
               <div>
-                <div
-                  className={`space-y-6 text-gray-700 leading-relaxed font-dubai prose max-w-none ${
-                    isArabic ? "leading-[1.6] tracking-normal" : ""
-                  }`}
-                >
-                  {isArabic
-                    ? template?.description1Ar && parse(template.description1Ar)
-                    : template?.description1En &&
-                      parse(template.description1En)}
-                </div>
+                <RichTextReadOnly
+                  value={
+                    isArabic
+                      ? template?.description1Ar
+                      : template?.description1En
+                  }
+                  isArabic={isArabic}
+                  className="space-y-6"
+                />
               </div>
 
               {/* Quote Box */}
               <div className="lg:mt-16">
                 <div className="bg-secondary p-8 rounded-lg shadow-lg">
                   <blockquote className="text-white">
-                    <div
-                      className={`text-lg leading-relaxed mb-6 font-dubai prose max-w-none ${
-                        isArabic ? "leading-[1.6] tracking-normal" : ""
-                      }`}
-                    >
-                      {isArabic
-                        ? template?.descriptionQuote1Ar &&
-                          parse(template.descriptionQuote1Ar)
-                        : template?.descriptionQuote1En &&
-                          parse(template.descriptionQuote1En)}
-                    </div>
+                    <RichTextReadOnly
+                      value={
+                        isArabic
+                          ? template?.descriptionQuote1Ar
+                          : template?.descriptionQuote1En
+                      }
+                      isArabic={isArabic}
+                      isWhiteText={true}
+                      fontSize="text-lg"
+                      className="leading-relaxed mb-6"
+                    />
                     <footer className="border-t border-white/20 pt-4">
                       <cite className="font-semibold not-italic">
                         {isArabic
@@ -155,27 +152,24 @@ function CaseStudyOneDesing() {
         <section className="py-8 bg-white">
           <div className="container mx-auto px-4">
             {/* Title */}
-            <h2
-              className={`text-3xl md:text-4xl font-bold text-secondary mb-6 ${
-                isArabic ? "text-right" : "text-left"
-              }`}
-            >
-              {isArabic ? template.description2Ar : template.description2En}
-            </h2>
+            <RichTextReadOnly
+              value={
+                isArabic ? template.description2Ar : template.description2En
+              }
+              isArabic={isArabic}
+              className="mb-6"
+            />
 
             {/* First Content Block */}
             <div className="mb-12">
-              <div
-                className={`text-lg text-gray-700 leading-relaxed font-dubai prose max-w-none ${
-                  isArabic
-                    ? "leading-[1.6] tracking-normal text-right"
-                    : "text-left"
-                }`}
-              >
-                {isArabic
-                  ? template?.description3Ar && parse(template.description3Ar)
-                  : template?.description3En && parse(template.description3En)}
-              </div>
+              <RichTextReadOnly
+                value={
+                  isArabic ? template?.description3Ar : template?.description3En
+                }
+                isArabic={isArabic}
+                fontSize="text-lg"
+                className="leading-relaxed"
+              />
             </div>
 
             {/* Central Image */}
@@ -193,27 +187,24 @@ function CaseStudyOneDesing() {
             </div>
 
             <div className="mb-8">
-              <div
-                className={`text-lg text-gray-700 leading-relaxed font-dubai prose max-w-none ${
-                  isArabic ? "leading-[1.6] tracking-normal" : ""
-                }`}
-              >
-                {isArabic
-                  ? template?.description4Ar && parse(template.description4Ar)
-                  : template?.description4En && parse(template.description4En)}
-              </div>
+              <RichTextReadOnly
+                value={
+                  isArabic ? template?.description4Ar : template?.description4En
+                }
+                isArabic={isArabic}
+                fontSize="text-lg"
+                className="leading-relaxed"
+              />
             </div>
 
             {/* Key Features */}
-            <div
-              className={`w-full font-dubai prose max-w-none ${
-                isArabic ? "leading-[1.6] tracking-normal" : ""
-              }`}
-            >
-              {isArabic
-                ? template?.description5Ar && parse(template.description5Ar)
-                : template?.description5En && parse(template.description5En)}
-            </div>
+            <RichTextReadOnly
+              value={
+                isArabic ? template?.description5Ar : template?.description5En
+              }
+              isArabic={isArabic}
+              className="w-full"
+            />
           </div>
         </section>
 
@@ -236,16 +227,15 @@ function CaseStudyOneDesing() {
 
               {/* Main Results Content - Swap order based on language */}
               <div className={`${isArabic ? "order-first" : "order-last"}`}>
-                <div
-                  className={`space-y-4 font-dubai prose max-w-none ${
-                    isArabic ? "leading-[1.6] tracking-normal" : ""
-                  }`}
-                >
-                  {isArabic
-                    ? template?.description6Ar && parse(template.description6Ar)
-                    : template?.description6En &&
-                      parse(template.description6En)}
-                </div>
+                <RichTextReadOnly
+                  value={
+                    isArabic
+                      ? template?.description6Ar
+                      : template?.description6En
+                  }
+                  isArabic={isArabic}
+                  className="space-y-4"
+                />
               </div>
             </div>
 
@@ -253,33 +243,32 @@ function CaseStudyOneDesing() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
               {/* Results Content */}
               <div>
-                <div
-                  className={`space-y-4 font-dubai prose max-w-none ${
-                    isArabic ? "leading-[1.6] tracking-normal" : ""
-                  }`}
-                >
-                  {isArabic
-                    ? template?.description7Ar && parse(template.description7Ar)
-                    : template?.description7En &&
-                      parse(template.description7En)}
-                </div>
+                <RichTextReadOnly
+                  value={
+                    isArabic
+                      ? template?.description7Ar
+                      : template?.description7En
+                  }
+                  isArabic={isArabic}
+                  className="space-y-4"
+                />
               </div>
 
               {/* Quote Box */}
               <div className="flex items-start">
                 <div className="bg-teal-500 p-6 rounded-lg shadow-lg w-full">
                   <blockquote className="text-white">
-                    <div
-                      className={`text-lg leading-relaxed mb-4 font-dubai prose max-w-none ${
-                        isArabic ? "leading-[1.6] tracking-normal" : ""
-                      }`}
-                    >
-                      {isArabic
-                        ? template?.descriptionQuote2Ar &&
-                          parse(template.descriptionQuote2Ar)
-                        : template?.descriptionQuote2En &&
-                          parse(template.descriptionQuote2En)}
-                    </div>
+                    <RichTextReadOnly
+                      value={
+                        isArabic
+                          ? template?.descriptionQuote2Ar
+                          : template?.descriptionQuote2En
+                      }
+                      isArabic={isArabic}
+                      isWhiteText={true}
+                      fontSize="text-lg"
+                      className="leading-relaxed mb-4"
+                    />
                     <footer>
                       <cite className="font-semibold not-italic">
                         {isArabic
@@ -312,15 +301,13 @@ function CaseStudyOneDesing() {
             </div>
 
             {/* Final Content */}
-            <div
-              className={`text-gray-700 font-dubai prose max-w-none ${
-                isArabic ? "leading-[1.6] tracking-normal" : ""
-              }`}
-            >
-              {isArabic
-                ? template?.description8Ar && parse(template.description8Ar)
-                : template?.description8En && parse(template.description8En)}
-            </div>
+            <RichTextReadOnly
+              value={
+                isArabic ? template?.description8Ar : template?.description8En
+              }
+              isArabic={isArabic}
+              className="mb-4"
+            />
 
             <div className={`mt-4 ${isArabic ? "text-right" : ""}`}>
               <Button
