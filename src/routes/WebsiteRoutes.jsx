@@ -8,6 +8,9 @@ import CaseStudy from "../pages/Website/case-studies/CaseStudy";
 import CaseStudyOneDesing from "../pages/Website/Templates/CaseStudyOneDesing";
 import CaseStudyTwoDesign from "../pages/Website/Templates/CaseStudyTwoDesign";
 import SunriseDesign from "../pages/Website/Templates/SunriseDesign";
+import PricingCards from "../pages/Website/print-pack/PricingCards";
+import SubscriptionForm from "../pages/Website/print-pack/SubscriptionForm";
+
 
 function WebsiteRoutes() {
   return (
@@ -19,6 +22,10 @@ function WebsiteRoutes() {
       <Route path="/case-study-one/:slug" element={<CaseStudyOneDesing />} />
       <Route path="/case-study-two/:slug" element={<CaseStudyTwoDesign />} />
       <Route path="/sunrise/:slug" element={<SunriseDesign />} />
+      <Route path="/print-pack/pricing" element={<PricingCards />} />
+      <Route path="/print-pack/subscription" element={<SubscriptionForm />} />
+      
+      {/* Nested routes for templates */}
 
       <Route path="/*" element={<TemplateRoutes />} />
     </Routes>
