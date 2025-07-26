@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import WebsiteLayout from "../../../layout/WebsiteLayouts/Layout";
 
 function SubscriptionForm() {
@@ -66,17 +67,65 @@ function SubscriptionForm() {
     setLoading(true);
 
     try {
-      // Here you would make the API call to submit the form
-      console.log("Submitting form data:", formData);
+      // Determine subscription type based on plan price
+      const subscriptionType = selectedPlan.price === "0" ? "free" : "paid";
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Prepare API payload
+      const payload = {
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        mobile: formData.mobile,
+        email: formData.email,
+        company_website: formData.company_website,
+        subscription_type: subscriptionType,
+        plan_id: selectedPlan.id,
+      };
 
-      // Handle success (redirect to payment or success page)
-      alert("Registration successful! Redirecting to payment...");
+      console.log("Submitting form data:", payload);
+
+      // Make API call to register user
+      const response = await fetch(
+        "https://printpack.gtrack.online/api/users",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Handle success
+        toast.success(
+          `Registration successful! Welcome to ${selectedPlan.display_name} plan.`
+        );
+
+        // Redirect to member login page
+        setTimeout(() => {
+          window.location.href = "https://printpack.gtrack.online/member-login";
+        }, 1500); // Give time for the success toast to show
+      } else {
+        // Handle API error response
+        let errorMessage = "Registration failed. Please try again.";
+
+        // Show the exact error message from API
+        if (data.error) {
+          errorMessage = data.error;
+        } else if (data.message) {
+          errorMessage = data.message;
+        }
+
+        toast.error(errorMessage);
+        console.error("API Error:", data);
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Error submitting registration. Please try again.");
+      toast.error(
+        "Network error occurred. Please check your connection and try again."
+      );
     } finally {
       setLoading(false);
     }
