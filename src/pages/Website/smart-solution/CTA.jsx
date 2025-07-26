@@ -137,43 +137,38 @@ function CTA() {
 
           {/* Right Image Section */}
           <div className="flex justify-center lg:justify-end">
-            <div className="relative">
+            <div className="w-full max-w-md">
               {template.image1 ? (
-                <div className="w-80 h-96 rounded-3xl shadow-2xl overflow-hidden border-8 border-gray-800 relative">
+                <div className="w-full h-80 md:h-96 lg:h-[500px] rounded-xl overflow-hidden shadow-lg">
                   <img
                     src={template.image1}
                     alt="Verify Halal Mobile App"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain "
                   />
-                  {/* Phone notch */}
-                  <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-20 h-6 bg-gray-800 rounded-full"></div>
                 </div>
               ) : (
-                <div className="w-80 h-96 bg-gray-200 rounded-3xl shadow-2xl flex items-center justify-center border-8 border-gray-800 relative overflow-hidden">
-                  {/* Phone notch */}
-                  <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-20 h-6 bg-gray-800 rounded-full"></div>
-
+                <div className="w-full h-80 md:h-96 lg:h-[500px] flex items-center justify-center">
                   {/* Placeholder content */}
-                  <div className="text-center p-8 mt-8">
-                    <div className="w-16 h-16 bg-white rounded-lg mx-auto mb-4 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-white/20 rounded-xl mx-auto mb-4 flex items-center justify-center">
                       <svg
-                        className="w-8 h-8 text-primary"
+                        className="w-8 h-8 text-white"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
                         <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
-                    <h4 className="text-primary font-bold mb-2">
+                    <h4 className="text-white font-bold mb-2 text-lg">
                       Verify Halal
                     </h4>
-                    <p className="text-gray-600 text-sm">
+                    <p className="text-white/80 text-sm mb-4">
                       {t("app.mobileApplication")}
                     </p>
-                    <div className="mt-4 space-y-2">
-                      <div className="h-2 bg-gray-300 rounded"></div>
-                      <div className="h-2 bg-gray-300 rounded w-3/4"></div>
-                      <div className="h-2 bg-gray-300 rounded w-1/2"></div>
+                    <div className="space-y-3">
+                      <div className="h-3 bg-white/20 rounded-full"></div>
+                      <div className="h-3 bg-white/20 rounded-full w-4/5 mx-auto"></div>
+                      <div className="h-3 bg-white/20 rounded-full w-3/5 mx-auto"></div>
                     </div>
                   </div>
                 </div>

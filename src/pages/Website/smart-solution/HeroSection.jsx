@@ -7,7 +7,7 @@ function HeroSection() {
 
   return (
     <div
-      className="relative bg-gradient-to-br from-primary via-navy-600 to-navy-700 min-h-[70vh] flex items-center justify-center px-4 overflow-hidden p-14"
+      className="relative bg-gradient-to-br from-primary via-navy-600 to-navy-700 min-h-[50vh] flex items-center justify-center px-4 overflow-hidden p-7"
       dir={isArabic ? "rtl" : "ltr"}
     >
       {/* Awesome SVG Background */}
@@ -143,7 +143,7 @@ function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-t from-navy-700/20 via-transparent to-primary/10"></div>
 
       <div className="relative z-10 text-center max-w-5xl mx-auto">
-        <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight font-dubai">
+        <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-bold  leading-tight font-dubai">
           {t("halalHero.title1")}{" "}
           <span className="bg-gradient-to-r from-green-300 to-green-500 bg-clip-text text-transparent">
             {t("halalHero.productCount")}
@@ -187,7 +187,7 @@ function HeroSection() {
       </div>
 
       {/* App Store Buttons - Bottom Right */}
-      <div className="absolute bottom-6 right-6 flex flex-col gap-3 z-20">
+      <div className="absolute bottom-6 xl:bottom-10 right-6 flex flex-col xl:flex-row gap-3 z-20">
         <div className="bg-black/80 backdrop-blur-sm hover:bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2 cursor-pointer transition-all duration-300 transform hover:scale-105 shadow-lg">
           <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
             <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.92 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />

@@ -7,7 +7,7 @@ function PricingCards() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-    const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSubscriptionPlans = async () => {
@@ -103,12 +103,11 @@ function PricingCards() {
     );
   }
 
-
   const handleSubscription = (plan) => {
     // Handle subscription logic here, e.g., redirect to payment page or show modal
     navigate("/print-pack/subscription", { state: { selectedPlan: plan } });
     console.log("Selected Plan:", plan);
-  }
+  };
 
   return (
     <WebsiteLayout>
@@ -146,12 +145,13 @@ function PricingCards() {
                   </div>
                 )}
 
-                <div className="p-8">
+                <div className="p-8 h-full flex flex-col">
                   {/* Plan Header */}
                   <div className="text-center mb-6">
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                        {/* make the first letter capital */}
-                      {plan.display_name.charAt(0).toUpperCase() + plan.display_name.slice(1)} 
+                      {/* make the first letter capital */}
+                      {plan.display_name.charAt(0).toUpperCase() +
+                        plan.display_name.slice(1)}
                     </h3>
                     <p className="text-gray-600 text-sm mb-4">
                       {plan.description}
@@ -160,7 +160,7 @@ function PricingCards() {
                     {/* Price */}
                     <div className="mb-4">
                       <span className="text-3xl font-bold text-gray-900">
-                       {formatPrice(plan.price)}
+                        {formatPrice(plan.price)}
                       </span>
                       {plan.price !== "0" && (
                         <span className="text-gray-600 text-sm ml-1">
@@ -171,8 +171,8 @@ function PricingCards() {
                   </div>
 
                   {/* Features List */}
-                  <div className="mb-8">
-                    <ul className="space-y-3">
+                  <div className="flex-1 mb-6">
+                    <ul className="space-y-3 h-full">
                       {plan.services.slice(0, 4).map((service) => (
                         <li key={service.id} className="flex items-start">
                           <svg
@@ -205,15 +205,17 @@ function PricingCards() {
                   </div>
 
                   {/* CTA Button */}
-                  <button
-                    onClick={() => handleSubscription(plan)}
-                    className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 ${getButtonColor(
-                      plan.name,
-                      plan.is_popular
-                    )}`}
-                  >
-                    {plan.price === "0" ? "Get Started Free" : "Choose Plan"}
-                  </button>
+                  <div className="mt-auto pt-4">
+                    <button
+                      onClick={() => handleSubscription(plan)}
+                      className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 ${getButtonColor(
+                        plan.name,
+                        plan.is_popular
+                      )}`}
+                    >
+                      {plan.price === "0" ? "Get Started Free" : "Choose Plan"}
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

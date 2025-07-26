@@ -234,6 +234,16 @@ export default function Header() {
       <div className="hidden lg:block bg-[#1B365D] text-white relative z-20">
         <div className="container mx-auto px-4 py-1">
           <nav className="flex justify-center gap-x-5">
+            {/* Static Home Menu Item */}
+            <div className="relative group">
+              <button
+                onClick={() => navigate("/")}
+                className="px-4 py-2.5 flex items-center space-x-1.5 hover:bg-[#335082] transition-all duration-300"
+              >
+                <span className="text-base font-medium">{t("menu.home")}</span>
+              </button>
+            </div>
+
             {transformedMenuItems.map((menu) => (
               <div
                 key={menu.title}
@@ -295,6 +305,19 @@ export default function Header() {
 
               {/* Mobile Navigation Items */}
               <nav className="flex flex-col space-y-2">
+                {/* Static Home Menu Item for Mobile */}
+                <div className="border-b border-gray-100">
+                  <button
+                    onClick={() => {
+                      navigate("/");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full px-4 py-3 text-left text-[#1B365D] font-medium"
+                  >
+                    {t("menu.home")}
+                  </button>
+                </div>
+
                 {transformedMenuItems.map((menu) => (
                   <div
                     key={menu.title}

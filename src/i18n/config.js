@@ -14,6 +14,9 @@ const resources = {
         noImage: "No Image",
         loading: "Loading...",
       },
+      menu: {
+        home: "Home",
+      },
       app: {
         getItOn: "GET IT ON",
         availableOn: "Available on the",
@@ -65,6 +68,9 @@ const resources = {
         learnMore: "اعرف المزيد",
         noImage: "لا توجد صورة",
         loading: "جاري التحميل...",
+      },
+      menu: {
+        home: "الرئيسية",
       },
       app: {
         getItOn: "احصل عليه من",

@@ -8,58 +8,17 @@ function SubscriptionForm() {
   const selectedPlan = location.state?.selectedPlan;
 
   const [formData, setFormData] = useState({
-    email: "",
-    company_name_eng: "",
-    company_name_arabic: "",
-    tin_number: "",
-    cr_number: "",
-    cr_activity: "",
-    contact_person: "",
+    firstname: "",
+    lastname: "",
     mobile: "",
-    company_landline: "",
-    business_type: "organization",
-    country: "Saudi Arabia",
-    state: "",
-    city: "",
-    zip_code: "",
+    email: "",
+    company_website: "",
     membership_category: selectedPlan?.name || "",
-    user_source: "gst",
-    industry_types: [],
     plan_id: selectedPlan?.id || "",
-    payment_method: "credit_card",
-    notes: "User registering via GST website",
   });
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-
-  // Sample industry types (you might want to fetch these from an API)
-  const industryOptions = [
-    { id: "1", name: "Technology" },
-    { id: "2", name: "Software Development" },
-    { id: "3", name: "Manufacturing" },
-    { id: "4", name: "Healthcare" },
-    { id: "5", name: "Finance" },
-    { id: "6", name: "Retail" },
-    { id: "7", name: "Education" },
-    { id: "8", name: "Logistics" },
-  ];
-
-  const saudiStates = [
-    "Riyadh",
-    "Makkah",
-    "Eastern Province",
-    "Asir",
-    "Jazan",
-    "Madinah",
-    "Qassim",
-    "Tabuk",
-    "Hail",
-    "Northern Borders",
-    "Najran",
-    "Al Bahah",
-    "Al Jouf",
-  ];
 
   useEffect(() => {
     if (!selectedPlan) {
@@ -83,44 +42,15 @@ function SubscriptionForm() {
     }
   };
 
-  const handleIndustryChange = (industryId) => {
-    const industry = industryOptions.find((ind) => ind.id === industryId);
-    if (!industry) return;
-
-    setFormData((prev) => {
-      const exists = prev.industry_types.find((ind) => ind.id === industryId);
-      if (exists) {
-        return {
-          ...prev,
-          industry_types: prev.industry_types.filter(
-            (ind) => ind.id !== industryId
-          ),
-        };
-      } else {
-        return {
-          ...prev,
-          industry_types: [...prev.industry_types, industry],
-        };
-      }
-    });
-  };
-
   const validateForm = () => {
     const newErrors = {};
 
+    if (!formData.firstname) newErrors.firstname = "First name is required";
+    if (!formData.lastname) newErrors.lastname = "Last name is required";
     if (!formData.email) newErrors.email = "Email is required";
-    if (!formData.company_name_eng)
-      newErrors.company_name_eng = "Company name in English is required";
-    if (!formData.contact_person)
-      newErrors.contact_person = "Contact person is required";
     if (!formData.mobile) newErrors.mobile = "Mobile number is required";
-    if (!formData.tin_number) newErrors.tin_number = "TIN number is required";
-    if (!formData.cr_number) newErrors.cr_number = "CR number is required";
-    if (!formData.state) newErrors.state = "State is required";
-    if (!formData.city) newErrors.city = "City is required";
-    if (!formData.zip_code) newErrors.zip_code = "Zip code is required";
-    if (formData.industry_types.length === 0)
-      newErrors.industry_types = "Please select at least one industry type";
+    if (!formData.company_website)
+      newErrors.company_website = "Company website is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -257,141 +187,58 @@ function SubscriptionForm() {
             <div className="lg:col-span-2">
               <div className="bg-white rounded-2xl shadow-lg p-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Company Registration
+                  Registration Information
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Company Information */}
+                  {/* Personal Information */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Company Information
+                      Personal Information
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Company Name (English) *
+                          First Name *
                         </label>
                         <input
                           type="text"
-                          name="company_name_eng"
-                          value={formData.company_name_eng}
+                          name="firstname"
+                          value={formData.firstname}
                           onChange={handleInputChange}
                           className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                            errors.company_name_eng
+                            errors.firstname
                               ? "border-red-500"
                               : "border-gray-300"
                           }`}
-                          placeholder="Enter company name in English"
+                          placeholder="Enter your first name"
                         />
-                        {errors.company_name_eng && (
+                        {errors.firstname && (
                           <p className="text-red-500 text-xs mt-1">
-                            {errors.company_name_eng}
+                            {errors.firstname}
                           </p>
                         )}
                       </div>
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Company Name (Arabic)
+                          Last Name *
                         </label>
                         <input
                           type="text"
-                          name="company_name_arabic"
-                          value={formData.company_name_arabic}
-                          onChange={handleInputChange}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          placeholder="اسم الشركة بالعربية"
-                          dir="rtl"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          TIN Number *
-                        </label>
-                        <input
-                          type="text"
-                          name="tin_number"
-                          value={formData.tin_number}
+                          name="lastname"
+                          value={formData.lastname}
                           onChange={handleInputChange}
                           className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                            errors.tin_number
+                            errors.lastname
                               ? "border-red-500"
                               : "border-gray-300"
                           }`}
-                          placeholder="Enter TIN number"
+                          placeholder="Enter your last name"
                         />
-                        {errors.tin_number && (
+                        {errors.lastname && (
                           <p className="text-red-500 text-xs mt-1">
-                            {errors.tin_number}
-                          </p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          CR Number *
-                        </label>
-                        <input
-                          type="text"
-                          name="cr_number"
-                          value={formData.cr_number}
-                          onChange={handleInputChange}
-                          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                            errors.cr_number
-                              ? "border-red-500"
-                              : "border-gray-300"
-                          }`}
-                          placeholder="Enter CR number"
-                        />
-                        {errors.cr_number && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {errors.cr_number}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          CR Activity
-                        </label>
-                        <input
-                          type="text"
-                          name="cr_activity"
-                          value={formData.cr_activity}
-                          onChange={handleInputChange}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          placeholder="Enter CR activity"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Contact Information */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Contact Information
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Contact Person *
-                        </label>
-                        <input
-                          type="text"
-                          name="contact_person"
-                          value={formData.contact_person}
-                          onChange={handleInputChange}
-                          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                            errors.contact_person
-                              ? "border-red-500"
-                              : "border-gray-300"
-                          }`}
-                          placeholder="Enter contact person name"
-                        />
-                        {errors.contact_person && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {errors.contact_person}
+                            {errors.lastname}
                           </p>
                         )}
                       </div>
@@ -408,7 +255,7 @@ function SubscriptionForm() {
                           className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                             errors.email ? "border-red-500" : "border-gray-300"
                           }`}
-                          placeholder="Enter email address"
+                          placeholder="Enter your email address"
                         />
                         {errors.email && (
                           <p className="text-red-500 text-xs mt-1">
@@ -438,173 +285,28 @@ function SubscriptionForm() {
                         )}
                       </div>
 
-                      <div>
+                      <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Company Landline
+                          Company Website *
                         </label>
                         <input
-                          type="tel"
-                          name="company_landline"
-                          value={formData.company_landline}
-                          onChange={handleInputChange}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          placeholder="+966 XX XXX XXXX"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Location Information */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Location Information
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Country
-                        </label>
-                        <input
-                          type="text"
-                          name="country"
-                          value={formData.country}
-                          readOnly
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          State/Province *
-                        </label>
-                        <select
-                          name="state"
-                          value={formData.state}
+                          type="url"
+                          name="company_website"
+                          value={formData.company_website}
                           onChange={handleInputChange}
                           className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                            errors.state ? "border-red-500" : "border-gray-300"
-                          }`}
-                        >
-                          <option value="">Select State</option>
-                          {saudiStates.map((state) => (
-                            <option key={state} value={state}>
-                              {state}
-                            </option>
-                          ))}
-                        </select>
-                        {errors.state && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {errors.state}
-                          </p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          City *
-                        </label>
-                        <input
-                          type="text"
-                          name="city"
-                          value={formData.city}
-                          onChange={handleInputChange}
-                          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                            errors.city ? "border-red-500" : "border-gray-300"
-                          }`}
-                          placeholder="Enter city"
-                        />
-                        {errors.city && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {errors.city}
-                          </p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Zip Code *
-                        </label>
-                        <input
-                          type="text"
-                          name="zip_code"
-                          value={formData.zip_code}
-                          onChange={handleInputChange}
-                          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                            errors.zip_code
+                            errors.company_website
                               ? "border-red-500"
                               : "border-gray-300"
                           }`}
-                          placeholder="Enter zip code"
+                          placeholder="https://www.yourcompany.com"
                         />
-                        {errors.zip_code && (
+                        {errors.company_website && (
                           <p className="text-red-500 text-xs mt-1">
-                            {errors.zip_code}
+                            {errors.company_website}
                           </p>
                         )}
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Industry Types */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Industry Types *
-                    </h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {industryOptions.map((industry) => (
-                        <label
-                          key={industry.id}
-                          className="flex items-center space-x-2 cursor-pointer"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={formData.industry_types.some(
-                              (ind) => ind.id === industry.id
-                            )}
-                            onChange={() => handleIndustryChange(industry.id)}
-                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                          />
-                          <span className="text-sm text-gray-700">
-                            {industry.name}
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                    {errors.industry_types && (
-                      <p className="text-red-500 text-xs mt-1">
-                        {errors.industry_types}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Payment Method */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Payment Method
-                    </h3>
-                    <div className="space-y-3">
-                      <label className="flex items-center space-x-3">
-                        <input
-                          type="radio"
-                          name="payment_method"
-                          value="credit_card"
-                          checked={formData.payment_method === "credit_card"}
-                          onChange={handleInputChange}
-                          className="text-blue-600 focus:ring-blue-500"
-                        />
-                        <span className="text-gray-700">Credit Card</span>
-                      </label>
-                      <label className="flex items-center space-x-3">
-                        <input
-                          type="radio"
-                          name="payment_method"
-                          value="bank_transfer"
-                          checked={formData.payment_method === "bank_transfer"}
-                          onChange={handleInputChange}
-                          className="text-blue-600 focus:ring-blue-500"
-                        />
-                        <span className="text-gray-700">Bank Transfer</span>
-                      </label>
                     </div>
                   </div>
 

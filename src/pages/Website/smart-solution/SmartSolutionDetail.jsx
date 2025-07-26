@@ -9,7 +9,7 @@ function SmartSolutionDetail() {
   return (
     <WebsiteLayout>
       <HeroSection />
-      <StatsCards />
+      {/* <StatsCards /> */}
       <ProductsCards />
       <CTA />
       {/* Add more sections as needed */}
