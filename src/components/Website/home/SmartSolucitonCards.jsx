@@ -147,30 +147,6 @@ function SmartSolutionCards() {
 
       {/* Cards Grid with Navigation */}
       <div className="relative">
-        {/* Navigation Arrows */}
-        {totalPages > 1 && (
-          <>
-            <button
-              onClick={handlePrevPage}
-              className="absolute top-1/2 -left-12 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg z-10 hover:bg-gray-100 transition-colors"
-              aria-label="Previous page"
-            >
-              <span className="text-2xl text-primary">
-                {isArabic ? "→" : "←"}
-              </span>
-            </button>
-            <button
-              onClick={handleNextPage}
-              className="absolute top-1/2 -right-12 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg z-10 hover:bg-gray-100 transition-colors"
-              aria-label="Next page"
-            >
-              <span className="text-2xl text-primary">
-                {isArabic ? "←" : "→"}
-              </span>
-            </button>
-          </>
-        )}
-
         {/* Cards Container */}
         <div className="overflow-hidden">
           <AnimatePresence mode="wait">
@@ -271,21 +247,31 @@ function SmartSolutionCards() {
           </AnimatePresence>
         </div>
 
-        {/* Pagination Dots */}
+        {/* Navigation with Arrows */}
         {totalPages > 1 && (
-          <div className="flex justify-center mt-8 space-x-2">
-            {Array.from({ length: totalPages }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentPage(index)}
-                className={`h-3 rounded-full transition-all duration-300 ${
-                  index === currentPage
-                    ? "bg-primary w-8"
-                    : "bg-gray-300 hover:bg-gray-400 w-3"
-                }`}
-                aria-label={`Go to page ${index + 1}`}
-              />
-            ))}
+          <div className="flex justify-center items-center mt-8 space-x-4">
+            {/* Previous Arrow */}
+            <button
+              onClick={handlePrevPage}
+              className="bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+              aria-label="Previous page"
+            >
+              <span className="text-xl text-primary">
+                {isArabic ? "→" : "←"}
+              </span>
+            </button>
+
+
+            {/* Next Arrow */}
+            <button
+              onClick={handleNextPage}
+              className="bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+              aria-label="Next page"
+            >
+              <span className="text-xl text-primary">
+                {isArabic ? "←" : "→"}
+              </span>
+            </button>
           </div>
         )}
 

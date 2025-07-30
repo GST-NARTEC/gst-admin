@@ -101,9 +101,10 @@ function CaseStudyOneDesing() {
             </div>
           </div>
         </section>
+        <div className="mx-5">
 
         {/* Section 2 - Overview */}
-        <section className="mt-24 py-8 bg-gray-50">
+        <section className=" pt-14 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
               {/* Overview Content */}
@@ -149,7 +150,7 @@ function CaseStudyOneDesing() {
         </section>
 
         {/* Section 3 - Solution */}
-        <section className="py-8 bg-white">
+        <section className=" bg-white">
           <div className="container mx-auto px-4">
             {/* Title */}
             <RichTextReadOnly
@@ -157,11 +158,11 @@ function CaseStudyOneDesing() {
                 isArabic ? template.description2Ar : template.description2En
               }
               isArabic={isArabic}
-              className="mb-6"
+              className=""
             />
 
             {/* First Content Block */}
-            <div className="mb-12">
+            <div className="mb-2">
               <RichTextReadOnly
                 value={
                   isArabic ? template?.description3Ar : template?.description3En
@@ -173,8 +174,8 @@ function CaseStudyOneDesing() {
             </div>
 
             {/* Central Image */}
-            <div className="mb-12 flex justify-center">
-              <div className="w-full max-w-4xl">
+            <div className="mb-5 flex justify-center">
+              <div className="w-full ">
                 <img
                   src={
                     fixImageUrl(template.image2) ||
@@ -186,7 +187,7 @@ function CaseStudyOneDesing() {
               </div>
             </div>
 
-            <div className="mb-8">
+            <div className="mb-4">
               <RichTextReadOnly
                 value={
                   isArabic ? template?.description4Ar : template?.description4En
@@ -284,11 +285,11 @@ function CaseStudyOneDesing() {
         </section>
 
         {/* Section 5 - Final Section */}
-        <section className="py-8  my-16">
+        <section className="py-8  ">
           <div className="container mx-auto px-4">
             {/* Central Image */}
             <div className="mb-12 flex justify-center">
-              <div className="w-full max-w-4xl">
+              <div className="w-full ">
                 <img
                   src={
                     fixImageUrl(template.image4) ||
@@ -322,6 +323,7 @@ function CaseStudyOneDesing() {
             </div>
           </div>
         </section>
+        </div>
       </div>
     </WebsiteLayout>
   );

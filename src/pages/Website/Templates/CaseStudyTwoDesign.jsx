@@ -110,6 +110,7 @@ function CaseStudyTwoDesign() {
           </div>
         </section>
 
+        <div className="mx-5">
         <section className="mt-24 py-8 bg-white">
           <div className="container mx-auto px-4">
             {/* First Content Block - Description1 */}
@@ -125,7 +126,7 @@ function CaseStudyTwoDesign() {
 
             {/* Central Image */}
             <div className="mb-12 flex justify-center">
-              <div className="w-full max-w-4xl">
+              <div className="w-full ">
                 <img
                   src={
                     fixImageUrl(template.image2) ||
@@ -216,7 +217,7 @@ function CaseStudyTwoDesign() {
 
             {/* Central Image */}
             <div className="mb-12 flex justify-center">
-              <div className="w-full max-w-4xl">
+              <div className="w-full">
                 <img
                   src={
                     fixImageUrl(template.image5) ||
@@ -310,6 +311,7 @@ function CaseStudyTwoDesign() {
             </div>
           </div>
         </section>
+        </div>
       </div>
     </WebsiteLayout>
   );
