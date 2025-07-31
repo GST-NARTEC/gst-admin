@@ -17,7 +17,7 @@ function EditPdfGuideline({ isOpen, onClose, pdf }) {
   console.log(pdf);
   const [formData, setFormData] = useState({
     titleEn: "",
-    // titleAr: "",
+    titleAr: "",
     pdf: null,
   });
 
@@ -27,8 +27,8 @@ function EditPdfGuideline({ isOpen, onClose, pdf }) {
   useEffect(() => {
     if (pdf) {
       setFormData({
-        titleEn: pdf.title || "",
-        // titleAr: pdf.titleAr || "",
+        titleEn: pdf.titleEn || "",
+        titleAr: pdf.titleAr || "",
         pdf: null, // Reset PDF file on each open
       });
     }
@@ -52,7 +52,8 @@ function EditPdfGuideline({ isOpen, onClose, pdf }) {
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("titleEn", formData.titleEn);
-      //   formDataToSend.append("titleAr", formData.titleAr);
+      formDataToSend.append("titleAr", formData.titleAr);
+      formDataToSend.append("type", "pdf");
       if (formData.pdf) {
         formDataToSend.append("pdf", formData.pdf);
       }
@@ -89,7 +90,7 @@ function EditPdfGuideline({ isOpen, onClose, pdf }) {
                 }
                 required
               />
-              {/* <Input
+              <Input
                 label="Title (Arabic)"
                 placeholder="Enter title in Arabic"
                 value={formData.titleAr}
@@ -97,7 +98,7 @@ function EditPdfGuideline({ isOpen, onClose, pdf }) {
                   setFormData((prev) => ({ ...prev, titleAr: e.target.value }))
                 }
                 required
-              /> */}
+              />
               <div
                 {...getRootProps()}
                 className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer
@@ -153,9 +154,7 @@ function EditPdfGuideline({ isOpen, onClose, pdf }) {
               type="submit"
               isLoading={isLoading}
               className="bg-navy-700"
-
-
->
+            >
               Update
             </Button>
           </ModalFooter>

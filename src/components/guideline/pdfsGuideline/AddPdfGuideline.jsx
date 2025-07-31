@@ -38,7 +38,8 @@ function AddPdfGuideline({ isOpen, onClose }) {
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("titleEn", formData.titleEn);
-    //   formDataToSend.append("titleAr", formData.titleAr);
+      formDataToSend.append("titleAr", formData.titleAr);
+      formDataToSend.append("type", "pdf");
       formDataToSend.append("pdf", formData.pdf);
 
       await createUserGuide(formDataToSend).unwrap();
@@ -67,14 +68,14 @@ function AddPdfGuideline({ isOpen, onClose }) {
                 setFormData((prev) => ({ ...prev, titleEn: e.target.value }))
               }
             />
-            {/* <Input
+            <Input
               label="Title (Arabic)"
               placeholder="Enter title in Arabic"
               value={formData.titleAr}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, titleAr: e.target.value }))
               }
-            /> */}
+            />
             <div
               {...getRootProps()}
               className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer
