@@ -310,17 +310,6 @@ function CaseStudyOneDesing() {
               className="mb-4"
             />
 
-            <div className={`mt-4 ${isArabic ? "text-right" : ""}`}>
-              <Button
-                as="a"
-                href="https://www.gs1.org/standards/gs1-sunrise-2027"
-                target="_blank"
-                rel="noopener noreferrer"
-                color="primary"
-              >
-                {t("common.learnMore")}
-              </Button>
-            </div>
           </div>
         </section>
         </div>

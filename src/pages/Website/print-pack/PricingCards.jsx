@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import WebsiteLayout from "../../../layout/WebsiteLayouts/Layout";
 import { useNavigate } from "react-router-dom";
+import { Tooltip } from "@nextui-org/react";
 
 function PricingCards() {
   const [plans, setPlans] = useState([]);
@@ -197,8 +198,51 @@ function PricingCards() {
                         </li>
                       ))}
                       {plan.services.length > 4 && (
-                        <li className="text-sm text-gray-600 font-medium">
-                          + {plan.services.length - 4} more features
+                        <li>
+                          <Tooltip
+                            content={
+                              <div className="px-2 py-3 max-w-sm">
+                                <div className="text-sm font-bold text-gray-900 mb-3">
+                                  Additional Features:
+                                </div>
+                                <div className="space-y-2 max-h-48 overflow-y-auto">
+                                  {plan.services.slice(4).map((service) => (
+                                    <div key={service.id} className="flex items-start">
+                                      <svg
+                                        className="w-4 h-4 text-green-500 mt-0.5 mr-2 flex-shrink-0"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                      >
+                                        <path
+                                          fillRule="evenodd"
+                                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                          clipRule="evenodd"
+                                        />
+                                      </svg>
+                                      <div>
+                                        <p className="text-xs font-medium text-gray-900">
+                                          {service.name}
+                                        </p>
+                                        <p className="text-xs text-gray-600 mt-1">
+                                          {service.description}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            }
+                            placement="top"
+                            showArrow={true}
+                            classNames={{
+                              base: "z-50",
+                              content: "bg-white border border-gray-200 shadow-xl rounded-lg"
+                            }}
+                          >
+                            <span className="text-sm text-blue-600 font-medium cursor-pointer hover:text-blue-800 transition-colors duration-200">
+                              + {plan.services.length - 4} more features
+                            </span>
+                          </Tooltip>
                         </li>
                       )}
                     </ul>
