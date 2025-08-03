@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import WebsiteLayout from "../../../layout/WebsiteLayouts/Layout";
 
 function SubscriptionForm() {
@@ -49,7 +51,9 @@ function SubscriptionForm() {
     if (!formData.firstname) newErrors.firstname = "First name is required";
     if (!formData.lastname) newErrors.lastname = "Last name is required";
     if (!formData.email) newErrors.email = "Email is required";
-    if (!formData.mobile) newErrors.mobile = "Mobile number is required";
+    if (!formData.mobile || formData.mobile.length < 10) {
+      newErrors.mobile = "Valid mobile number is required";
+    }
     if (!formData.company_website)
       newErrors.company_website = "Company website is required";
 
@@ -317,15 +321,33 @@ function SubscriptionForm() {
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           Mobile Number *
                         </label>
-                        <input
-                          type="tel"
-                          name="mobile"
+                        <PhoneInput
+                          country={"sa"}
                           value={formData.mobile}
-                          onChange={handleInputChange}
-                          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                          onChange={(phone) => {
+                            setFormData((prev) => ({
+                              ...prev,
+                              mobile: phone,
+                            }));
+
+                            // Clear error when user starts typing
+                            if (errors.mobile) {
+                              setErrors((prev) => ({
+                                ...prev,
+                                mobile: "",
+                              }));
+                            }
+                          }}
+                          inputClass={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                             errors.mobile ? "border-red-500" : "border-gray-300"
                           }`}
-                          placeholder="+966 XX XXX XXXX"
+                          containerClass="w-full"
+                          buttonClass="border-gray-300"
+                          dropdownClass="border-gray-300"
+                          searchClass="w-full px-3 py-2 border border-gray-300 rounded"
+                          // enableSearch={true}
+                          // disableSearchIcon={false}
+                          placeholder="Enter your mobile number"
                         />
                         {errors.mobile && (
                           <p className="text-red-500 text-xs mt-1">
@@ -339,7 +361,7 @@ function SubscriptionForm() {
                           Company Website *
                         </label>
                         <input
-                          type="url"
+                          type="text"
                           name="company_website"
                           value={formData.company_website}
                           onChange={handleInputChange}

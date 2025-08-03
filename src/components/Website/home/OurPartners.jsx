@@ -98,7 +98,7 @@ function OurPartners() {
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
             Our{" "}
             <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-              Gold Sponsors
+              Gold Strategic Partners
             </span>
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-yellow-400 to-yellow-600 mx-auto rounded-full"></div>
