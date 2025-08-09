@@ -10,7 +10,7 @@ import CaseStudyTwoDesign from "../pages/Website/Templates/CaseStudyTwoDesign";
 import SunriseDesign from "../pages/Website/Templates/SunriseDesign";
 import PricingCards from "../pages/Website/print-pack/PricingCards";
 import SubscriptionForm from "../pages/Website/print-pack/SubscriptionForm";
-
+import ContactUs from "../pages/Website/contact-us/ContactUs";
 
 function WebsiteRoutes() {
   return (
@@ -24,7 +24,8 @@ function WebsiteRoutes() {
       <Route path="/sunrise/:slug" element={<SunriseDesign />} />
       <Route path="/print-pack/pricing" element={<PricingCards />} />
       <Route path="/print-pack/subscription" element={<SubscriptionForm />} />
-      
+      <Route path="/contact-us" element={<ContactUs />} />
+
       {/* Nested routes for templates */}
 
       <Route path="/*" element={<TemplateRoutes />} />
