@@ -3,6 +3,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import toast from "react-hot-toast";
 import WebsiteLayout from "../../../layout/WebsiteLayouts/Layout";
+import { useSubmitContactFormMutation } from "../../../store/apis/endpoints/websiteEndpoints/contact-us";
 
 function ContactUs() {
   const [formData, setFormData] = useState({
@@ -15,7 +16,8 @@ function ContactUs() {
   });
 
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
+  // use RTK Query mutation for submitting contact form
+  const [submitContact, { isLoading }] = useSubmitContactFormMutation();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -57,15 +59,9 @@ function ContactUs() {
     if (!validateForm()) {
       return;
     }
-
-    setLoading(true);
-
     try {
-      // Here you would make your API call to submit the contact form
-      console.log("Submitting contact form:", formData);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // call the backend API (POST /contact-us)
+      await submitContact(formData).unwrap();
 
       toast.success(
         "Your message has been sent successfully! We'll get back to you soon."
@@ -82,9 +78,10 @@ function ContactUs() {
       });
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+      // try to show a helpful message if available from the API
+      const message =
+        error?.data?.message || error?.error || "Something went wrong. Please try again.";
+      toast.error(message);
     }
   };
 
@@ -327,10 +324,10 @@ function ContactUs() {
                   <div>
                     <button
                       type="submit"
-                      disabled={loading}
+                      disabled={isLoading}
                       className="w-full bg-gradient-to-r from-primary to-secondary text-white py-4 px-6 rounded-lg font-semibold hover:from-tertiary hover:to-primary focus:ring-4 focus:ring-primary/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
                     >
-                      {loading ? (
+                      {isLoading ? (
                         <>
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                           Sending...
