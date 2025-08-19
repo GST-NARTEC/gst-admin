@@ -111,7 +111,7 @@ function Footer() {
                   <HiPhone className="text-xl text-white" />
                 </div>
                 <div dir="ltr">
-                  {isArabic ? "+966 92 005 1091" : "+966920051091"}
+                  {isArabic ? "92 005 1091" : "920051091"}
                 </div>
               </motion.a>
             </div>
