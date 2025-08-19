@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import WebsiteLayout from "../../../layout/WebsiteLayouts/Layout";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@nextui-org/react";
+import { useTranslation } from "react-i18next";
 
 function PricingCards() {
   const [plans, setPlans] = useState([]);
@@ -9,6 +10,8 @@ function PricingCards() {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
 
   useEffect(() => {
     const fetchSubscriptionPlans = async () => {
@@ -21,10 +24,10 @@ function PricingCards() {
         if (data.success) {
           setPlans(data.data);
         } else {
-          setError("Failed to fetch subscription plans");
+          setError(t("pricingCards.errorMessage"));
         }
       } catch (err) {
-        setError("Error fetching subscription plans");
+        setError(t("pricingCards.errorMessage"));
         console.error("Error:", err);
       } finally {
         setLoading(false);
@@ -35,7 +38,7 @@ function PricingCards() {
   }, []);
 
   const formatPrice = (price) => {
-    if (price === "0") return "Free";
+    if (price === "0") return t("pricingCards.free");
     return ` SAR ${parseInt(price).toLocaleString()}`;
   };
 
@@ -81,7 +84,7 @@ function PricingCards() {
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
               <p className="mt-4 text-gray-600">
-                Loading subscription plans...
+                {t("pricingCards.loadingPlans")}
               </p>
             </div>
           </div>
@@ -112,17 +115,18 @@ function PricingCards() {
 
   return (
     <WebsiteLayout>
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div
+        className="min-h-screen bg-gray-50 py-12"
+        dir={isArabic ? "rtl" : "ltr"}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header Section */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Choose Your Perfect Plan
+              {t("pricingCards.title")}
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Get GS1 2027 compliant with our comprehensive barcode and
-              integration solutions. From basic audits to enterprise-grade
-              customizations.
+              {t("pricingCards.subtitle")}
             </p>
           </div>
 
@@ -141,7 +145,7 @@ function PricingCards() {
                 {plan.is_popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <span className="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
-                      Most Popular
+                      {t("pricingCards.mostPopular")}
                     </span>
                   </div>
                 )}
@@ -151,11 +155,14 @@ function PricingCards() {
                   <div className="text-center mb-6">
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">
                       {/* make the first letter capital */}
-                      {plan.display_name.charAt(0).toUpperCase() +
-                        plan.display_name.slice(1)}
+                      {isArabic
+                        ? plan.display_name_ar || plan.display_name
+                        : plan.display_name}
                     </h3>
                     <p className="text-gray-600 text-sm mb-4">
-                      {plan.description}
+                      {isArabic
+                        ? plan.description_ar || plan.description
+                        : plan.description}
                     </p>
 
                     {/* Price */}
@@ -165,7 +172,7 @@ function PricingCards() {
                       </span>
                       {plan.price !== "0" && (
                         <span className="text-gray-600 text-sm ml-1">
-                          /{plan.billing_cycle}
+                          /{t(`pricingCards.${plan.billing_cycle}`)}
                         </span>
                       )}
                     </div>
@@ -189,10 +196,14 @@ function PricingCards() {
                           </svg>
                           <div>
                             <p className="text-sm font-medium text-gray-900">
-                              {service.name}
+                              {isArabic
+                                ? service.display_name_ar || service.name
+                                : service.name}
                             </p>
                             <p className="text-xs text-gray-600 mt-1">
-                              {service.description}
+                              {isArabic
+                                ? service.description_ar || service.description
+                                : service.description}
                             </p>
                           </div>
                         </li>
@@ -203,11 +214,14 @@ function PricingCards() {
                             content={
                               <div className="px-2 py-3 max-w-sm">
                                 <div className="text-sm font-bold text-gray-900 mb-3">
-                                  Additional Features:
+                                  {t("pricingCards.additionalFeatures")}
                                 </div>
                                 <div className="space-y-2 max-h-48 overflow-y-auto">
                                   {plan.services.slice(4).map((service) => (
-                                    <div key={service.id} className="flex items-start">
+                                    <div
+                                      key={service.id}
+                                      className="flex items-start"
+                                    >
                                       <svg
                                         className="w-4 h-4 text-green-500 mt-0.5 mr-2 flex-shrink-0"
                                         fill="currentColor"
@@ -221,10 +235,16 @@ function PricingCards() {
                                       </svg>
                                       <div>
                                         <p className="text-xs font-medium text-gray-900">
-                                          {service.name}
+                                          {isArabic
+                                            ? service.display_name_ar ||
+                                              service.name
+                                            : service.name}
                                         </p>
                                         <p className="text-xs text-gray-600 mt-1">
-                                          {service.description}
+                                          {isArabic
+                                            ? service.description_ar ||
+                                              service.description
+                                            : service.description}
                                         </p>
                                       </div>
                                     </div>
@@ -236,11 +256,13 @@ function PricingCards() {
                             showArrow={true}
                             classNames={{
                               base: "z-50",
-                              content: "bg-white border border-gray-200 shadow-xl rounded-lg"
+                              content:
+                                "bg-white border border-gray-200 shadow-xl rounded-lg",
                             }}
                           >
                             <span className="text-sm text-blue-600 font-medium cursor-pointer hover:text-blue-800 transition-colors duration-200">
-                              + {plan.services.length - 4} more features
+                              + {plan.services.length - 4}
+                              {t("pricingCards.moreFeatures")}
                             </span>
                           </Tooltip>
                         </li>
@@ -257,7 +279,9 @@ function PricingCards() {
                         plan.is_popular
                       )}`}
                     >
-                      {plan.price === "0" ? "Get Started Free" : "Choose Plan"}
+                      {plan.price === "0"
+                        ? t("pricingCards.getStartedFree")
+                        : t("pricingCards.choosePlan")}
                     </button>
                   </div>
                 </div>
@@ -269,7 +293,7 @@ function PricingCards() {
           <div className="mt-16 text-center">
             <div className="bg-white rounded-2xl shadow-lg p-8 max-w-4xl mx-auto">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Why Choose Our GS1 2027 Compliance Solutions?
+                {t("pricingCards.whyChooseTitle")}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
                 <div className="text-center">
@@ -289,10 +313,10 @@ function PricingCards() {
                     </svg>
                   </div>
                   <h4 className="font-semibold text-gray-900 mb-2">
-                    GS1 Certified
+                    {t("pricingCards.certifiedTitle")}
                   </h4>
                   <p className="text-gray-600 text-sm">
-                    Fully compliant with GS1 2027 standards
+                    {t("pricingCards.certifiedDesc")}
                   </p>
                 </div>
                 <div className="text-center">
@@ -312,10 +336,10 @@ function PricingCards() {
                     </svg>
                   </div>
                   <h4 className="font-semibold text-gray-900 mb-2">
-                    Fast Implementation
+                    {t("pricingCards.implementationTitle")}
                   </h4>
                   <p className="text-gray-600 text-sm">
-                    Quick setup and migration support
+                    {t("pricingCards.implementationDesc")}
                   </p>
                 </div>
                 <div className="text-center">
@@ -335,10 +359,10 @@ function PricingCards() {
                     </svg>
                   </div>
                   <h4 className="font-semibold text-gray-900 mb-2">
-                    24/7 Support
+                    {t("pricingCards.supportTitle")}
                   </h4>
                   <p className="text-gray-600 text-sm">
-                    Expert assistance whenever you need it
+                    {t("pricingCards.supportDesc")}
                   </p>
                 </div>
               </div>

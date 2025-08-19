@@ -4,11 +4,14 @@ import toast from "react-hot-toast";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import WebsiteLayout from "../../../layout/WebsiteLayouts/Layout";
+import { useTranslation } from "react-i18next";
 
 function SubscriptionForm() {
   const location = useLocation();
   const navigate = useNavigate();
   const selectedPlan = location.state?.selectedPlan;
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -48,14 +51,16 @@ function SubscriptionForm() {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.firstname) newErrors.firstname = "First name is required";
-    if (!formData.lastname) newErrors.lastname = "Last name is required";
-    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.firstname)
+      newErrors.firstname = t("subscriptionForm.firstNameRequired");
+    if (!formData.lastname)
+      newErrors.lastname = t("subscriptionForm.lastNameRequired");
+    if (!formData.email) newErrors.email = t("subscriptionForm.emailRequired");
     if (!formData.mobile || formData.mobile.length < 10) {
-      newErrors.mobile = "Valid mobile number is required";
+      newErrors.mobile = t("subscriptionForm.mobileRequired");
     }
     if (!formData.company_website)
-      newErrors.company_website = "Company website is required";
+      newErrors.company_website = t("subscriptionForm.websiteRequired");
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -103,8 +108,13 @@ function SubscriptionForm() {
 
       if (response.ok && data.success) {
         // Handle success
+        const planDisplayName = isArabic
+          ? selectedPlan.display_name_ar || selectedPlan.display_name
+          : selectedPlan.display_name;
         toast.success(
-          `Registration successful! Welcome to ${selectedPlan.display_name} plan.`
+          t("subscriptionForm.registrationSuccess", {
+            planName: planDisplayName,
+          })
         );
 
         // Redirect to member login page
@@ -113,7 +123,7 @@ function SubscriptionForm() {
         }, 1500); // Give time for the success toast to show
       } else {
         // Handle API error response
-        let errorMessage = "Registration failed. Please try again.";
+        let errorMessage = t("subscriptionForm.registrationFailed");
 
         // Show the exact error message from API
         if (data.error) {
@@ -127,33 +137,36 @@ function SubscriptionForm() {
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast.error(
-        "Network error occurred. Please check your connection and try again."
-      );
+      toast.error(t("subscriptionForm.networkError"));
     } finally {
       setLoading(false);
     }
   };
 
   const formatPrice = (price) => {
-    if (price === "0") return "Free";
+    if (price === "0") return t("subscriptionForm.free");
     return `SAR ${parseInt(price).toLocaleString()}`;
   };
 
   if (!selectedPlan) {
     return (
       <WebsiteLayout>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div
+          className="min-h-screen bg-gray-50 flex items-center justify-center"
+          dir={isArabic ? "rtl" : "ltr"}
+        >
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              No Plan Selected
+              {t("subscriptionForm.noPlanSelected")}
             </h2>
-            <p className="text-gray-600 mb-4">Please select a plan first.</p>
+            <p className="text-gray-600 mb-4">
+              {t("subscriptionForm.noPlanSelectedDesc")}
+            </p>
             <button
               onClick={() => navigate("/print-pack/pricing")}
               className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary"
             >
-              View Plans
+              {t("subscriptionForm.viewPlans")}
             </button>
           </div>
         </div>
@@ -163,24 +176,32 @@ function SubscriptionForm() {
 
   return (
     <WebsiteLayout>
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div
+        className="min-h-screen bg-gray-50 py-12"
+        dir={isArabic ? "rtl" : "ltr"}
+      >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Selected Plan Summary */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Selected Plan
+                  {t("subscriptionForm.selectedPlan")}
                 </h2>
 
                 <div className="border-2 border-green-200 rounded-xl p-6 bg-green-50">
                   <div className="text-center mb-4">
                     <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      {selectedPlan.display_name.charAt(0).toUpperCase() +
-                        selectedPlan.display_name.slice(1)}
+                      {isArabic
+                        ? selectedPlan.display_name_ar ||
+                          selectedPlan.display_name
+                        : selectedPlan.display_name}
                     </h3>
                     <p className="text-gray-600 text-sm mb-4">
-                      {selectedPlan.description}
+                      {isArabic
+                        ? selectedPlan.description_ar ||
+                          selectedPlan.description
+                        : selectedPlan.description}
                     </p>
 
                     <div className="mb-4">
@@ -189,7 +210,7 @@ function SubscriptionForm() {
                       </span>
                       {selectedPlan.price !== "0" && (
                         <span className="text-gray-600 text-sm ml-1">
-                          /{selectedPlan.billing_cycle}
+                          /{t(`pricingCards.${selectedPlan.billing_cycle}`)}
                         </span>
                       )}
                     </div>
@@ -197,7 +218,7 @@ function SubscriptionForm() {
 
                   <div className="space-y-3">
                     <h4 className="font-semibold text-gray-900">
-                      Included Features:
+                      {t("subscriptionForm.includedFeatures")}
                     </h4>
                     {selectedPlan.services.slice(0, 3).map((service) => (
                       <div key={service.id} className="flex items-start">
@@ -213,13 +234,16 @@ function SubscriptionForm() {
                           />
                         </svg>
                         <span className="text-sm text-gray-700">
-                          {service.name}
+                          {isArabic
+                            ? service.display_name_ar || service.name
+                            : service.name}
                         </span>
                       </div>
                     ))}
                     {selectedPlan.services.length > 3 && (
                       <p className="text-sm text-gray-600">
-                        + {selectedPlan.services.length - 3} more features
+                        + {selectedPlan.services.length - 3}
+                        {t("subscriptionForm.moreFeatures")}
                       </p>
                     )}
                   </div>
@@ -230,7 +254,7 @@ function SubscriptionForm() {
                     onClick={() => navigate("/print-pack/pricing")}
                     className="text-primary hover:text-primary text-sm font-medium"
                   >
-                    ← Change Plan
+                    {t("subscriptionForm.changePlan")}
                   </button>
                 </div>
               </div>
@@ -240,19 +264,20 @@ function SubscriptionForm() {
             <div className="lg:col-span-2">
               <div className="bg-white rounded-2xl shadow-lg p-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Registration Information
+                  {t("subscriptionForm.registrationInfo")}
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Personal Information */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Personal Information
+                      {t("subscriptionForm.personalInfo")}
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          First Name *
+                          {t("subscriptionForm.firstName")}{" "}
+                          {t("subscriptionForm.required")}
                         </label>
                         <input
                           type="text"
@@ -264,7 +289,9 @@ function SubscriptionForm() {
                               ? "border-red-500"
                               : "border-gray-300"
                           }`}
-                          placeholder="Enter your first name"
+                          placeholder={t(
+                            "subscriptionForm.firstNamePlaceholder"
+                          )}
                         />
                         {errors.firstname && (
                           <p className="text-red-500 text-xs mt-1">
@@ -275,7 +302,8 @@ function SubscriptionForm() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Last Name *
+                          {t("subscriptionForm.lastName")}{" "}
+                          {t("subscriptionForm.required")}
                         </label>
                         <input
                           type="text"
@@ -287,7 +315,9 @@ function SubscriptionForm() {
                               ? "border-red-500"
                               : "border-gray-300"
                           }`}
-                          placeholder="Enter your last name"
+                          placeholder={t(
+                            "subscriptionForm.lastNamePlaceholder"
+                          )}
                         />
                         {errors.lastname && (
                           <p className="text-red-500 text-xs mt-1">
@@ -298,7 +328,8 @@ function SubscriptionForm() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Email *
+                          {t("subscriptionForm.email")}{" "}
+                          {t("subscriptionForm.required")}
                         </label>
                         <input
                           type="email"
@@ -308,7 +339,7 @@ function SubscriptionForm() {
                           className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                             errors.email ? "border-red-500" : "border-gray-300"
                           }`}
-                          placeholder="Enter your email address"
+                          placeholder={t("subscriptionForm.emailPlaceholder")}
                         />
                         {errors.email && (
                           <p className="text-red-500 text-xs mt-1">
@@ -319,7 +350,8 @@ function SubscriptionForm() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Mobile Number *
+                          {t("subscriptionForm.mobileNumber")}{" "}
+                          {t("subscriptionForm.required")}
                         </label>
                         <PhoneInput
                           country={"sa"}
@@ -347,7 +379,7 @@ function SubscriptionForm() {
                           searchClass="w-full px-3 py-2 border border-gray-300 rounded"
                           // enableSearch={true}
                           // disableSearchIcon={false}
-                          placeholder="Enter your mobile number"
+                          placeholder={t("subscriptionForm.mobilePlaceholder")}
                         />
                         {errors.mobile && (
                           <p className="text-red-500 text-xs mt-1">
@@ -358,7 +390,8 @@ function SubscriptionForm() {
 
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Company Website *
+                          {t("subscriptionForm.companyWebsite")}{" "}
+                          {t("subscriptionForm.required")}
                         </label>
                         <input
                           type="text"
@@ -370,7 +403,7 @@ function SubscriptionForm() {
                               ? "border-red-500"
                               : "border-gray-300"
                           }`}
-                          placeholder="https://www.yourcompany.com"
+                          placeholder={t("subscriptionForm.websitePlaceholder")}
                         />
                         {errors.company_website && (
                           <p className="text-red-500 text-xs mt-1">
@@ -391,12 +424,12 @@ function SubscriptionForm() {
                       {loading ? (
                         <div className="flex items-center justify-center">
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                          Processing...
+                          {t("subscriptionForm.processing")}
                         </div>
                       ) : (
-                        `Complete Registration - ${formatPrice(
-                          selectedPlan.price
-                        )}`
+                        `${t(
+                          "subscriptionForm.completeRegistration"
+                        )} - ${formatPrice(selectedPlan.price)}`
                       )}
                     </button>
                   </div>

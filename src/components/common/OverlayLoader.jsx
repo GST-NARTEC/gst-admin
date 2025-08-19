@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export default function OverlayLoader() {
+  const { t } = useTranslation();
   return (
     <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
       <motion.div
@@ -32,7 +34,7 @@ export default function OverlayLoader() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          Loading...
+          {t("common.loading")}
         </motion.p>
       </motion.div>
     </div>

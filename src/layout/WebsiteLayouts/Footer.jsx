@@ -104,19 +104,6 @@ function Footer() {
 
               <motion.a
                 whileHover={{ x: isArabic ? -5 : 5 }}
-                href="tel:+966115030591"
-                className="flex items-center gap-3 text-gray-300 hover:text-quaternary transition-colors group"
-              >
-                <div className="p-2 bg-quaternary/10 rounded-lg group-hover:bg-quaternary/20 transition-colors">
-                  <HiPhone className="text-xl text-white" />
-                </div>
-                <div dir="ltr">
-                  {isArabic ? "+966 11 503 0591" : "+966115030591"}
-                </div>
-              </motion.a>
-
-              <motion.a
-                whileHover={{ x: isArabic ? -5 : 5 }}
                 href="tel:+966920051091"
                 className="flex items-center gap-3 text-gray-300 hover:text-quaternary transition-colors group"
               >

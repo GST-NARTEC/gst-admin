@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import WebsiteLayout from "../../../layout/WebsiteLayouts/Layout";
 import { useSubmitContactFormMutation } from "../../../store/apis/endpoints/websiteEndpoints/contact-us";
 
 function ContactUs() {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -38,15 +40,18 @@ function ContactUs() {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.name) newErrors.name = "Name is required";
-    if (!formData.email) newErrors.email = "Email is required";
-    if (!formData.subject) newErrors.subject = "Subject is required";
-    if (!formData.message) newErrors.message = "Message is required";
+    if (!formData.name) newErrors.name = t("contactUs.validation.nameRequired");
+    if (!formData.email)
+      newErrors.email = t("contactUs.validation.emailRequired");
+    if (!formData.subject)
+      newErrors.subject = t("contactUs.validation.subjectRequired");
+    if (!formData.message)
+      newErrors.message = t("contactUs.validation.messageRequired");
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (formData.email && !emailRegex.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
+      newErrors.email = t("contactUs.validation.emailInvalid");
     }
 
     setErrors(newErrors);
@@ -63,9 +68,7 @@ function ContactUs() {
       // call the backend API (POST /contact-us)
       await submitContact(formData).unwrap();
 
-      toast.success(
-        "Your message has been sent successfully! We'll get back to you soon."
-      );
+      toast.success(t("contactUs.success"));
 
       // Reset form
       setFormData({
@@ -80,7 +83,7 @@ function ContactUs() {
       console.error("Error submitting form:", error);
       // try to show a helpful message if available from the API
       const message =
-        error?.data?.message || error?.error || "Something went wrong. Please try again.";
+        error?.data?.message || error?.error || t("contactUs.error");
       toast.error(message);
     }
   };
@@ -92,10 +95,10 @@ function ContactUs() {
           {/* Header Section */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Contact Us
+              {t("contactUs.title")}
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              We'd love to hear from you. Reach out today!
+              {t("contactUs.subtitle")}
             </p>
           </div>
 
@@ -103,7 +106,9 @@ function ContactUs() {
             {/* Contact Information Card */}
             <div className="lg:col-span-1">
               <div className="bg-gradient-to-br from-primary to-secondary rounded-2xl shadow-lg p-8 text-white h-fit sticky top-8">
-                <h2 className="text-2xl font-bold mb-8">Contact Information</h2>
+                <h2 className="text-2xl font-bold mb-8">
+                  {t("contactUs.contactInformation")}
+                </h2>
 
                 {/* Address */}
                 <div className="flex items-start mb-6">
@@ -160,7 +165,6 @@ function ContactUs() {
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <p className="text-white mb-1">+966 11 503 0591</p>
                     <p className="text-white">+966 9200 51091</p>
                   </div>
                 </div>
@@ -175,7 +179,7 @@ function ContactUs() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Your Name
+                        {t("contactUs.formLabels.name")}
                       </label>
                       <input
                         type="text"
@@ -185,7 +189,7 @@ function ContactUs() {
                         className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors ${
                           errors.name ? "border-red-500" : "border-gray-300"
                         }`}
-                        placeholder="Write your name"
+                        placeholder={t("contactUs.placeholders.name")}
                       />
                       {errors.name && (
                         <p className="text-red-500 text-sm mt-1">
@@ -196,7 +200,7 @@ function ContactUs() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Your Email
+                        {t("contactUs.formLabels.email")}
                       </label>
                       <input
                         type="email"
@@ -206,7 +210,7 @@ function ContactUs() {
                         className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors ${
                           errors.email ? "border-red-500" : "border-gray-300"
                         }`}
-                        placeholder="Write your email"
+                        placeholder={t("contactUs.placeholders.email")}
                       />
                       {errors.email && (
                         <p className="text-red-500 text-sm mt-1">
@@ -220,7 +224,7 @@ function ContactUs() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Your Mobile number (optional)
+                        {t("contactUs.formLabels.mobile")}
                       </label>
                       <PhoneInput
                         country={"sa"}
@@ -255,7 +259,7 @@ function ContactUs() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Company Name (optional)
+                        {t("contactUs.formLabels.companyName")}
                       </label>
                       <input
                         type="text"
@@ -263,7 +267,7 @@ function ContactUs() {
                         value={formData.companyName}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
-                        placeholder="If contacting on behalf of a company"
+                        placeholder={t("contactUs.placeholders.companyName")}
                       />
                     </div>
                   </div>
@@ -271,7 +275,7 @@ function ContactUs() {
                   {/* Subject */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Subject
+                      {t("contactUs.formLabels.subject")}
                     </label>
                     <input
                       type="text"
@@ -281,7 +285,7 @@ function ContactUs() {
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors ${
                         errors.subject ? "border-red-500" : "border-gray-300"
                       }`}
-                      placeholder="Short title of the message like: Inquiry, Support Request, Partnership, etc."
+                      placeholder={t("contactUs.placeholders.subject")}
                     />
                     {errors.subject && (
                       <p className="text-red-500 text-sm mt-1">
@@ -293,7 +297,7 @@ function ContactUs() {
                   {/* Message */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Message
+                      {t("contactUs.formLabels.message")}
                     </label>
                     <textarea
                       name="message"
@@ -303,7 +307,7 @@ function ContactUs() {
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors resize-vertical ${
                         errors.message ? "border-red-500" : "border-gray-300"
                       }`}
-                      placeholder="Detailed message / inquiry / request"
+                      placeholder={t("contactUs.placeholders.message")}
                     />
                     {errors.message && (
                       <p className="text-red-500 text-sm mt-1">
@@ -315,8 +319,7 @@ function ContactUs() {
                   {/* Privacy Notice */}
                   <div className="text-center">
                     <p className="text-sm text-gray-600 mb-6">
-                      *Your information will be kept confidential and used
-                      solely for correspondence purposes.
+                      {t("contactUs.privacyNotice")}
                     </p>
                   </div>
 
@@ -330,11 +333,11 @@ function ContactUs() {
                       {isLoading ? (
                         <>
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                          Sending...
+                          {t("contactUs.buttons.sending")}
                         </>
                       ) : (
                         <>
-                          Submit Inquiry
+                          {t("contactUs.buttons.submit")}
                           <svg
                             className="w-5 h-5 ml-2"
                             fill="currentColor"
