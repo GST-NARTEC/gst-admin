@@ -77,6 +77,14 @@ const user = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["userDetails", "users"],
     }),
+
+    deleteOrder: builder.mutation({
+      query: (orderId) => ({
+        url: `/v1/orders/${orderId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["userDetails", "orders"],
+    }),
     
   }),
 });
@@ -91,4 +99,5 @@ export const {
   useUpdateUserMutation,
   useDeleteUserMutation,
   useUpdateUserStatusMutation,
+  useDeleteOrderMutation,
 } = user;

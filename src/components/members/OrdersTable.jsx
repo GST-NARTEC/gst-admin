@@ -25,6 +25,7 @@ import {
   FaCheckCircle,
   FaShoppingCart,
   FaCreditCard,
+  FaTrash,
 } from "react-icons/fa";
 import { BsReceiptCutoff } from "react-icons/bs";
 import { useGetUserByIdQuery } from "../../store/apis/endpoints/user";
@@ -35,6 +36,7 @@ import { selectCurrencySymbol } from "../../store/slice/currencySlice";
 import BankSlipModal from "./BankSlipModal";
 import ActivateOrderModal from "./ActivateOrderModal";
 import PaymentModal from "./PaymentModal";
+import DeleteOrderModal from "./DeleteOrderModal";
 
 function OrdersTable() {
   const { id } = useParams();
@@ -45,6 +47,7 @@ function OrdersTable() {
   const [isBankSlipModalOpen, setIsBankSlipModalOpen] = useState(false);
   const [isActivateModalOpen, setIsActivateModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const currencySymbol = useSelector(selectCurrencySymbol);
@@ -194,6 +197,18 @@ function OrdersTable() {
               >
                 Activate Order
               </DropdownItem>
+              <DropdownItem
+                key="delete"
+                className="text-danger"
+                color="danger"
+                startContent={<FaTrash />}
+                onClick={() => {
+                  setSelectedOrder(order);
+                  setIsDeleteModalOpen(true);
+                }}
+              >
+                Delete Order
+              </DropdownItem>
             </DropdownMenu>
           </Dropdown>
         );
@@ -311,6 +326,12 @@ function OrdersTable() {
       <PaymentModal
         isOpen={isPaymentModalOpen}
         onOpenChange={setIsPaymentModalOpen}
+        order={selectedOrder}
+      />
+
+      <DeleteOrderModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
         order={selectedOrder}
       />
     </>
