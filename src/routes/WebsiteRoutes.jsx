@@ -11,10 +11,12 @@ import SunriseDesign from "../pages/Website/Templates/SunriseDesign";
 import PricingCards from "../pages/Website/print-pack/PricingCards";
 import SubscriptionForm from "../pages/Website/print-pack/SubscriptionForm";
 import ContactUs from "../pages/Website/contact-us/ContactUs";
+import ExpoForm from "../pages/expo/ExpoForm";
 
 function WebsiteRoutes() {
   return (
     <Routes>
+      <Route path="/exhibit-visitor-registration" element={<ExpoForm />} />
       <Route path="/" element={<Home />} />
       <Route path="/user-guide-manual" element={<UserGuideManual />} />
       <Route path="/verify-halal" element={<SmartSolutionDetail />} />

@@ -4,6 +4,7 @@ import { useGetCurrencyQuery } from "./store/apis/endpoints/currency";
 import LocalizationProvider from "./components/common/LocalizationProvider";
 import SEO from "./components/seo/SEO";
 
+
 export default function App() {
   const { data: currency } = useGetCurrencyQuery();
   return (

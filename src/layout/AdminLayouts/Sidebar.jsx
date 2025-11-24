@@ -159,6 +159,12 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
       icon: <FaQuestionCircle />,
       label: "Help and Support",
     },
+    // expo members
+    {
+      path: "/admin/expo-members",
+      icon: <FaUsers />,
+      label: "Expo Members",
+    },
     { path: "/admin/settings", icon: <FaCog />, label: "Settings" },
   ];
 

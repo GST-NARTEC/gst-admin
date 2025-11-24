@@ -83,11 +83,14 @@ import Sunrise from "../components/pageTemplates/pageTemplatesGallery/Sunrise202
 import AddSunrise from "../components/pageTemplates/pageTemplatesGallery/Sunrise2027/AddSunrise";
 import EditSunrise from "../components/pageTemplates/pageTemplatesGallery/Sunrise2027/EditSunrise";
 
+import ExpoMembers from "../pages/expo/ExpoMembers";
+
 function AdminRoutes() {
   return (
     <Routes>
       {/* Public Route */}
       <Route path="/admin/login" element={<Login />} />
+    
 
       {/* Protected Routes - Everything under /admin except login */}
       <Route element={<ProtectedRoutes />}>
@@ -203,6 +206,8 @@ function AdminRoutes() {
           path="/admin/members/payment/success"
           element={<PaymentResponse />}
         />
+        {/* Expo Members */}
+        <Route path="/admin/expo-members" element={<ExpoMembers />} />
 
         {/* Not Found Route - for protected routes */}
         <Route path="/admin/*" element={<NotFound />} />
