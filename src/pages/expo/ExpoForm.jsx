@@ -73,7 +73,7 @@ function ExpoForm() {
         {/* Title */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-navy-700 mb-3 relative inline-block">
-            Exhibit Visitor Registration
+           Visitor Registration
             <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-red-900 via-red-800 to-red-700 rounded-full"></span>
           </h1>
         </div>
