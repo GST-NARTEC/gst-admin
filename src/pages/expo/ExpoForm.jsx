@@ -7,7 +7,7 @@ import { useCreateExhibitVisitorMutation } from '../../store/apis/endpoints/expo
 import Confetti from 'react-confetti';
 
 // Gemini API Key
-const GEMINI_API_KEY = 'AIzaSyDUcdcF6d2loD-VZRW2815aSjm7NuIkFbQ';
+const GEMINI_API_KEY = 'AIzaSyC3Gxn5GKez6xkWrn1xgxl_CXqG7_gz09A';
 
 function ExpoForm() {
   const [formData, setFormData] = useState({
