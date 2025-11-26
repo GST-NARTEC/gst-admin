@@ -21,13 +21,15 @@ import {
   Select,
   SelectItem,
 } from "@nextui-org/react";
-import { FaEye, FaTrash, FaEdit, FaSearch, FaPlus } from "react-icons/fa";
+import { FaEye, FaTrash, FaEdit, FaSearch, FaPlus, FaFileExcel } from "react-icons/fa";
+import * as XLSX from "xlsx";
 import { format } from "date-fns";
 import {
   useGetExhibitVisitorsQuery,
   useCreateExhibitVisitorMutation,
   useUpdateExhibitVisitorMutation,
   useDeleteExhibitVisitorMutation,
+  useGetAllExhibitorsQuery,
 } from "../../store/apis/endpoints/expo";
 import toast from "react-hot-toast";
 
@@ -45,6 +47,8 @@ function ExpoMembers() {
     useUpdateExhibitVisitorMutation();
   const [deleteVisitor, { isLoading: isDeleteLoading }] =
     useDeleteExhibitVisitorMutation();
+
+  const { data: exhibitors, isLoading: exhibitorsLoading } = useGetAllExhibitorsQuery();
 
   const [selectedVisitor, setSelectedVisitor] = useState(null);
   const [formData, setFormData] = useState({
@@ -171,6 +175,28 @@ function ExpoMembers() {
     }
   };
 
+  const handleExport = () => {
+    if (!exhibitors?.data?.exhibitVisitors || exhibitors.data.exhibitVisitors.length === 0) {
+      toast.error("No data to export");
+      return;
+    }
+
+    const exportData = exhibitors.data.exhibitVisitors.map((visitor) => ({
+      ID: visitor.id,
+      Name: visitor.name,
+      Email: visitor.email,
+      Phone: visitor.phone,
+      Company: visitor.company,
+      "Created At": format(new Date(visitor.createdAt), "PPpp"),
+      "Updated At": format(new Date(visitor.updatedAt), "PPpp"),
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Visitors");
+    XLSX.writeFile(wb, "Expo_Visitors.xlsx");
+  };
+
   const topContent = useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
@@ -186,17 +212,28 @@ function ExpoMembers() {
               onValueChange={(value) => handleFilterChange("search", value)}
             />
           </div>
-          <Button
-            color="primary"
-            endContent={<FaPlus />}
-            onPress={handleCreateClick}
-          >
-            Add Visitor
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              color="success"
+              className="text-white"
+              endContent={<FaFileExcel />}
+              onPress={handleExport}
+              isLoading={exhibitorsLoading}
+            >
+              Export Excel
+            </Button>
+            <Button
+              color="primary"
+              endContent={<FaPlus />}
+              onPress={handleCreateClick}
+            >
+              Add Visitor
+            </Button>
+          </div>
         </div>
       </div>
     );
-  }, [filters]);
+  }, [filters, exhibitors, exhibitorsLoading]);
 
   const bottomContent = useMemo(() => {
     return (

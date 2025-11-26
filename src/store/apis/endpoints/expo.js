@@ -73,6 +73,11 @@ const exhibitVisitorApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["ExhibitVisitors"],
     }),
+
+    getAllExhibitors: builder.query({
+      query: () => "/v1/exhibit-visitors/all",
+      providesTags: ["Exhibitors"],
+    }),
   }),
 });
 
@@ -83,4 +88,5 @@ export const {
   useCreateExhibitVisitorMutation,
   useUpdateExhibitVisitorMutation,
   useDeleteExhibitVisitorMutation,
+  useGetAllExhibitorsQuery,
 } = exhibitVisitorApi;

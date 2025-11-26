@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useGetActiveSmartSolutionsQuery } from "../../../store/apis/endpoints/websiteEndpoints/smartSolution";
 import { useTranslation } from "react-i18next";
 import { Spinner } from "@nextui-org/react";
+import { Images } from "../../../assets/Index";
 
 const containerVariants = {
   hidden: {},
@@ -135,14 +136,31 @@ function SmartSolutionCards() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-12"
+        className="mb-12"
       >
-        <h2 className="text-4xl font-bold text-gray-900 mb-4">
-          {t("smartSolutions.title")}
-        </h2>
-        <p className="text-lg text-gray-600 max-w-4xl mx-auto">
-          {t("smartSolutions.subtitle")}
-        </p>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Left Side - Banner */}
+          <div className="flex-1 flex justify-center md:justify-start w-full md:w-auto">
+            <img
+              src={Images.ExpoBanner}
+              alt="Expo Banner"
+              className="h-40 w-auto object-contain rounded-lg shadow-md hover:scale-105 transition-transform duration-300"
+            />
+          </div>
+
+          {/* Center - Title & Subtitle */}
+          <div className="flex-[2] text-center w-full">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              {t("smartSolutions.title")}
+            </h2>
+            <p className="text-lg text-gray-600 mx-auto">
+              {t("smartSolutions.subtitle")}
+            </p>
+          </div>
+
+          {/* Right Side - Spacer for balance */}
+          <div className="flex-1 hidden md:block"></div>
+        </div>
       </motion.div>
 
       {/* Cards Grid with Navigation */}
