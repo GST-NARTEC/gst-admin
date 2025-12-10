@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { PartnerLogos } from "../../../assets/Index.js";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
 
 const partners = [
   {
@@ -84,8 +85,14 @@ function OurPartners() {
     setTimeout(() => setIsAutoPlay(true), 5000);
   };
 
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
+  
   return (
-    <div className="py-16 bg-gradient-to-br from-gray-50 to-white overflow-hidden relative">
+    <div
+      className="py-16 bg-gradient-to-br from-gray-50 to-white overflow-hidden relative"
+      dir={isArabic ? "rtl" : "ltr"}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Title */}
         <motion.div
@@ -96,9 +103,9 @@ function OurPartners() {
           className="text-center mb-12"
         >
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Our{" "}
+            {t("partners.our")}{" "}
             <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-              Gold Strategic Partners
+              {t("partners.title")}
             </span>
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-yellow-400 to-yellow-600 mx-auto rounded-full"></div>

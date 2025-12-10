@@ -154,11 +154,15 @@ export default function Header() {
         >
           <div className="flex items-center">
             <MdMail className="h-3 w-3 mr-2 " />
-            <span>{t("info.email")}</span>
+            <span>{t("header.email")}</span>
           </div>
           <div className="flex items-center">
             <BsPhone className="h-3 w-3 mr-2" />
-            <span>92 005 1091</span>
+            <span dir="ltr">{t("header.phone1")}</span>
+          </div>
+          <div className="flex items-center">
+            <BsPhone className="h-3 w-3 mr-2" />
+            <span dir="ltr">{t("header.phone2")}</span>
           </div>
         </div>
       </motion.div>
@@ -182,9 +186,9 @@ export default function Header() {
               />
               <div className="hidden sm:block">
                 <h1 className="text-[#1B365D] font-bold text-base lg:text-lg">
-                  {t("company.name")}
+                  {t("header.companyName")}
                 </h1>
-                <p className="text-xs text-gray-600">{t("company.slogan")}</p>
+                <p className="text-xs text-gray-600">{t("header.slogan")}</p>
               </div>
             </motion.div>
 
@@ -216,13 +220,13 @@ export default function Header() {
                 }
                 className="px-3 py-1.5 text-sm border-2 border-[#1B365D] text-[#1B365D] rounded hover:bg-[#1B365D] hover:text-white transition-all duration-300"
               >
-                {t("button.buyBarcode")}
+                {t("header.buyBarcode")}
               </button>
               <button
                 onClick={() => navigate("/admin/login")}
                 className="px-3 py-1.5 text-sm bg-[#335082] text-white rounded hover:bg-[#1B365D] transition-all duration-300"
               >
-                {t("button.login")}
+                {t("header.login")}
               </button>
               <LanguageSwitcher />
             </motion.div>
@@ -290,7 +294,7 @@ export default function Header() {
                   }
                   className="w-full px-3 py-2 text-sm border-2 border-[#1B365D] text-[#1B365D] rounded hover:bg-[#1B365D] hover:text-white transition-all duration-300"
                 >
-                  Buy Barcode
+                  {t("header.buyBarcode")}
                 </button>
                 <button
                   onClick={() => {
@@ -299,7 +303,7 @@ export default function Header() {
                   }}
                   className="w-full px-3 py-2 text-sm bg-[#335082] text-white rounded hover:bg-[#1B365D] transition-all duration-300"
                 >
-                  Login
+                  {t("header.login")}
                 </button>
               </div>
 

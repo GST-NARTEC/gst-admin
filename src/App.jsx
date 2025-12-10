@@ -1,7 +1,7 @@
 import AdminRoutes from "./routes/AdminRoutes";
 import WebsiteRoutes from "./routes/WebsiteRoutes";
 import { useGetCurrencyQuery } from "./store/apis/endpoints/currency";
-import LocalizationProvider from "./components/common/LocalizationProvider";
+// import LocalizationProvider from "./components/common/LocalizationProvider";
 import SEO from "./components/seo/SEO";
 
 
@@ -38,10 +38,10 @@ export default function App() {
         type="website"
       />
 
-      <LocalizationProvider>
+      {/* <LocalizationProvider> */}
         <AdminRoutes />
         <WebsiteRoutes />
-      </LocalizationProvider>
+      {/* </LocalizationProvider> */}
     </>
   );
 }
