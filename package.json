@@ -16,6 +16,7 @@
     "@react-google-maps/api": "^2.20.3",
     "@reduxjs/toolkit": "^2.3.0",
     "copyfiles": "^2.4.1",
+    "country-state-city": "^3.2.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^11.11.15",
     "html-react-parser": "^5.1.18",
