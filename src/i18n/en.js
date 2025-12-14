@@ -222,9 +222,9 @@ export const en = {
     },
   },
   whyChooseUs: {
-    title: "Why Choose GST Solutions?",
+    title: "Why Use 2D Barcodes?",
     subtitle:
-      "We combine industry expertise with cutting-edge technology to deliver comprehensive GS1-compliant solutions that drive your business forward.",
+      "Built on global standards, 2D barcodes unlock advanced data sharing, end-to-end traceability, and future-ready supply chains.",
     noData: "No features available at the moment.",
   },
   coreSolutions: {
