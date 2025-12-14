@@ -153,7 +153,7 @@ const LoginPage = () => {
               <div className="flex justify-center items-center w-full py-4">
                 <ReCAPTCHA
                   ref={recaptchaRef}
-                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                  sitekey="6Ldx_6ArAAAAAGUmZgqDDfJ5yKEwD8dLMZZsQNEV"
                   onChange={onRecaptchaChange}
                   onExpired={onRecaptchaExpired}
                   theme="light"
