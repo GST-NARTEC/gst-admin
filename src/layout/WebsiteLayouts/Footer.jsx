@@ -83,9 +83,6 @@ function Footer() {
             <p className="text-sm text-gray-400 border-l-4 border-quaternary pl-3">
               {t("footer.company.copyright")}
             </p>
-            <p className="text-sm text-gray-300 border-l-4 border-quaternary pl-3 mt-3">
-              {t("footer.company.manufacturing")}
-            </p>
           </div>
 
           {/* Get in Touch */}
@@ -209,6 +206,13 @@ function Footer() {
                 {t("footer.newsletter.subscribe")}
               </motion.button>
             </form>
+
+            {/* Manufacturing Partnership */}
+            <div className="mt-6">
+              <p className="text-sm text-gray-300 leading-relaxed border-l-4 border-quaternary pl-3">
+                {t("footer.company.manufacturing")}
+              </p>
+            </div>
           </div>
         </div>
       </div>
