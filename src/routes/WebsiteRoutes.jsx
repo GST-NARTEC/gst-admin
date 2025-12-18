@@ -20,7 +20,7 @@ function WebsiteRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/user-guide-manual" element={<UserGuideManual />} />
       <Route path="/verify-halal" element={<SmartSolutionDetail />} />
-      <Route path="/case-studies" element={<CaseStudy />} />
+      <Route path="/case-study-main" element={<CaseStudy />} />
       <Route path="/case-study-one/:slug" element={<CaseStudyOneDesing />} />
       <Route path="/case-study-two/:slug" element={<CaseStudyTwoDesign />} />
       <Route path="/sunrise/:slug" element={<SunriseDesign />} />

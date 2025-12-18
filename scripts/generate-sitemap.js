@@ -170,7 +170,7 @@ async function generateSitemap() {
         priority: "0.8",
       },
       {
-        url: "/case-studies",
+        url: "/case-study-main",
         lastmod: new Date().toISOString(),
         changefreq: "weekly",
         priority: "0.9",

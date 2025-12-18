@@ -74,7 +74,7 @@ function SmartSolutionCards() {
           navigate("/verify-halal");
           break;
         case "case-study-main":
-          navigate("/case-studies");
+          navigate("/case-study-main");
           break;
         case "sunrise-2027":
           navigate(`/sunrise/${solution.page.slug}`);
