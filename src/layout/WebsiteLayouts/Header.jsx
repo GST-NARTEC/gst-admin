@@ -192,6 +192,20 @@ export default function Header() {
               </div>
             </motion.div>
 
+            {/* Saudi 2030 Vision Logo */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="hidden lg:flex items-center justify-center flex-1"
+            >
+              <img
+                src={Images.Saudi2030Vision}
+                alt="Saudi 2030 Vision"
+                className="h-14 lg:h-20 w-auto object-contain"
+              />
+            </motion.div>
+
             {/* Mobile Menu Button */}
             <div className="flex items-center lg:hidden space-x-2">
               <LanguageSwitcher isMobile={true} />

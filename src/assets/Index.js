@@ -25,6 +25,7 @@ import SaoBi from "./PartnersLogo/SaoBi.png";
 import SaudiGulf from "./PartnersLogo/Saudi Gulf.png";
 import ShamsAlJazirahSchools from "./PartnersLogo/Shams Al-Jazirah Schools.png";
 import SouthernGasCompany from "./PartnersLogo/Southern Gas Company.png";
+import Saudi2030Vision from "./Logo/saudi-vision-2030.png";
 
 export const Images = {
   Logo,
@@ -32,6 +33,7 @@ export const Images = {
   KSAFlag,
   USAFlag,
   ExpoBanner,
+  Saudi2030Vision,
 };
 
 export const PartnerLogos = {

@@ -7,7 +7,7 @@ import {
   FaYoutube,
   FaWhatsapp,
   FaTiktok,
-  FaXTwitter
+  FaXTwitter,
 } from "react-icons/fa6";
 // twaitter ( now X)
 import { HiMail, HiPhone, HiLocationMarker } from "react-icons/hi";
@@ -15,17 +15,33 @@ import { Images } from "../../assets/Index";
 import { useTranslation } from "react-i18next";
 
 const socialLinks = [
-  { icon: <FaLinkedin />, href: "https://www.linkedin.com/company/gstsolutionsksa", color: "hover:text-quaternary" },
-  { icon: <FaFacebook />, href: "https://www.facebook.com/GSTSolutionsSaudi", color: "hover:text-quaternary" },
+  {
+    icon: <FaLinkedin />,
+    href: "https://www.linkedin.com/company/gstsolutionsksa",
+    color: "hover:text-quaternary",
+  },
+  {
+    icon: <FaFacebook />,
+    href: "https://www.facebook.com/GSTSolutionsSaudi",
+    color: "hover:text-quaternary",
+  },
   {
     icon: <FaXTwitter />,
     href: "https://x.com/gstsa1org",
     color: "hover:text-quaternary",
   },
   // { icon: <FaInstagram />, href: "#", color: "hover:text-quaternary" }, // Commented out as requested
-  { icon: <FaYoutube />, href: "https://www.youtube.com/@GSTSolutionsKSA", color: "hover:text-quaternary" },
+  {
+    icon: <FaYoutube />,
+    href: "https://www.youtube.com/@GSTSolutionsKSA",
+    color: "hover:text-quaternary",
+  },
   // { icon: <FaWhatsapp />, href: "#", color: "hover:text-quaternary" }, // Commented out as requested
-  { icon: <FaTiktok />, href: "https://www.tiktok.com/@gstsolutionsksa", color: "hover:text-quaternary" },
+  {
+    icon: <FaTiktok />,
+    href: "https://www.tiktok.com/@gstsolutionsksa",
+    color: "hover:text-quaternary",
+  },
 ];
 
 function Footer() {
@@ -66,6 +82,9 @@ function Footer() {
             </div>
             <p className="text-sm text-gray-400 border-l-4 border-quaternary pl-3">
               {t("footer.company.copyright")}
+            </p>
+            <p className="text-sm text-gray-300 border-l-4 border-quaternary pl-3 mt-3">
+              {t("footer.company.manufacturing")}
             </p>
           </div>
 
@@ -110,9 +129,7 @@ function Footer() {
                 <div className="p-2 bg-quaternary/10 rounded-lg group-hover:bg-quaternary/20 transition-colors">
                   <HiPhone className="text-xl text-white" />
                 </div>
-                <div dir="ltr">
-                  {isArabic ? "11 503 0591" : "0115030591"}
-                </div>
+                <div dir="ltr">{isArabic ? "11 503 0591" : "0115030591"}</div>
               </motion.a>
 
               <motion.a
@@ -123,9 +140,7 @@ function Footer() {
                 <div className="p-2 bg-quaternary/10 rounded-lg group-hover:bg-quaternary/20 transition-colors">
                   <HiPhone className="text-xl text-white" />
                 </div>
-                <div dir="ltr">
-                  {isArabic ? "92 005 1091" : "920051091"}
-                </div>
+                <div dir="ltr">{isArabic ? "92 005 1091" : "920051091"}</div>
               </motion.a>
             </div>
           </div>

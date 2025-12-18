@@ -180,6 +180,8 @@ export const en = {
       address:
         "Short Address: RFKA4234, Building No: 4234, Al Mateea, 7650 Al Khaleej District, 13224, Riyadh, Kingdom of Saudi Arabia",
       copyright: "Copyright © 2025 GST Solutions All Right Reserved",
+      manufacturing:
+        "Empowering Smart Manufacturing: Partner & Service Provider, Future Factories Program | Ministry of Industry",
     },
     getInTouch: {
       title: "Get in Touch",
