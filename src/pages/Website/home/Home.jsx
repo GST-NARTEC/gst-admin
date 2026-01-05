@@ -6,7 +6,7 @@ import CoreSolutions from "../../../components/Website/home/CoreSolutions";
 import ProfessionalServices from "../../../components/Website/home/ProfessionalServices";
 import WhyWorkWithUs from "../../../components/Website/home/WhyWorkWithUs";
 import OurPartners from "../../../components/Website/home/OurPartners";
-import SmartSolucitonCards from "../../../components/Website/home/SmartSolucitonCards";   
+import SmartSolucitonCards from "../../../components/Website/home/SmartSolucitonCards";
 
 function Home() {
   return (

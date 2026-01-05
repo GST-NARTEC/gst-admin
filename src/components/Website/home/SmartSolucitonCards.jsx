@@ -142,7 +142,7 @@ function SmartSolutionCards() {
           {/* Left Side - Banner */}
           <div className="flex-1 flex justify-center md:justify-start w-full md:w-auto">
             <img
-              src={Images.ExpoBanner}
+              src={Images.websitecertifcation}
               alt="Expo Banner"
               className="h-40 w-auto object-contain rounded-lg shadow-md hover:scale-105 transition-transform duration-300"
             />
@@ -185,11 +185,10 @@ function SmartSolutionCards() {
                   <motion.div
                     key={solution.id}
                     variants={itemVariants}
-                    className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group ${
-                      solution.page || solution.externalUrl
-                        ? "cursor-pointer"
-                        : "cursor-default"
-                    }`}
+                    className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group ${solution.page || solution.externalUrl
+                      ? "cursor-pointer"
+                      : "cursor-default"
+                      }`}
                     onClick={() => handleSolutionClick(solution)}
                   >
                     {/* Solution Image */}

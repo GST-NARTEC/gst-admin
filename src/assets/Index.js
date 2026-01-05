@@ -2,7 +2,8 @@ import Logo from "./Logo/Logo.png";
 import Grid from "./grid.svg";
 import KSAFlag from "./Logo/ksa_flag.png";
 import USAFlag from "./Logo/usa_flg.png";
-import ExpoBanner from "./expo-banner.png"
+import ExpoBanner from "./expo-banner.png";
+import websitecertifcation from "./PartnersLogo/websitecertifcation.png";
 
 // Partner Logos
 import AbdelHadiAbdullaAlQahtaniSons from "./PartnersLogo/Abdel Hadi Abdulla Al-Qahtani & Sons Co..png";
@@ -34,6 +35,7 @@ export const Images = {
   USAFlag,
   ExpoBanner,
   Saudi2030Vision,
+  websitecertifcation,
 };
 
 export const PartnerLogos = {
