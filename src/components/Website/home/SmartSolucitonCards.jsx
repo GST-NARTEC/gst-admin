@@ -140,13 +140,13 @@ function SmartSolutionCards() {
       >
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Left Side - Banner */}
-          <div className="flex-1 flex justify-center md:justify-start w-full md:w-auto">
+          {/* <div className="flex-1 flex justify-center md:justify-start w-full md:w-auto">
             <img
               src={Images.websitecertifcation}
               alt="Expo Banner"
               className="h-40 w-auto object-contain rounded-lg shadow-md hover:scale-105 transition-transform duration-300"
             />
-          </div>
+          </div> */}
 
           {/* Center - Title & Subtitle */}
           <div className="flex-[2] text-center w-full">
@@ -159,7 +159,7 @@ function SmartSolutionCards() {
           </div>
 
           {/* Right Side - Spacer for balance */}
-          <div className="flex-1 hidden md:block"></div>
+          {/* <div className="flex-1 hidden md:block"></div> */}
         </div>
       </motion.div>
 
