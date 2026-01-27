@@ -40,6 +40,7 @@ import OverlayLoader from "../../components/common/OverlayLoader";
 import toast from "react-hot-toast";
 import { encrypt } from "../../utils/encryption.js";
 import DeleteConfirmationModal from "../../components/members/DeleteConfirmationModal.jsx";
+import ExportMembers from "../../components/members/ExportMembers.jsx";
 
 const TABLE_COLUMNS = [
   { name: "COMPANY (EN)", uid: "companyNameEn" },
@@ -325,6 +326,7 @@ function Members() {
           >
             Refresh
           </Button>
+          <ExportMembers members={members} />
           <Button
             className="bg-navy-700 text-white"
             startContent={<FaPlus />}

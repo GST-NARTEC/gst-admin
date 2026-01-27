@@ -34,6 +34,7 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
 
   const menuItems = [
     { path: "/admin/dashboard", icon: <FaChartLine />, label: "Dashboard" },
+    { path: "/admin/kpi-dashboard", icon: <FaChartLine />, label: "KPI Dashboard" },
     { path: "/admin/members", icon: <FaUsers />, label: "Members" },
     {
       label: "Master Data",

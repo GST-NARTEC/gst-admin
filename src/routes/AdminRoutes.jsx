@@ -13,6 +13,7 @@ import NotFound from "../pages/NotFound";
 
 import Members from "../pages/members/Members";
 import ViewMember from "../pages/members/ViewMember";
+import KPIReports from "../pages/KPI/KPIReports";
 
 import Navigation from "../pages/WebsitesManagement/GSTSA/Navigation";
 import Media from "../pages/WebsitesManagement/GSTSA/Media";
@@ -96,6 +97,7 @@ function AdminRoutes() {
       <Route element={<ProtectedRoutes />}>
         {/* Dashboard */}
         <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/kpi-dashboard" element={<KPIReports />} />
 
         {/* Help & Support */}
         <Route path="/admin/help-and-support" element={<HelpAndSupport />} />
