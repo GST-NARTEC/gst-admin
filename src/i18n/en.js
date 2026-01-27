@@ -186,7 +186,7 @@ export const en = {
     getInTouch: {
       title: "Get in Touch",
       address:
-        "RFKA4234, Al Mateea, 7650 Al Khaleej District, 13224, Riyadh, KSA",
+        "1st Floor Office 02 Dist, Anas Ibn Malik Rd, Al Malqa, Riyadh 13524 KSA",
       email: "info@gstsa1.org",
     },
     followUs: {
