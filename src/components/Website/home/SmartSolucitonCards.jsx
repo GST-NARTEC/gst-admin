@@ -52,7 +52,7 @@ function SmartSolutionCards() {
 
   // Determine cards per page based on screen width
   const getCardsPerPage = () => {
-    if (windowWidth >= 1024) return 4; // lg screens
+    if (windowWidth >= 1024) return 5; // lg screens
     if (windowWidth >= 768) return 2; // md screens
     return 1; // sm screens
   };
@@ -127,7 +127,7 @@ function SmartSolutionCards() {
 
   return (
     <div
-      className="w-full max-w-7xl mx-auto px-4 py-12"
+      className="w-full max-w-[85rem] mx-auto px-4 py-12"
       dir={isArabic ? "rtl" : "ltr"}
     >
       {/* Header */}
@@ -179,7 +179,7 @@ function SmartSolutionCards() {
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8"
               >
                 {currentSolutions.map((solution) => (
                   <motion.div
