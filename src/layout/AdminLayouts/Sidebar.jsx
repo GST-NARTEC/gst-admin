@@ -12,6 +12,7 @@ import {
   FaAngleDown,
   FaRuler,
   FaFile,
+  FaFileAlt,
   FaBoxes,
   FaCloud,
   FaGlobe,
@@ -25,7 +26,7 @@ import {
   FaQuestionCircle,
 } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
-import { Images } from "../../assets";
+import { Images } from "../../assets/Index";
 import { MdEmail } from "react-icons/md";
 
 function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
@@ -154,6 +155,12 @@ function Sidebar({ isOpen, toggleSidebar, isLargeScreenCollapsed }) {
     { path: "/admin/addons", icon: <FaPuzzlePiece />, label: "Addons" },
     // { path: "/admin/languages", icon: <FaLanguage />, label: "Languages" },
     { path: "/admin/roles", icon: <FaUserShield />, label: "User Roles" },
+    // file management
+    {
+      path: "/admin/file-management",
+      icon: <FaFileAlt />,
+      label: "File Management",
+    },
     // help and support
     {
       path: "/admin/help-and-support",

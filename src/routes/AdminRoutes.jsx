@@ -85,6 +85,7 @@ import AddSunrise from "../components/pageTemplates/pageTemplatesGallery/Sunrise
 import EditSunrise from "../components/pageTemplates/pageTemplatesGallery/Sunrise2027/EditSunrise";
 
 import ExpoMembers from "../pages/expo/ExpoMembers";
+import FileManagement from "../pages/fileManagement/FileManagement";
 
 function AdminRoutes() {
   return (
@@ -98,6 +99,9 @@ function AdminRoutes() {
         {/* Dashboard */}
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/kpi-dashboard" element={<KPIReports />} />
+
+        {/* File Management */}
+        <Route path="/admin/file-management" element={<FileManagement />} />
 
         {/* Help & Support */}
         <Route path="/admin/help-and-support" element={<HelpAndSupport />} />
