@@ -142,7 +142,7 @@ function SmartSolutionCards() {
           {/* Left Side - Banner */}
           <div className="flex-1 flex justify-center md:justify-start w-full md:w-auto">
             <img
-              src={Images.websitecertifcation}
+              src={Images.cardcertified}
               alt="Expo Banner"
               className="h-40 w-auto object-contain rounded-lg shadow-md hover:scale-105 transition-transform duration-300"
             />
