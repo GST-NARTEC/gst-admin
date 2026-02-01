@@ -127,11 +127,11 @@ function ContactUs() {
                   </div>
                   <div className="ml-4">
                     <p className="text-white leading-relaxed">
-                      Office no. 2RF+4234, Building No. 4234,
+                      1st Floor Office 02 Dist, Anas Ibn Malik Rd,
                       <br />
-                      Al - Mateeq, 7650 Al Khobar District, 13224,
+                      Al Malqa, Riyadh 13524
                       <br />
-                      Riyadh, Kingdom of Saudi Arabia
+                      Kingdom of Saudi Arabia
                     </p>
                   </div>
                 </div>

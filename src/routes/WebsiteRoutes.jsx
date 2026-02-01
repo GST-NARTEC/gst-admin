@@ -12,6 +12,8 @@ import PricingCards from "../pages/Website/print-pack/PricingCards";
 import SubscriptionForm from "../pages/Website/print-pack/SubscriptionForm";
 import ContactUs from "../pages/Website/contact-us/ContactUs";
 import ExpoForm from "../pages/expo/ExpoForm";
+import MesSiriAlignment from "../pages/Website/MesSiriAlignment/MesSiriAlignment";
+import GstPartnerProgram from "../pages/Website/gstPartnerProgram/gstPartnerProgram";
 
 function WebsiteRoutes() {
   return (
@@ -27,6 +29,8 @@ function WebsiteRoutes() {
       <Route path="/print-pack/pricing" element={<PricingCards />} />
       <Route path="/print-pack/subscription" element={<SubscriptionForm />} />
       <Route path="/contact-us" element={<ContactUs />} />
+      <Route path="/mes-siri-alignment" element={<MesSiriAlignment />} />
+      <Route path="/gst-partner-program" element={<GstPartnerProgram />} />
 
       {/* Nested routes for templates */}
 
