@@ -23,12 +23,6 @@ import {
 import WebsiteLayout from "../../../layout/WebsiteLayouts/Layout";
 
 const MesSiriAlignment = () => {
-  const [showNotification, setShowNotification] = useState(false);
-
-  const handleButtonClick = () => {
-    setShowNotification(true);
-    setTimeout(() => setShowNotification(false), 3000);
-  };
 
   const processSteps = [
     {
@@ -90,9 +84,9 @@ const MesSiriAlignment = () => {
   ];
 
   const features = [
-    "Industry Expertise – We combine deep manufacturing knowledge with global MES and digital transformation expertise.",
-    "Customized Solutions – Each roadmap is tailored to your operational goals and industry context.",
-    "End-to-End Support – From assessment to MES implementation and optimization, we're your strategic partner for smart manufacturing."
+    "Industry Expertise - We combine deep manufacturing knowledge with global MES and digital transformation expertise.",
+    "Customized Solutions - Each roadmap is tailored to your operational goals and industry context.",
+    "End-to-End Support - From assessment to MES implementation and optimization, we're your strategic partner for smart manufacturing."
   ];
 
   const whatYouGet = [
@@ -121,12 +115,6 @@ const MesSiriAlignment = () => {
   return (
     <WebsiteLayout>
     <div className="w-full min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 relative font-dubai">
-      {/* Notification */}
-      {showNotification && (
-        <div className="fixed top-5 right-5 px-6 py-4 bg-gradient-to-r from-[#1B365D] to-[#254170] text-white rounded-lg font-semibold z-50 shadow-lg animate-slide-in">
-          Thank you for your interest! Our team will contact you soon.
-        </div>
-      )}
 
       {/* Banner Header */}
       <header className="relative sm:h-[280px] h-auto overflow-hidden">
@@ -335,12 +323,14 @@ const MesSiriAlignment = () => {
             resilient manufacturer. Transform your operations with data-driven planning rooted in global standards 
             and aligned with Saudi Vision 2030.
           </p>
-          <button 
-            onClick={handleButtonClick}
-            className="px-8 py-3 text-base font-semibold text-white bg-[#1B365D] hover:bg-[#254170] rounded-lg shadow-md transition-all duration-300 hover:shadow-lg"
+          <a 
+            href="https://gstsa1.org/contact-us"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-8 py-3 text-base font-semibold text-white bg-[#1B365D] hover:bg-[#254170] rounded-lg shadow-md transition-all duration-300 hover:shadow-lg"
           >
-            Contact GST – Global Standard Solutions Today
-          </button>
+            Contact GST - Global Standard Solutions Today
+          </a>
         </section>
       </main>
 
