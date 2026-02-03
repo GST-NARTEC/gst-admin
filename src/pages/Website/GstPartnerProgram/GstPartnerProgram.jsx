@@ -23,7 +23,10 @@ import {
   FaCloudUploadAlt,
   FaWarehouse,
   FaIndustry,
-  FaLaptop
+  FaLaptop,
+  FaBarcode,
+  FaNetworkWired,
+  FaRoute
 } from 'react-icons/fa';
 import WebsiteLayout from "../../../layout/WebsiteLayouts/Layout";
 
@@ -78,9 +81,12 @@ const GstPartnerProgram = () => {
   };
 
   const solutionTiles = [
-    { icon: <FaQrcode className="text-4xl" />, title: "Barcode Solutions" },
-    { icon: <FaWifi className="text-4xl" />, title: "2D Barcodes & RFID" },
-    { icon: <FaIdCard className="text-4xl" />, title: "Digital Product Passport" }
+    { icon: <FaBarcode className="text-4xl" />, title: "Barcode & Identification Solutions" },
+    { icon: <FaWifi className="text-4xl" />, title: "2D Barcodes, RFID & Smart Labels" },
+    { icon: <FaIdCard className="text-4xl" />, title: "Digital Product Passport & Compliance" },
+    { icon: <FaIndustry className="text-4xl" />, title: "MES Solutions (SIRI-Aligned)" },
+    { icon: <FaCogs className="text-4xl" />, title: "Industry 4.0 & IIoT Enablement" },
+    { icon: <FaRoute className="text-4xl" />, title: "End-to-End Traceability Solutions (All Industries)" }
   ];
 
   const solutions = [
@@ -149,39 +155,33 @@ const GstPartnerProgram = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - 2/3 width */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Solution Provider Directory */}
+            {/* GST Industry Solutions */}
             <section className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-3xl font-bold text-[#1B365D]">Solution Provider Directory</h2>
-                <div className="flex flex-wrap gap-3">
-                  <button className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg font-semibold hover:shadow-md transition-all">
-                    <FaSearch />
-                    Search
-                  </button>
-                  <button className="flex items-center gap-2 px-4 py-2 bg-white text-[#1B365D] border-2 border-[#1B365D] rounded-lg font-semibold hover:bg-gray-50 transition-all">
-                    <FaUserPlus />
-                    Partner
-                  </button>
-                  <button className="flex items-center gap-2 px-4 py-2 bg-white text-[#1B365D] border-2 border-[#1B365D] rounded-lg font-semibold hover:bg-gray-50 transition-all">
-                    <FaSignInAlt />
-                    Login
-                  </button>
-                </div>
+              <div className="flex flex-col mb-6">
+                <h2 className="text-3xl font-bold text-[#1B365D] mb-4">GST Industry Solutions</h2>
+                <p className="text-sm text-gray-600 leading-relaxed max-w-4xl">
+                  At GST – Global Standard Technology, we deliver integrated Industry 4.0, MES, SIRI-aligned, and traceability solutions that accelerate Saudi Arabia’s manufacturing transformation in line with Vision 2030.
+                </p>
+                <p className="text-sm text-gray-600 leading-relaxed max-w-4xl mt-2">
+                  Our expertise enables industries to achieve real-time visibility, regulatory compliance, and digital readiness through globally recognized standards and proven technologies.
+                </p>
               </div>
-              <p className="text-sm text-gray-600 mb-4">
-                Partner expertise is essential for driving Saudi Arabia's manufacturing transformation. Our certified network connects manufacturers with specialists who implement Industry 4.0 technologies aligned with the SIRI program and Vision 2030 objectives.
-              </p>
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">Click on the tile you need help with:</h3>
-              <div className="grid grid-cols-3 gap-4">
+
+              <div className="mb-6">
+                 <h3 className="text-xl font-bold text-[#1B365D] mb-2">Our Solution Areas</h3>
+                 <p className="text-sm text-gray-600 mb-4">Select the capability you want to enable:</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {solutionTiles.map((tile, index) => (
                   <div 
                     key={index}
-                    className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl hover:-translate-y-2 transition-all cursor-pointer"
+                    className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl hover:-translate-y-2 transition-all cursor-pointer border border-gray-100"
                   >
-                    <div className="text-[#254170] mb-3 flex justify-center">
+                    <div className="text-[#254170] mb-4 flex justify-center">
                       {tile.icon}
                     </div>
-                    <div className="text-sm font-semibold text-gray-800">{tile.title}</div>
+                    <div className="text-sm font-bold text-[#1B365D] leading-tight">{tile.title}</div>
                   </div>
                 ))}
               </div>
