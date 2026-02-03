@@ -839,66 +839,10 @@ const GstPartnerProgram = () => {
                   </div>
                 </div>
 
-                {/* Section 3: Business Capabilities */}
+                {/* Section 3: Agreements & Compliance */}
                 <div>
                   <h3 className="text-xl font-bold text-[#1B365D] pb-3 border-b-2 border-gray-200 mb-5">
-                    Section 3 — Business Capabilities
-                  </h3>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-[#1B365D] mb-3">
-                        Annual Company Turnover (optional)
-                      </label>
-                      <div className="space-y-2">
-                        {['Under $1M', '$1M – $5M', '$5M – $20M', '$20M+'].map((turnover, index) => (
-                          <label key={index} className="flex items-center gap-2 text-sm">
-                            <input type="radio" name="turnover" className="w-4 h-4" />
-                            <span>{turnover}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold text-[#1B365D] mb-2">
-                        Company Logo Upload
-                      </label>
-                      <p className="text-xs text-gray-600 mb-2">(Preferred format: PNG or SVG)</p>
-                      <div className="flex items-center gap-4">
-                        <label className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 border-2 border-dashed border-[#1B365D] rounded-lg cursor-pointer hover:bg-blue-50 transition-colors">
-                          <FaCloudUploadAlt className="text-[#1B365D]" />
-                          <span className="text-sm text-[#1B365D] font-medium">Choose File</span>
-                          <input 
-                            type="file" 
-                            accept=".png,.svg" 
-                            className="hidden"
-                            onChange={handleFileChange}
-                          />
-                        </label>
-                        <span className="text-sm text-gray-600">
-                          {selectedFile || 'No file selected'}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold text-[#1B365D] mb-2">
-                        Company Overview / Value Proposition
-                      </label>
-                      <p className="text-xs text-gray-600 mb-2">(200–500 words)</p>
-                      <textarea 
-                        rows="5"
-                        className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-[#254170] focus:outline-none transition-colors text-sm resize-y"
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Section 4: Agreements & Compliance */}
-                <div>
-                  <h3 className="text-xl font-bold text-[#1B365D] pb-3 border-b-2 border-gray-200 mb-5">
-                    Section 4 — Agreements & Compliance
+                    Section 3 — Agreements & Compliance
                   </h3>
 
                   <div className="space-y-4">
