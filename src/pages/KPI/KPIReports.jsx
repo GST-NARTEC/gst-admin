@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from "react";
 import MainLayout from "../../layout/AdminLayouts/MainLayout";
 import {
   FaFileExcel,
-  FaFilePdf,
   FaSearch,
   FaSync,
   FaChartLine,
@@ -47,15 +46,14 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import * as XLSX from "xlsx";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
+
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import {
   useGetQuickStatsQuery,
   useGetRevenueTrendsQuery,
   useGetKpiMembersQuery,
-  useLazyGetKpiExportQuery,
+  useLazyGetKpiMembersQuery,
 } from "../../store/apis/endpoints/kpi";
 
 const TABLE_COLUMNS = [
@@ -166,7 +164,7 @@ const KPIReports = () => {
     ...(endDate && { endDate }),
   });
 
-  const [triggerExport, { isLoading: isExporting }] = useLazyGetKpiExportQuery();
+  const [triggerMemberExport, { isLoading: isExporting }] = useLazyGetKpiMembersQuery();
 
   // Extract data from API responses
   const stats = useMemo(() => {
@@ -212,57 +210,77 @@ const KPIReports = () => {
 
   const handleExportExcel = async () => {
     try {
-      const result = await triggerExport({ period: activePeriod }).unwrap();
+      const result = await triggerMemberExport({
+        page: 1,
+        limit: 100,
+        search: debouncedSearch,
+        orderStatus: orderStatusFilter,
+        isActive: activeStatusFilter,
+        sortBy: "createdAt",
+        sortOrder: "desc",
+        ...(startDate && { startDate }),
+        ...(endDate && { endDate }),
+      }).unwrap();
 
-      if (result?.data) {
-        // Export orders
-        const ordersWs = XLSX.utils.json_to_sheet(result.data.orders || []);
-        const usersWs = XLSX.utils.json_to_sheet(result.data.users || []);
-        const summaryWs = XLSX.utils.json_to_sheet([result.data.summary]);
+      if (result?.data?.members) {
+        const dataToExport = result.data.members.map((member) => {
+          const pendingPayment =
+            member.orders?.filter((order) => order.status === "Pending Payment")
+              .length || 0;
+          const pendingActivation =
+            member.orders?.filter(
+              (order) => order.status === "Pending Account Activation"
+            ).length || 0;
+          const activated =
+            member.orders?.filter((order) => order.status === "Activated")
+              .length || 0;
+
+          let orderStatusText = [];
+          if (activated > 0) orderStatusText.push(`${activated} Activated`);
+          if (pendingPayment > 0)
+            orderStatusText.push(`${pendingPayment} Payment Pending`);
+          if (pendingActivation > 0)
+            orderStatusText.push(`${pendingActivation} Activation Pending`);
+          if (orderStatusText.length === 0) orderStatusText.push("No orders");
+
+          return {
+            "Company (EN)": member.companyNameEn,
+            "Company (AR)": member.companyNameAr,
+            "Email": member.email,
+            "Mobile": member.mobile,
+            "License No": member.companyLicenseNo,
+            "Country": member.country,
+            "Orders Status": orderStatusText.join(", "),
+            Status: member.isActive ? "Active" : "Inactive",
+          };
+        });
+
+        const ws = XLSX.utils.json_to_sheet(dataToExport);
+
+        // Adjust column widths
+        ws['!cols'] = [
+          { wch: 32 },
+          { wch: 32 },
+          { wch: 30 },
+          { wch: 15 },
+          { wch: 15 },
+          { wch: 20 },
+          { wch: 30 },
+          { wch: 10 },
+        ];
 
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, summaryWs, "Summary");
-        XLSX.utils.book_append_sheet(wb, ordersWs, "Orders");
-        XLSX.utils.book_append_sheet(wb, usersWs, "Users");
-
-        XLSX.writeFile(wb, `KPI_Report_${activePeriod}_${new Date().toISOString().split('T')[0]}.xlsx`);
+        XLSX.utils.book_append_sheet(wb, ws, "Members");
+        XLSX.writeFile(
+          wb,
+          `KPI_Members_${new Date().toISOString().split("T")[0]}.xlsx`
+        );
         toast.success("Exported to Excel successfully");
       }
     } catch (error) {
       toast.error("Failed to export data");
-      console.error("Export error:", error);
+      // console.error("Export error:", error);
     }
-  };
-
-  const handleExportPDF = () => {
-    const doc = new jsPDF();
-    doc.text("KPI Report", 14, 22);
-    doc.text(`Period: ${activePeriod.charAt(0).toUpperCase() + activePeriod.slice(1)}`, 14, 30);
-    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 38);
-
-    // Add summary stats
-    if (quickStatsData?.data?.stats) {
-      doc.text("Summary Statistics:", 14, 50);
-      quickStatsData.data.stats.forEach((stat, index) => {
-        doc.text(`${stat.title}: ${stat.value}`, 20, 58 + (index * 8));
-      });
-    }
-
-    // Add chart data table
-    if (chartData.length > 0) {
-      doc.autoTable({
-        head: [["Period", "Activated (SAR)", "Pending (SAR)"]],
-        body: chartData.map((item) => [
-          item.name,
-          item.activated?.toLocaleString() || "0",
-          item.pending?.toLocaleString() || "0",
-        ]),
-        startY: 90,
-      });
-    }
-
-    doc.save(`KPI_Report_${activePeriod}_${new Date().toISOString().split('T')[0]}.pdf`);
-    toast.success("Exported to PDF successfully");
   };
 
   const handleReset = () => {
@@ -465,6 +483,20 @@ const KPIReports = () => {
             >
               Refresh
             </Button>
+            <Button
+              className="bg-navy-700 text-white"
+              startContent={
+                  isExporting ? (
+                    <Spinner size="sm" />
+                  ) : (
+                    <FaFileExcel className="text-white" />
+                  )
+                }
+                onClick={handleExportExcel}
+                isDisabled={isExporting}
+            >
+              Excel
+            </Button>
           </div>
         </div>
       </div>
@@ -542,25 +574,6 @@ const KPIReports = () => {
                   {period.charAt(0).toUpperCase() + period.slice(1)}
                 </button>
               ))}
-            </div>
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                className="bg-white border text-gray-700 hover:bg-gray-50"
-                startContent={isExporting ? <Spinner size="sm" /> : <FaFileExcel className="text-green-600" />}
-                onClick={handleExportExcel}
-                isDisabled={isExporting}
-              >
-                Excel
-              </Button>
-              <Button
-                size="sm"
-                className="bg-white border text-gray-700 hover:bg-gray-50"
-                startContent={<FaFilePdf className="text-red-500" />}
-                onClick={handleExportPDF}
-              >
-                PDF
-              </Button>
             </div>
           </div>
         </div>

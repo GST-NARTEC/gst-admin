@@ -71,4 +71,5 @@ export const {
   useGetTopProductsQuery,
   useGetKpiExportQuery,
   useLazyGetKpiExportQuery,
+  useLazyGetKpiMembersQuery,
 } = kpi;
