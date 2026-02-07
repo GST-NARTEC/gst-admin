@@ -14,6 +14,7 @@ import ContactUs from "../pages/Website/contact-us/ContactUs";
 import ExpoForm from "../pages/expo/ExpoForm";
 import MesSiriAlignment from "../pages/Website/MesSiriAlignment/MesSiriAlignment";
 import GstPartnerProgram from "../pages/Website/gstPartnerProgram/gstPartnerProgram";
+import CompanyProfile from "../pages/Website/CompanyProfile/CompanyProfile";
 
 function WebsiteRoutes() {
   return (
@@ -31,6 +32,7 @@ function WebsiteRoutes() {
       <Route path="/contact-us" element={<ContactUs />} />
       <Route path="/mes-siri-alignment" element={<MesSiriAlignment />} />
       <Route path="/gst-partner-program" element={<GstPartnerProgram />} />
+      <Route path="/company-profile" element={<CompanyProfile />} />
 
       {/* Nested routes for templates */}
 
